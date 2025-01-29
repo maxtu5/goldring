@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
-import {Box, Stack} from "@mui/material";
-import SideBar from "./SideBar";
-import CustomMap from "./CustomMap";
+import {Box} from "@mui/material";
+
 import ObjectCard from "./ObjectCard";
 import {GRingContext} from "../../utils/context";
 import MapArea from "./MapArea";
@@ -9,10 +8,11 @@ import MapArea from "./MapArea";
 const MainArea = () => {
     const {appMode} = useContext(GRingContext)
 
-    return (<Box>
-        <MapArea visible={appMode === 'map' ? true : false}/>
-        <ObjectCard visible={appMode === 'card' ? true : false}/>
-    </Box>);
+    return (
+        <Box>
+            <MapArea visible={appMode === 'map'}/>
+            <ObjectCard visible={appMode === 'card'}/>
+        </Box>);
 };
 
 export default MainArea;

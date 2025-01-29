@@ -1,17 +1,25 @@
 import React, {useContext} from 'react';
-import {Box} from "@mui/material";
+import {Box, styled} from "@mui/material";
 import {Map, Placemark, YMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
+
+const StyledMap = styled(Map)(({theme}) => ({
+        width: "100%",
+        height: "600px",
+        [theme.breakpoints.up("sm")]: {
+            height: "100%"
+        }
+    })
+)
 
 const CustomMap = () => {
     const {setAppMode} = useContext(GRingContext)
 
     return (
-        <YMaps
-            query={{ apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}
-        >
-            <Box bgcolor={"lightgrey"} flex={3}>
-                <Map width="100%" height="100%" defaultState={{center: [56.49941, 39.67653], zoom: 9}}>
+        <Box bgcolor={"lightgrey"} flex={3}>
+            <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
+                <StyledMap
+                    defaultState={{center: [56.49941, 39.67653], zoom: 9}}>
                     <Placemark
                         onClick={() => {
                             setAppMode('card')
@@ -23,9 +31,10 @@ const CustomMap = () => {
                             preset: "islands#yellowDotIcon"
                         }}
                     />
-                </Map>
-            </Box>
-        </YMaps>
+                </StyledMap>
+            </YMaps>
+
+        </Box>
     );
 };
 
