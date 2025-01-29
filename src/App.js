@@ -3,12 +3,15 @@ import NavBar from "./components/top/NavBar";
 import Footer from "./components/top/Footer";
 import MainArea from "./components/top/MainArea";
 import {GRingContext} from "./utils/context";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 function App() {
     const [displayMode, setDisplayMode] = useState('map')
 
+    useEffect(()=> {
+        window.scrollTo(0,0)
+    }, [displayMode])
     return (
         <Box>
             <NavBar/>

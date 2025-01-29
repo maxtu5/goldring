@@ -9,7 +9,6 @@ interface ObjectCardProps {
 }
 
 const ObjectCard = ({visible}: ObjectCardProps) => {
-
     return (
         <Box display={visible ? "flex" : "none"}>
             <Stack p={2}>
