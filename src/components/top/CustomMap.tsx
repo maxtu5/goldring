@@ -7,7 +7,9 @@ const CustomMap = () => {
     const {setAppMode} = useContext(GRingContext)
 
     return (
-        <YMaps>
+        <YMaps
+            query={{ apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}
+        >
             <Box bgcolor={"lightgrey"} flex={3}>
                 <Map width="100%" height="100%" defaultState={{center: [56.49941, 39.67653], zoom: 9}}>
                     <Placemark

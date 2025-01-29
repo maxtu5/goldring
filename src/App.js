@@ -9,6 +9,7 @@ import {useState} from "react";
 function App() {
     const [displayMode, setDisplayMode] = useState('map')
 
+
     return (
         <Box>
             <NavBar/>
