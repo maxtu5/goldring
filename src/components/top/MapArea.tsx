@@ -10,7 +10,7 @@ interface MapAreaProps {
 const MapArea = ({visible}: MapAreaProps) => {
     return (
         <Box display={visible?"block":"none"}>
-            <Stack direction={{xs: "column", sm: "row"}} spacing={0} justifyContent={"space-between"}>
+            <Stack direction={"column"} spacing={0} justifyContent={"space-between"}>
                 <SideBar/>
                 <CustomMap/>
             </Stack>
