@@ -10,10 +10,10 @@ const ObjectHeader = () => {
     }
 
     return (
-        <Box>
+        <Box width={"auto"}>
             <Stack direction={{xs: "column", sm: "row"}} justifyContent={"space-between"} alignItems={"center"} bgcolor={"lightgray"}>
                 <Stack>
-                    <Typography p={[0, 0, 0, 1]} variant={"h5"}>Изба зажиточного крестьянина в селе Высокое</Typography>
+                    <Typography p={[0, 0, 0, 1]} variant={"h6"}>Жилой дом</Typography>
                     <Stack direction={"row"} alignItems={"center"}>
                         <Box p={[0, 0, 0, 1]}>
                             <Rating name="half-rating" readOnly={true} defaultValue={3.8} precision={0.1}/>

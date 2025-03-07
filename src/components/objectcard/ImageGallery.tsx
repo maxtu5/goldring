@@ -1,79 +1,106 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
-    Paper,
-    ImageList,
-    ImageListItem,
     Stack,
     Box,
-    Typography,
-    Card,
-    CardMedia,
-    CardActions,
-    Rating
+    Rating, IconButton, Button
 } from "@mui/material";
+import Carousel from 'react-material-ui-carousel'
+import CloseIcon from "@mui/icons-material/Close";
+import {GRingContext} from "../../utils/context";
+import zIndex from "@mui/material/styles/zIndex";
+import {FullPlace} from "../../utils/types";
 
-const ImageGallery = () => {
+interface Props {
+    place: FullPlace
+}
+
+const ImageGallery = ({place}: Props) => {
+    const {setAppMode} = useContext(GRingContext)
+
     const itemData = [
         {
-            img: 'https://cs13.pikabu.ru/post_img/big/2023/06/15/6/1686816849210348318.jpg',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Bradbury_building_Los_Angeles_c2005_01383u_crop.jpg/640px-Bradbury_building_Los_Angeles_c2005_01383u_crop.jpg',
             title: 'Изба зажиточного крестьянина',
         },
         {
-            img: 'https://cs13.pikabu.ru/post_img/big/2023/06/15/6/1686816849239074970.jpg',
-            title: 'Изба зажиточного крестьянина',
+            img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxXJya2SXL2NMhrHkJmY66iMCUUwI11jmY2g&s',
+            title: 'Изба зажиточного крестьянина'
         },
         {
-            img: 'https://kino-bank.com/upload/iblock/9de/9ded020fadc9b51e274d7f57975b8453.jpg',
-            title: 'Изба зажиточного крестьянина',
+            img: 'https://www.visitchurches.org.uk/static/derivatives/gallery_7e1461bbf7a7fc106abfce2c1960f526/458ead4c-1fa0-404e-b813446b226e2897.jpg',
+            title: 'Изба зажиточного крестьянина'
         },
         {
-            img: 'https://cs14.pikabu.ru/post_img/big/2023/06/15/6/1686816848213375531.jpg',
-            title: 'Изба зажиточного крестьянина',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Eagle_Warehouse.jpg/1200px-Eagle_Warehouse.jpg',
+            title: 'Изба зажиточного крестьянина'
         }
     ];
 
+    const handleClose = () => {
+        console.log('clickedddd');
+        setAppMode('map');
+    };
+
+    // @ts-ignore
     return (
-        <Box marginTop={1}>
-            <Stack direction={{xs: "column", sm: "row"}} spacing={2} justifyContent={"stretch"}>
+        <Stack width={'600'} direction={"column"} spacing={2} justifyContent={"stretch"}>
+            <Carousel autoPlay={false}
+                      navButtonsAlwaysVisible={true}
 
-                <Box flex={3} display="flex"
-                     sx={{
-                         display: "inline-block",
-                         position: "relative"
-                     }}>
-                    <img src={'https://cs13.pikabu.ru/post_img/big/2023/06/15/6/1686816849210348318.jpg'}
-                         width={"100%"}></img>
-                    <Rating sx={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        margin: 1
-                    }} defaultValue={3.8} precision={0.1}/>
+                      indicatorContainerProps={{
+                          style: {
+                              marginTop: "-60px",
+                              zIndex:1,
+                              position: "relative"
+                          }
+                      }}
+            >
 
-                </Box>
+                {
+                    itemData.map((item, i) =>
+                        <Box
+                            sx={{
+                                // backgroundImage: `url(${item.img})`,
+                                // backgroundSize: "cover",
+                                // width: "100%",
+                                maxHeight: '800',
+                                // p:'0'
+                                // paddingBottom: '0'
+                            }}
+                        >
+                            <img
+                                src={item.img} alt={item.title}
+                                width={"100%"}
+                                height={"auto"}
+                                // z-index={10000}
+                            ></img>
 
+                            <Rating sx={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                margin: 0
+                            }} value={place.appeal} precision={0.1}/>
 
-                <Box flex={1}>
-                    <Typography variant={"h5"}>
-                        Другие фото
-                    </Typography>
-                    <ImageList sx={{width: "100%", height: "auto"}} cols={2} variant="masonry">
-                        {itemData.map((item) => (
-                            <ImageListItem key={item.img}>
-                                <img
-                                    srcSet={`${item.img}`}
-                                    src={`${item.img}`}
-                                    alt={item.title}
-                                    loading="lazy"
-                                    // width={"100%"}
-                                    // height={"auto"}
-                                />
-                            </ImageListItem>
-                        ))}
-                    </ImageList>
-                </Box>
-            </Stack>
-        </Box>
+                            <Button
+                                aria-label="close"
+                                onClick={handleClose}
+                                sx={(theme) => ({
+                                    // backgroundColor: 'red',
+                                    zIndex:1,
+                                    position: "absolute",
+                                    right: 8,
+                                    top: 8,
+                                    color: theme.palette.grey[500],
+                                })}>
+                                {/*<CloseIcon/>*/}
+                                закрыть
+                            </Button>
+                        </Box>
+                    )
+                }
+            </Carousel>
+        </Stack>
     );
 };
 
