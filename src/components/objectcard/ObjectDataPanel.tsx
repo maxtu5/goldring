@@ -1,26 +1,57 @@
-import React from 'react';
-import {Box, Stack, Typography} from "@mui/material";
-import LinksPanel from "./LinksPanel";
+import React, {useContext} from 'react';
+import {Box, Link, Stack, Typography} from "@mui/material";
+import {FullPlace} from "../../utils/types";
+import {GRingContext} from "../../utils/context";
 
-const ObjectDataPanel = () => {
+interface Props {
+    place: FullPlace
+}
+
+const ObjectDataPanel = ({place}: Props) => {
+    const {genres, types, linkPrefixes, cultureStatuses} = useContext(GRingContext)
+
+    function typoLine(text: string) {
+        return (
+            <Typography>
+                {text}
+            </Typography>
+        );
+    }
+
+    function reduceLink(link: string, last: boolean) {
+        const lpfx = linkPrefixes.filter(lp=>link.indexOf(lp) !== -1);
+        return lpfx.length===0 ? link : lpfx[0] + (last? "" : ", ");
+    }
+
     return (
-        <Box marginTop={1}>
-            <Stack direction={{xs: "column", sm: "row"}} justifyContent={"space-between"}>
-                <Typography flex={3}>
-                    Дата постройки: 1869<br/>
-                    Архитектор: неизвестен<br/>
-                    Жанр: деревянная архитектура<br/>
-                    Тип: жилой дом на одну семью<br/>
-                    Адрес: Ярославская обл., село Высокое, ул.Комсомольская 6<br/>
-                    Добавлено: 28.01.2025<br/><br/>
-                    Составными частями крестьянской избы были: клеть, сени, изба, подклеть, чулан и горница.
-                    Основной постройкой было жилое помещение с печью. Внутри находились такие неотъемлемые атрибуты
-                    хозяйской жизни как: прикрепленные к стенам широкие лавки, полки, люлька, посудный шкаф и др.
-                    Отсутствие лишних элементов и строгая привязанность одной вещи к месту – вот главные признаки
-                    интерьера избы.
-
+        <Box width={"auto"} p={2}>
+            <Stack direction={"column"} justifyContent={"space-between"}>
+                <Typography
+                    variant="h6"
+                    sx={{lineHeight:'1.2', paddingRight:'20px'}}>
+                    {place.name}
                 </Typography>
-                <LinksPanel/>
+
+                {typoLine(`${place.date}. ${place.genres.length === 0 ? "" :place.genres
+                    .map(gc => genres[genres.findIndex(g => g.name === gc)].displayName)
+                    .join(', ')+'. '}${!place.cultureStatus || place.cultureStatus === "IGNORED" ? "" : 
+                    cultureStatuses[cultureStatuses.findIndex(g => g.name === place.cultureStatus)].displayName+'.'}`)}
+
+                {typoLine(place.types.length === 0 ? "" :
+                    place.types
+                        .map(gc => types[types.findIndex(g => g.name === gc)].displayName)
+                        .join(', ') + '. ' + (place.architects.length === 0 ? "" :
+                        (place.architects.length === 1 ? 'Архитектор: ' : 'Архитекторы: ') + place.architects.join(', ')))}
+                {typoLine(place.description)}
+                <Stack direction={"row"}>
+                {place.pages.map((link, index)=>
+                        <Link marginRight={1} href={link}>{reduceLink(link, index===place.pages.length-1)}</Link>)}
+                </Stack>
+                <Typography
+                    variant="caption"
+                    align='right'>
+                    {place.address}. Добавлено: {place.dateAdded}
+                </Typography>
             </Stack>
         </Box>
     );

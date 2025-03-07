@@ -1,20 +1,13 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {AppBar, styled, Toolbar, Typography, Box, InputBase, Badge, Avatar, Menu, MenuItem} from "@mui/material";
 import OtherHousesIcon from '@mui/icons-material/OtherHouses';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import {GRingContext} from "../../utils/context";
 
 const StyledToolBar = styled(Toolbar)({
     display: "flex",
     justifyContent: "space-between"
 })
-
-const Search = styled("div")(({theme}) => ({
-        backgroundColor: "white",
-        padding: "0 10px",
-        borderRadius: theme.shape.borderRadius,
-        width: "40%"
-    })
-)
 
 const IconGroup = styled(Box)(({theme}) => ({
         display: "none",
@@ -37,17 +30,15 @@ const UserBox = styled(Box)(({theme}) => ({
 )
 
 const NavBar = () => {
+    const {appMode, places} = useContext(GRingContext)
     const [open, setOpen] = useState<boolean>(false)
     return (
         <AppBar position={"sticky"}>
             <StyledToolBar>
                 <Typography variant={"h6"} sx={{display: {xs: "none", sm: "block"}}}>
-                    КРАСИВЫЕ ДОМА
+                    КРАСИВЫЕ ДОМА {`(${places.length})`}
                 </Typography>
                 <OtherHousesIcon sx={{display: {xs: "block", sm: "none"}}}/>
-                <Search>
-                    <InputBase placeholder={"поиск..."}/>
-                </Search>
                 <IconGroup>
                     <Badge badgeContent={4} color="error">
                         <NotificationsIcon color={"action"}/>

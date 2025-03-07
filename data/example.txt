@@ -1,0 +1,35 @@
+Пример:
+ID/ coordinates: "55.75023, 37.58007"
+""country"": ""RUSSIA"" (enum)
+""region"": ""MOSCOW"" (enum)
+""municipality"": """", ""settlement"": """", ""street"": ""Проточный переулок"", ""number"": ""9с1""}" Это все приедет одной строкой
+2 (рейтинг)
+IGNORED Имеется в виду что культурный статус отсутствует
+1912 Дата
+2024-05-31T21:00:00.000Z Дата добавления
+2025-01-20T21:00:00.000Z Дата редактирования, показывать не надо
+Здание (Название, в данном случае названия никакого нет, поэтому здание)
+DONE (технический статус)
+PUBLIC (есть еще ADMIN, которые виду только админу)
+
+"55.74966, 37.58145",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""проезд Шломина"", ""number"": ""6""}",1,[],,1900,2024-05-31T21:00:00.000Z,,"",[],"","[""https://disk.yandex.ru/i/2UTy0qPsselywQ""]",Доходный дом,[],,"[""RENTAL""]",PUBLIC
+"55.75167, 37.58261",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""Новинский бульвар"", ""number"": ""7""}",2,[],V_FORMING,1941,2024-05-31T21:00:00.000Z,2025-01-21T21:00:00.000Z,"","[""STALIN""]","","[""https://disk.yandex.ru/i/Jz1W5EEdpy7a_Q"", ""https://disk.yandex.ru/i/p7zdq08n28qGSw""]",Жилой дом,[],DONE,[],PUBLIC
+"55.74944, 37.58218",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""Смоленская площадь"", ""number"": ""13/21""}",4,"[""И.В. Жолтовский""]",REGIONAL,1956,2024-05-31T21:00:00.000Z,2025-01-22T21:00:00.000Z,"","[""STALIN""]","","[""https://disk.yandex.ru/i/Li1uLVm5kuKQWw"", ""https://disk.yandex.ru/i/W-DswM9khFPbaw"", ""https://disk.yandex.ru/i/6zwjQx9_L3DSpQ"", ""https://disk.yandex.ru/i/CZnTd-nI-wtMIw""]",Дом работника НКВД,"[""https://ru.wikipedia.org/wiki/%D0%94%D0%BE%D0%BC_%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2_%D0%9D%D0%9A%D0%92%D0%94_%D0%BD%D0%B0_%D0%A1%D0%BC%D0%BE%D0%BB%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B9_%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D0%B8"", ""https://um.mos.ru/houses/zhiloy_dom_na_smolenskoy_arkhitektor_i_v_zholtovskiy""]",DONE,[],PUBLIC
+"55.74699, 37.58152",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""Смоленская площадь"", ""number"": ""4""}",4,"[""В.В. Шервуд""]",REGIONAL,1906,2024-05-31T21:00:00.000Z,2025-01-22T21:00:00.000Z,"","[""MODERN""]","","[""https://disk.yandex.ru/i/UV-79q6uDo4i-g"", ""https://disk.yandex.ru/i/xVyx8pzKITi32Q"", ""https://disk.yandex.ru/i/ks6IKruYLxua1Q"", ""https://disk.yandex.ru/i/dqF5EsYJC1cDCg""]",Доходный дом Орловых,[],DONE,"[""RENTAL""]",PUBLIC
+"55.74683, 37.58040",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""1-й Смоленский переулок"", ""number"": ""4/3""}",2,[],IGNORED,1898,2024-05-31T21:00:00.000Z,2025-01-20T21:00:00.000Z,"",[],"","[""https://disk.yandex.ru/i/kGYBL1Z6ZGPP2g"", ""https://disk.yandex.ru/i/G7vvVQEArIHLTw""]",Здание,[],RESHOT,[],PUBLIC
+"55.74981, 37.58340",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""Смоленская площадь"", ""number"": ""8/12/1с1""}",4,[],FEDERAL,1832,2024-05-31T21:00:00.000Z,2025-01-22T21:00:00.000Z,"","[""EMPIRE""]","","[""https://disk.yandex.ru/i/SUTf751fHZq_Yw"", ""https://disk.yandex.ru/i/fUZUrTdRIUEhAw""]",Дом с лавками,"[""https://um.mos.ru/houses/dom-s-lavkami-na-smolenskoy-ploshchadi/""]",DONE,"[""SHOP""]",PUBLIC
+"55.74916, 37.58333",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""Смоленская площадь"", ""number"": ""6с1""}",2,"[""И.П. Херодинов"", ""И.А. Кашечкин""]",REGIONAL,1832,2024-05-31T21:00:00.000Z,2025-01-22T21:00:00.000Z,"","[""CLASSICISM""]","","[""https://disk.yandex.ru/i/gO_vXklL_lfgZQ"", ""https://disk.yandex.ru/i/8kLQkwq62SXfTA""]",Жилой дом с лавками,"[""https://um.mos.ru/houses/gorodskaya_usadba_xix_v_dom_s_lavkami_zhiloy_dom""]",DONE,"[""SHOP""]",PUBLIC
+"55.74723, 37.58346",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""улица Арбат"", ""number"": ""54/2с1""}",3,"[""В.К. Олтаржевский""]",IGNORED,1928,2024-05-31T21:00:00.000Z,2025-01-10T21:00:00.000Z,"","[""CONSTRUCTIVISM""]","","[""https://disk.yandex.ru/i/vNtA9RY23BIRVA"", ""https://disk.yandex.ru/i/_2TtRDHRAVY-8w""]",Торгсин,"[""https://um.mos.ru/houses/torgsin""]",DONE,"[""SHOP""]",PUBLIC
+"55.74999, 37.58470",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""переулок Каменная Слобода"", ""number"": ""8""}",3,"[""Г.К. Олтаржевский""]",IGNORED,1910,2024-05-31T21:00:00.000Z,2025-01-23T21:00:00.000Z,"",[],"","[""https://disk.yandex.ru/i/fz7u2M4WAdVIMw"", ""https://disk.yandex.ru/i/BliDgZmMk-FxCg"", ""https://disk.yandex.ru/i/w7u9anbOf_Pofg"", ""https://disk.yandex.ru/i/X24kmK8bcExADg"", ""https://disk.yandex.ru/i/uNw4GRnXnV7LaQ""]",Доходный дом архитектора Г.К. Олтаржевского,[],RESHOT,"[""RENTAL""]",PUBLIC
+"55.75022, 37.58529",ru.architect.entitites.Place,"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""переулок Каменная Слобода"", ""number"": ""6/2с2""}",2,"[""П.Н. Курбатов""]",IGNORED,1904,2024-05-31T21:00:00.000Z,2025-01-23T21:00:00.000Z,Надстроен в 1909 г.,"[""MODERN""]","","[""https://disk.yandex.ru/i/DqGBhL2fE5mmVA""]",Доходный дом И.И. Егорова,[],RESHOT,"[""RENTAL""]",PUBLIC
+"55.75041, 37.58662",
+ru.architect.entitites.Place,
+"{""country"": ""RUSSIA"", ""region"": ""MOSCOW"", ""municipality"": """", ""settlement"": """", ""street"": ""переулок Каменная Слобода"", ""number"": ""2/1с1""}",
+1,
+"[""В.П. Гаврилов""]",
+,
+1911,
+2024-05-31T21:00:00.000Z,
+,
+"",
+[],"","[""https://disk.yandex.ru/i/bZt6sw_CIC1p_w"", ""https://disk.yandex.ru/i/3uVGK2JjBXNg_Q"", ""https://disk.yandex.ru/i/A3tzZOzfMIDJew""]",Доходный дом церкви Спаса на Песках,"[""https://um.mos.ru/houses/dom_prichta_tserkvi_spasa_na_peskakh""]",,"[""RENTAL""]",PUBLIC

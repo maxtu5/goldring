@@ -1,20 +1,22 @@
 import React from 'react';
 import SideBar from "./SideBar";
 import CustomMap from "./CustomMap";
-import {Box, Stack} from "@mui/material";
+import {Box, Grid2, Stack} from "@mui/material";
 
 interface MapAreaProps {
     visible: boolean
 }
 
-const MapArea = ({visible}: MapAreaProps) => {
+const MapArea = () => {
     return (
-        <Box display={visible?"block":"none"}>
-            <Stack direction={{xs: "column", sm: "row"}} spacing={0} justifyContent={"space-between"}>
+        <Grid2 container>
+            <Grid2 size={{xs: 12, sm: 3, xl:2}}>
                 <SideBar/>
+            </Grid2>
+            <Grid2 size={{xs: 12, sm: 9, xl: 10}} minHeight={700}>
                 <CustomMap/>
-            </Stack>
-        </Box>
+            </Grid2>
+        </Grid2>
     );
 };
 
