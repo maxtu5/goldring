@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {
     Stack,
     Box,
-    Rating, IconButton, Button
+    Rating, IconButton, Button, Paper
 } from "@mui/material";
 import Carousel from 'react-material-ui-carousel'
 import CloseIcon from "@mui/icons-material/Close";
@@ -43,7 +43,7 @@ const ImageGallery = ({place}: Props) => {
 
     // @ts-ignore
     return (
-        <Stack width={'600'} direction={"column"} spacing={2} justifyContent={"stretch"}>
+        <Stack direction={"column"} spacing={2} justifyContent={"stretch"}>
             <Carousel autoPlay={false}
                       navButtonsAlwaysVisible={true}
 
@@ -59,21 +59,32 @@ const ImageGallery = ({place}: Props) => {
                 {
                     itemData.map((item, i) =>
                         <Box
+
                             sx={{
                                 // backgroundImage: `url(${item.img})`,
                                 // backgroundSize: "cover",
-                                // width: "100%",
-                                maxHeight: '800',
+                                width: "auto",
+                                backgroundColor: "darkred",
+                                // maxHeight: '600',
                                 // p:'0'
                                 // paddingBottom: '0'
+                                justifyContent: "center",
                             }}
+                            // src={item.img}
                         >
-                            <img
-                                src={item.img} alt={item.title}
-                                width={"100%"}
-                                height={"auto"}
-                                // z-index={10000}
-                            ></img>
+                            <Paper
+                                // component="img"
+                                sx={{
+                            height: "500px",
+                                width: "auto"}}>
+                            {/*<img*/}
+                                <img src={item.img} alt={item.title}
+                                width={"auto"}
+                                height={"500px"}
+                                />
+                            {/*    // z-index={10000}*/}
+                            {/*></img>*/}
+                            </Paper>
 
                             <Rating sx={{
                                 position: "absolute",
