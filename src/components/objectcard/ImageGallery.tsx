@@ -88,7 +88,7 @@ const ImageGallery = ({place}: Props) => {
                         <CardMedia
                             component="img"
                             alt={item.title}
-                            height='100px'
+                            height='100%'
                             src={item.img}
                             sx={{objectFit: "contain"}}
                         />

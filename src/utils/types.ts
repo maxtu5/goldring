@@ -18,6 +18,7 @@ export interface InitialData {
 }
 
 export interface LightPlace {
+    id: string,
     latlon: string,
     status: string,
     visibility: string,
@@ -29,6 +30,7 @@ export interface LightPlace {
 }
 
 export interface FullPlace {
+    id: string,
     latlon: string,
     name: string,
     appeal: number,
@@ -46,6 +48,7 @@ export interface FullPlace {
 }
 
 export const emptyPlace: FullPlace = {
+    id:"",
     latlon:"",
     name:"",
     appeal:1,

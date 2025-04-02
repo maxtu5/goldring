@@ -19,7 +19,7 @@ const CustomMap = () => {
 
                             key={place.latlon}
                             onClick={()=>{
-                                setAppMode(place.latlon)
+                                setAppMode(place.id)
                             }}
                             properties={{iconContent: place.rating}}
 
