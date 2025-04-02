@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {
     Stack,
     Box,
-    Rating, IconButton, Button, Paper
+    Rating, IconButton, Button, Paper, ImageList, ImageListItem, Card, CardMedia, CardContent
 } from "@mui/material";
 import Carousel from 'react-material-ui-carousel'
 import CloseIcon from "@mui/icons-material/Close";
@@ -14,10 +14,19 @@ interface Props {
     place: FullPlace
 }
 
+function hasImages(images: string[]) {
+    console.log(images)
+    return images && images.length>0 && images[0].startsWith('moscow/b');
+}
+
 const ImageGallery = ({place}: Props) => {
     const {setAppMode} = useContext(GRingContext)
-
-    const itemData = [
+    console.log(place)
+    const itemData = hasImages(place.images) ? place.images.map(i=> {
+        const prefix = 'http://127.0.0.1:8081/'
+        const file = prefix+i
+            // .replaceAll('/','\\')
+        return {img:file, title:file}}) : [
         {
             img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Bradbury_building_Los_Angeles_c2005_01383u_crop.jpg/640px-Bradbury_building_Los_Angeles_c2005_01383u_crop.jpg',
             title: 'Изба зажиточного крестьянина',
@@ -43,76 +52,59 @@ const ImageGallery = ({place}: Props) => {
 
     // @ts-ignore
     return (
-        <Stack direction={"column"} spacing={2} justifyContent={"stretch"}>
+        <Stack direction={"column"} spacing={0} justifyContent={"stretch"}>
+            <Button
+                // autoFocus
+                aria-label="close"
+                onClick={handleClose}
+                sx={(theme) => ({
+                    // backgroundColor: 'red',
+                    zIndex: 10000,
+                    position: "absolute",
+                    right: 8,
+                    top: 8,
+                    // color: theme.palette.grey[500],
+                })}>
+                {/*<CloseIcon/>*/}
+                закрыть
+            </Button>
             <Carousel autoPlay={false}
                       navButtonsAlwaysVisible={true}
-
+                      // navButtonsProps={}
                       indicatorContainerProps={{
                           style: {
                               marginTop: "-60px",
-                              zIndex:1,
+                              zIndex: 1,
                               position: "relative"
                           }
                       }}
             >
 
-                {
-                    itemData.map((item, i) =>
-                        <Box
-
-                            sx={{
-                                // backgroundImage: `url(${item.img})`,
-                                // backgroundSize: "cover",
-                                width: "auto",
-                                backgroundColor: "darkred",
-                                // maxHeight: '600',
-                                // p:'0'
-                                // paddingBottom: '0'
-                                justifyContent: "center",
-                            }}
-                            // src={item.img}
-                        >
-                            <Paper
-                                // component="img"
-                                sx={{
-                            height: "500px",
-                                width: "auto"}}>
-                            {/*<img*/}
-                                <img src={item.img} alt={item.title}
-                                width={"auto"}
-                                height={"500px"}
-                                />
-                            {/*    // z-index={10000}*/}
-                            {/*></img>*/}
-                            </Paper>
-
+                {itemData.map((item, i) =>
+                    <Card sx={{width: 'auto', height: "80vh"
+                        // margin: '0'
+                        , backgroundColor: 'black'
+                    }}>
+                        <CardMedia
+                            component="img"
+                            alt={item.title}
+                            height='100px'
+                            src={item.img}
+                            sx={{objectFit: "contain"}}
+                        />
+                        <CardContent>
                             <Rating sx={{
                                 position: "absolute",
                                 top: 0,
                                 left: 0,
                                 margin: 0
                             }} value={place.appeal} precision={0.1}/>
-
-                            <Button
-                                aria-label="close"
-                                onClick={handleClose}
-                                sx={(theme) => ({
-                                    // backgroundColor: 'red',
-                                    zIndex:1,
-                                    position: "absolute",
-                                    right: 8,
-                                    top: 8,
-                                    color: theme.palette.grey[500],
-                                })}>
-                                {/*<CloseIcon/>*/}
-                                закрыть
-                            </Button>
-                        </Box>
-                    )
-                }
+                        </CardContent>
+                    </Card>
+                )}
             </Carousel>
         </Stack>
-    );
+    )
 };
 
 export default ImageGallery;

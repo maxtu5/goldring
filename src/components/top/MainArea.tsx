@@ -34,7 +34,9 @@ const MainArea = () => {
             types: [...data.types],
             architects: [...data.architects],
             pages: data.pages ? [...data.pages] : [],
-            cultureStatus: data.cultureStatus
+            cultureStatus: data.cultureStatus,
+            pics: data.pics,
+            images: data.images
         })
     }
 
@@ -58,50 +60,22 @@ const MainArea = () => {
     return (<Box>
         <MapArea/>
         <Dialog
+            fullScreen
             onClose={handleClose}
             scroll={"body"}
-            fullWidth={true}
-            maxWidth={'xl'}
-
+            // fullWidth={true}
+            // maxWidth={'xl'}
             aria-labelledby="customized-dialog-title"
-            // slotProps={{
-            //     paper:
-            //         {
-            //             sx: {
-            //                 width: "100%",
-            //                 maxWidth: {xs: 550, md:900, xl: 1200},
-            //             }
-            //         }
-            // }}
             open={appMode !== 'map'}
         >
             <DialogContent
                 sx={{p:0}}
                 dividers>
-
-                {/*<IconButton*/}
-                {/*    aria-label="close"*/}
-                {/*    onClick={handleClose}*/}
-                {/*    sx={(theme) => ({*/}
-                {/*        zIndex:1,*/}
-                {/*        position: "absolute",*/}
-                {/*        right: 8,*/}
-                {/*        top: 8,*/}
-                {/*        color: theme.palette.grey[500],*/}
-                {/*    })}>*/}
-                {/*    <CloseIcon/>*/}
-                {/*</IconButton>*/}
                 <Stack>
                     <ImageGallery place={currentPlace}/>
                     <ObjectDataPanel place={currentPlace}/>
                 </Stack>
             </DialogContent>
-
-            {/*<DialogActions>*/}
-            {/*    <Button autoFocus onClick={handleClose}>*/}
-            {/*        Save changes*/}
-            {/*    </Button>*/}
-            {/*</DialogActions>*/}
         </Dialog>
     </Box>);
 };
