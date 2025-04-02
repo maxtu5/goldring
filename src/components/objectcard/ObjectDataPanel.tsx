@@ -32,10 +32,10 @@ const ObjectDataPanel = ({place}: Props) => {
                     {`${place.name} (${place.pics})`}
                 </Typography>
 
-                {typoLine(`${place.date}. ${place.genres.length === 0 ? "" :place.genres
-                    .map(gc => genres[genres.findIndex(g => g.name === gc)].displayName)
-                    .join(', ')+'. '}${!place.cultureStatus || place.cultureStatus === "IGNORED" ? "" : 
-                    cultureStatuses[cultureStatuses.findIndex(g => g.name === place.cultureStatus)].displayName+'.'}`)}
+                {/*{typoLine(`${place.date}. ${place.genres.length === 0 ? "" :place.genres*/}
+                {/*    .map(gc => genres[genres.findIndex(g => g.name === gc)].displayName)*/}
+                {/*    .join(', ')+'. '}${!place.cultureStatus || place.cultureStatus === "IGNORED" ? "" : */}
+                {/*    cultureStatuses[cultureStatuses.findIndex(g => g.name === place.cultureStatus)].displayName+'.'}`)}*/}
 
                 {typoLine(place.types.length === 0 ? "" :
                     place.types

@@ -23,6 +23,7 @@ const MainArea = () => {
 
     function processPlaceData(data: any) {
         setCurrentPlace({
+            id: data.id,
             latlon: data.latlon,
             name: data.name,
             appeal: data.appeal,
@@ -42,6 +43,7 @@ const MainArea = () => {
 
     useEffect(() => {
         if (appMode !== 'map') {
+            console.log(`${base_url}${url_getplace}${appMode}`)
             fetch(`${base_url}${url_getplace}${appMode}`)
                 .then(response => response.json())
                 .then(data => {
