@@ -29,7 +29,7 @@ const ObjectDataPanel = ({place}: Props) => {
                 <Typography
                     variant="h6"
                     sx={{lineHeight:'1.2', paddingRight:'20px'}}>
-                    {place.name}
+                    {`${place.name} (${place.pics})`}
                 </Typography>
 
                 {typoLine(`${place.date}. ${place.genres.length === 0 ? "" :place.genres
