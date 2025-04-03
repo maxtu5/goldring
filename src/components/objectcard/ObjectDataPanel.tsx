@@ -23,6 +23,12 @@ const ObjectDataPanel = ({place}: Props) => {
         return lpfx.length===0 ? link : lpfx[0] + (last? "" : ", ");
     }
 
+    function genresList(place: FullPlace): string {
+        return place.genres.length === 0 ? "" :place.genres
+            .map(gc => genres[genres.findIndex(g => g.name === gc)].displayName)
+            .join(', ')+'. '
+    }
+
     return (
         <Box width={"auto"} p={2}>
             <Stack direction={"column"} justifyContent={"space-between"}>
@@ -32,16 +38,13 @@ const ObjectDataPanel = ({place}: Props) => {
                     {`${place.name} (${place.pics})`}
                 </Typography>
 
-                {/*{typoLine(`${place.date}. ${place.genres.length === 0 ? "" :place.genres*/}
-                {/*    .map(gc => genres[genres.findIndex(g => g.name === gc)].displayName)*/}
-                {/*    .join(', ')+'. '}${!place.cultureStatus || place.cultureStatus === "IGNORED" ? "" : */}
-                {/*    cultureStatuses[cultureStatuses.findIndex(g => g.name === place.cultureStatus)].displayName+'.'}`)}*/}
+                {typoLine(`${place.date}. ${genresList(place)}${place.cultureStatus}`)}
 
                 {typoLine(place.types.length === 0 ? "" :
                     place.types
                         .map(gc => types[types.findIndex(g => g.name === gc)].displayName)
                         .join(', ') + '. ' + (place.architects.length === 0 ? "" :
-                        (place.architects.length === 1 ? 'Архитектор: ' : 'Архитекторы: ') + place.architects.join(', ')))}
+                        (place.architects.indexOf(",") >=0 ? 'Архитекторы: ' : 'Архитектор: ') + place.architects))}
                 {typoLine(place.description)}
                 <Stack direction={"row"}>
                 {place.pages.map((link, index)=>

@@ -25,7 +25,6 @@ function App() {
             linkPrefixes: [...data.linkPrefixes]
         });
         console.log("from api")
-        console.log(initialData)
         const info = {
             payload: {
                 genres: {...data.genres}, types: {...data.types},
