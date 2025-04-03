@@ -22,18 +22,19 @@ const MainArea = () => {
     const [currentPlace, setCurrentPlace] = useState<FullPlace>(emptyPlace)
 
     function processPlaceData(data: any) {
+        console.log(data)
         setCurrentPlace({
             id: data.id,
             latlon: data.latlon,
             name: data.name,
             appeal: data.appeal,
             date: data.date,
-            address: parseAddress(data.address),
+            address: data.address,
             dateAdded: data.dateAdded,
             description: data.description,
             genres: [...data.genres],
             types: [...data.types],
-            architects: [...data.architects],
+            architects: data.architects,
             pages: data.pages ? [...data.pages] : [],
             cultureStatus: data.cultureStatus,
             pics: data.pics,

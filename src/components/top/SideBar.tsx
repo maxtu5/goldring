@@ -38,7 +38,6 @@ const SideBar = () => {
     )
 
     const handleChangeScore = (event: Event, newValue: number | number[]) => {
-        console.log(newValue)
         setScoreRange(newValue as number[]);
     };
 
@@ -103,7 +102,6 @@ const SideBar = () => {
 
 
     function filterclick() {
-        console.log(localFilter);
         if (filtered) setLocalFilter({...localFilter, genres:[], types:[], cultureStatuses:[]})
         setFiltered(!filtered)
     }

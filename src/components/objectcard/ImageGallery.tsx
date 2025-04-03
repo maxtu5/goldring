@@ -15,13 +15,12 @@ interface Props {
 }
 
 function hasImages(images: string[]) {
-    console.log(images)
-    return images && images.length>0 && images[0].startsWith('moscow/b');
+    console.log(images);
+    return images && images.length>0 ;
 }
 
 const ImageGallery = ({place}: Props) => {
     const {setAppMode} = useContext(GRingContext)
-    console.log(place)
     const itemData = hasImages(place.images) ? place.images.map(i=> {
         const prefix = 'http://127.0.0.1:8081/'
         const file = prefix+i
