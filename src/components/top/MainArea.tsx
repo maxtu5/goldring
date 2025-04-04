@@ -13,7 +13,6 @@ import {base_url, url_getplace} from "../../utils/constants";
 import {emptyPlace, FullPlace} from "../../utils/types";
 import ImageGallery from "../objectcard/ImageGallery";
 import ObjectDataPanel from "../objectcard/ObjectDataPanel";
-import {parseAddress} from "../../utils/utils";
 import {placesLocal} from "../../utils/data";
 
 
@@ -37,8 +36,7 @@ const MainArea = () => {
             architects: data.architects,
             pages: data.pages ? [...data.pages] : [],
             cultureStatus: data.cultureStatus,
-            pics: data.pics,
-            images: data.images
+            pics: data.pics
         })
     }
 
@@ -52,7 +50,6 @@ const MainArea = () => {
                 })
                 .catch(error => {
                     console.log(error)
-                    processPlaceData(placesLocal[Math.floor(Math.random() * placesLocal.length)])
                 })
         }
     }, [appMode]);
