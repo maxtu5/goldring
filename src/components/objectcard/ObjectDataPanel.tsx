@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ObjectDataPanel = ({place}: Props) => {
-    const {genres, types, linkPrefixes, cultureStatuses} = useContext(GRingContext)
+    const {genres, types, linkPrefixes} = useContext(GRingContext)
 
     function typoLine(text: string) {
         return (
@@ -35,7 +35,7 @@ const ObjectDataPanel = ({place}: Props) => {
                 <Typography
                     variant="h6"
                     sx={{lineHeight:'1.2', paddingRight:'20px'}}>
-                    {`${place.name} (${place.pics})`}
+                    {`${place.name} (${place.latlon})`}
                 </Typography>
 
                 {typoLine(`${place.date}. ${genresList(place)}${place.cultureStatus}`)}

@@ -43,8 +43,7 @@ export interface FullPlace {
     architects: string,
     pages: string[],
     cultureStatus: string,
-    pics: number,
-    images: string[]
+    pics: string[]
 }
 
 export const emptyPlace: FullPlace = {
@@ -61,6 +60,5 @@ export const emptyPlace: FullPlace = {
     architects:"",
     pages:[],
     cultureStatus:"",
-    pics:0,
-    images:[]
+    pics:[]
 }

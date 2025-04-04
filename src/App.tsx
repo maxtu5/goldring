@@ -66,7 +66,7 @@ function App() {
 
 
     function applyFilter(p: LightPlace): boolean {
-        return (p.rating === 0 || (p.rating.valueOf() < scoreRange[1]) && (p.rating.valueOf() > scoreRange[0])) &&
+        return (p.rating === 0 || (p.rating.valueOf() <= scoreRange[1]) && (p.rating.valueOf() >= scoreRange[0])) &&
             (!filtered ? true :
                 (filter.genres.length === 0 ? true : filter.genres.filter(g => p.genres.filter(gg => g === gg).length > 0).length === filter.genres.length) &&
                 (filter.types.length === 0 ? true : filter.types.filter(t => p.types.filter(tt => t === tt).length > 0).length === filter.types.length) &&
