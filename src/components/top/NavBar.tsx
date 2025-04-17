@@ -33,7 +33,9 @@ const NavBar = () => {
     const {appMode, places} = useContext(GRingContext)
     const [open, setOpen] = useState<boolean>(false)
     return (
-        <AppBar position={"sticky"}>
+        <AppBar
+            position={"relative"}
+        >
             <StyledToolBar>
                 <Typography variant={"h6"} sx={{display: {xs: "none", sm: "block"}}}>
                     КРАСИВЫЕ ДОМА {`(${places.length})`}

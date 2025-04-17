@@ -9,11 +9,13 @@ interface MapAreaProps {
 
 const MapArea = () => {
     return (
-        <Grid2 container>
+        <Grid2 container
+               height={'calc(100vh - 64px)'}
+       >
             <Grid2 size={{xs: 12, sm: 3, xl:2}}>
                 <SideBar/>
             </Grid2>
-            <Grid2 size={{xs: 12, sm: 9, xl: 10}} minHeight={700}>
+            <Grid2 size={{xs: 12, sm: 9, xl: 10}} >
                 <CustomMap/>
             </Grid2>
         </Grid2>
