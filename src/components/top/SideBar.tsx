@@ -25,12 +25,21 @@ import {Filters} from "../../utils/types";
 
 const SideBar = () => {
     const [localFilter, setLocalFilter] = useState<Filters>({genres: [], types: [], cultureStatuses: []})
-    const {cultureStatuses, genres, types, scoreRange, setScoreRange, setGlobalFilter, filtered, setFiltered} = useContext(GRingContext)
+    const {
+        cultureStatuses,
+        genres,
+        types,
+        scoreRange,
+        setScoreRange,
+        setGlobalFilter,
+        filtered,
+        setFiltered
+    } = useContext(GRingContext)
 
     useEffect(() => {
         setGlobalFilter(localFilter)
     }, [localFilter, setGlobalFilter]);
-    
+
     const Subheader = styled(Typography)(({theme}) => ({
             variant: "h6",
             paddingTop: 10
@@ -102,19 +111,21 @@ const SideBar = () => {
 
 
     function filterclick() {
-        if (filtered) setLocalFilter({...localFilter, genres:[], types:[], cultureStatuses:[]})
+        if (filtered) setLocalFilter({...localFilter, genres: [], types: [], cultureStatuses: []})
         setFiltered(!filtered)
     }
 
     function renderV(selected: string[]): string {
-        const txt = selected.map(s=>types.find(t=>t.name===s)?.displayName).join(", ")
-        return txt.length<=28 ? txt : txt.substring(0,25)+'...'
+        const txt = selected.map(s => types.find(t => t.name === s)?.displayName).join(", ")
+        return txt.length <= 28 ? txt : txt.substring(0, 25) + '...'
     }
 
     return (
         <Box
-            // width={{xs: "100%", sm: "0.20"}}
-            p={2}>
+            sx={{
+                width: 'auto', p:2
+            }}
+        >
             <FormControl size="small">
                 <Stack width={'auto'}>
                     <Subheader>
@@ -155,8 +166,8 @@ const SideBar = () => {
                         MenuProps={MenuProps}
                     >
                         {genres.map((genre) => (
-                            <MenuItem sx= {{p:0}} key={genre.name} value={genre.name}>
-                                <Checkbox sx= {{p:0}} checked={localFilter.genres.includes(genre.name)}/>
+                            <MenuItem sx={{p: 0}} key={genre.name} value={genre.name}>
+                                <Checkbox sx={{p: 0}} checked={localFilter.genres.includes(genre.name)}/>
                                 <ListItemText primary={genre.displayName}/>
                             </MenuItem>
                         ))}
@@ -174,7 +185,7 @@ const SideBar = () => {
                     >
                         {types.map((type) => (
                             <MenuItem key={type.name} value={type.name}>
-                                <Checkbox sx= {{p:0}} checked={localFilter.types.includes(type.name)}/>
+                                <Checkbox sx={{p: 0}} checked={localFilter.types.includes(type.name)}/>
                                 <ListItemText primary={type.displayName}/>
                             </MenuItem>
                         ))}
@@ -192,7 +203,7 @@ const SideBar = () => {
                     >
                         {cultureStatuses.map((status) => (
                             <MenuItem key={status.name} value={status.name}>
-                                <Checkbox sx= {{p:0}} checked={localFilter.cultureStatuses.includes(status.name)}/>
+                                <Checkbox sx={{p: 0}} checked={localFilter.cultureStatuses.includes(status.name)}/>
                                 <ListItemText primary={status.displayName}/>
                             </MenuItem>
                         ))}
@@ -202,35 +213,36 @@ const SideBar = () => {
                         <Switch defaultChecked/>
                     </Stack>
 
-                    <Button variant={'outlined'} onClick={filterclick} sx={{margin: 2}}>{filtered ? 'СБРОСИТЬ ФИЛЬТРЫ' : 'ПРИМЕНИТЬ ФИЛЬТРЫ'}</Button>
+                    <Button variant={'outlined'} onClick={filterclick}
+                            sx={{margin: 2}}>{filtered ? 'СБРОСИТЬ ФИЛЬТРЫ' : 'ПРИМЕНИТЬ ФИЛЬТРЫ'}</Button>
 
-                    <Divider variant="fullWidth"/>
+                    {/*<Divider variant="fullWidth"/>*/}
 
-                    <TextField
-                        id="filled-search"
-                        type="search"
-                        variant="outlined"
-                        size="small"
-                        defaultValue={'...поиск'}
-                        slotProps={{
-                            input: {
-                                sx: {
-                                    marginBottom:2,
-                                    marginTop:1
-                                },
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon/>
-                                    </InputAdornment>
-                                )
-                            }
-                        }}
-                    />
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Название"/>
-                        <FormControlLabel  control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Адрес"/>
-                        <FormControlLabel  control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Архитектор"/>
-                    </FormGroup>
+                    {/*<TextField*/}
+                    {/*    id="filled-search"*/}
+                    {/*    type="search"*/}
+                    {/*    variant="outlined"*/}
+                    {/*    size="small"*/}
+                    {/*    defaultValue={'...поиск'}*/}
+                    {/*    slotProps={{*/}
+                    {/*        input: {*/}
+                    {/*            sx: {*/}
+                    {/*                marginBottom:2,*/}
+                    {/*                marginTop:1*/}
+                    {/*            },*/}
+                    {/*            startAdornment: (*/}
+                    {/*                <InputAdornment position="start">*/}
+                    {/*                    <SearchIcon/>*/}
+                    {/*                </InputAdornment>*/}
+                    {/*            )*/}
+                    {/*        }*/}
+                    {/*    }}*/}
+                    {/*/>*/}
+                    {/*<FormGroup>*/}
+                    {/*    <FormControlLabel control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Название"/>*/}
+                    {/*    <FormControlLabel  control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Адрес"/>*/}
+                    {/*    <FormControlLabel  control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Архитектор"/>*/}
+                    {/*</FormGroup>*/}
                 </Stack>
             </FormControl>
         </Box>

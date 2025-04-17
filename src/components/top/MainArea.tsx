@@ -57,7 +57,11 @@ const MainArea = () => {
     const handleClose = () => {
         setAppMode('map');
     };
-    return (<Box>
+    return (<Box
+        sx={{
+            height: '100%',
+            maxHeight: 'calc(100vh - 64px)',
+        }}>
         <MapArea/>
         <Dialog
             fullScreen

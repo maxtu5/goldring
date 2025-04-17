@@ -76,7 +76,12 @@ function App() {
     }
 
     return (
-        <Box>
+        <Box
+        //      sx={{ background: "cyan",
+        //          // height:'100vh'
+        //          // maxHeight:'100vh'
+        // }}
+        >
             <GRingContext.Provider value={{
                 appMode: displayMode, setAppMode: setDisplayMode,
                 genres: Object.getOwnPropertyNames(initialData.genres)
@@ -101,7 +106,6 @@ function App() {
                 <NavBar/>
                 <MainArea/>
             </GRingContext.Provider>
-            <Divider/>
         </Box>
     );
 }
