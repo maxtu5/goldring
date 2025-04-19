@@ -1,5 +1,6 @@
 import React from "react";
 import {FilterItem, Filters, LightPlace} from "./types";
+import {defaultInitialMapState} from "./constants";
 
 export interface ContextData {
     appMode: string,
@@ -14,7 +15,12 @@ export interface ContextData {
     globalFilter: Filters,
     setGlobalFilter: (filters: Filters)=>void,
     filtered: boolean,
-    setFiltered: (b: boolean) => void
+    setFiltered: (b: boolean) => void,
+    mapState: {
+        center: number[],
+        zoom: number
+    },
+    renewMapState: (center: number[], zoom: number)=>void,
 }
 
 export const GRingContext = React.createContext<ContextData>(
@@ -31,5 +37,7 @@ export const GRingContext = React.createContext<ContextData>(
         globalFilter: {genres: [], types: [], cultureStatuses:[]},
         setGlobalFilter: f=>{},
         filtered: false,
-        setFiltered: (b) =>{}
+        setFiltered: (b) =>{},
+        mapState: defaultInitialMapState,
+        renewMapState: (center: number[], zoom: number)=>{}
     })
