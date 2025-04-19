@@ -3,7 +3,7 @@ import NavBar from "./components/top/NavBar";
 import MainArea from "./components/top/MainArea";
 import {GRingContext} from "./utils/context";
 import React, {useEffect, useState} from "react";
-import {base_url, expiry_time, url_getinitial} from "./utils/constants";
+import {base_url, defaultInitialMapState, expiry_time, url_getinitial} from "./utils/constants";
 import {FilterItem, Filters, InitialData, LightPlace} from "./utils/types";
 import {initialDataLocal} from "./utils/data";
 
@@ -13,10 +13,10 @@ function App() {
     const [scoreRange, setScoreRange] = React.useState<number[]>([1, 5])
     const [filter, setFilter] = React.useState<Filters>({genres: [], types: [], cultureStatuses: []})
     const [filtered, setFiltered] = React.useState<boolean>(false)
-
     const [initialData, setInitialData] = useState<InitialData>({
         genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: []
     });
+    const [initialMapState, setInitialMapState] = useState(defaultInitialMapState);
 
     function processInitialData(data: any) {
         setInitialData({
@@ -38,6 +38,11 @@ function App() {
     }
 
     useEffect(() => {
+        console.log("load app")
+        const mapStateFromCache = localStorage.getItem("initialMapState")
+        // console.log(readFC)
+        setInitialMapState(mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState)
+
         const fromCache = sessionStorage.getItem("initialData") ?
             JSON.parse(sessionStorage.getItem("initialData")!) : null;
 
@@ -64,7 +69,6 @@ function App() {
             });
     }
 
-
     function applyFilter(p: LightPlace): boolean {
         return (p.rating === 0 || (p.rating.valueOf() <= scoreRange[1]) && (p.rating.valueOf() >= scoreRange[0])) &&
             (!filtered ? true :
@@ -75,13 +79,12 @@ function App() {
                 (filter.cultureStatuses.length === 0 ? true : (filter.cultureStatuses.indexOf(p.cultureStatus) > -1)))
     }
 
+    function saveMapState(center: number[], zoom: number) {
+        localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
+    }
+
     return (
-        <Box
-        //      sx={{ background: "cyan",
-        //          // height:'100vh'
-        //          // maxHeight:'100vh'
-        // }}
-        >
+        <Box>
             <GRingContext.Provider value={{
                 appMode: displayMode, setAppMode: setDisplayMode,
                 genres: Object.getOwnPropertyNames(initialData.genres)
@@ -101,7 +104,9 @@ function App() {
                 globalFilter: filter,
                 setGlobalFilter: setFilter,
                 filtered: filtered,
-                setFiltered: setFiltered
+                setFiltered: setFiltered,
+                mapState: initialMapState,
+                renewMapState: saveMapState
             }}>
                 <NavBar/>
                 <MainArea/>
