@@ -1,40 +1,48 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Box} from "@mui/material";
-import {Map, Placemark, YMaps} from "@pbe/react-yandex-maps";
+import {useYMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
+import {defaultInitialMapState} from "../../utils/constants";
 
 const CustomMap = () => {
-    const {setAppMode, places} = useContext(GRingContext)
+    const mapRef = useRef<HTMLDivElement>(null);
+    const ymaps = useYMaps(["Map", "Placemark"]);
+    const [map, setMap] = useState<ymaps.Map|null>(null);
+
+    const {setAppMode, places, mapState, renewMapState} = useContext(GRingContext)
+
+    useEffect(() => {
+        if (!ymaps || !mapRef.current) {
+            return;
+        }
+        if (map===null) {
+            setMap(new ymaps.Map(mapRef.current, mapState ? mapState : defaultInitialMapState))
+        }
+        map?.events.add('boundschange', () => {
+            renewMapState(map.getCenter(), map.getZoom())
+        })
+        map?.geoObjects.removeAll()
+        places.forEach((place, index) => {
+            const pm = new ymaps.Placemark(
+                [parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])],
+                {iconContent: place.rating},
+                {iconImageSize: [10, 10], preset: "islands#darkBlueIcon"}
+            )
+            pm.events.add('click', () => {setAppMode(place.id)})
+            map?.geoObjects.add(pm)
+        });
+    }, [mapState, places, ymaps]);
 
     return (
-        <YMaps query={{ apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
-            <Box sx={{ width:'auto', height:'100%'}}>
-                <Map
-                    width='auto'
-                    height="100%"
-                    defaultState={{center: [56.49941, 39.67653], zoom: 9}}>
-
-                    {places
-                        .map((place,index)=>(
-                        <Placemark
-
-                            key={place.latlon}
-                            onClick={()=>{
-                                setAppMode(place.id)
-                            }}
-                            properties={{iconContent: place.rating}}
-
-                            defaultGeometry={[parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])]}
-                            options={{
-
-                                iconImageSize: [10, 10],
-                                preset: "islands#darkBlueIcon"
-                            }}
-                        />
-                    ))}
-                </Map>
-            </Box>
-        </YMaps>
+        <Box sx={{width: 'auto', height:'calc(100vh - 64px)'}}>
+            <div ref={mapRef}
+                 style={{
+                     width: 'auto',
+                     height: "100%"
+                 }}
+            >
+            </div>
+        </Box>
     );
 };
 

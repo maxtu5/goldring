@@ -5,3 +5,7 @@ export function parseAddress(address) {
         (address.number === null ? "" : address.number)
     return retval;
 }
+
+export function latlonStringToNumbers(latlonString) {
+    latlonString.split(',').map(s => 0 + s)
+}
