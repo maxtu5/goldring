@@ -24,7 +24,7 @@ const CustomMap = () => {
         map?.events.add('boundschange', () => {
             renewMapState(map.getCenter(), map.getZoom())
         })
-
+        map?.geoObjects.removeAll()
         places.forEach((place, index) => {
             const pm = new ymaps.Placemark(
                 [parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])],
