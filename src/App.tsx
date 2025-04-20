@@ -60,6 +60,7 @@ function App() {
                     processInitialData(initialDataLocal)
                 })
         }
+        console.log("end load app")
     }, [])
 
     function transformFilter(filterList: FilterItem[]) {
@@ -80,6 +81,7 @@ function App() {
     }
 
     function saveMapState(center: number[], zoom: number) {
+        console.log("saveMapState", center, zoom)
         localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
     }
 
