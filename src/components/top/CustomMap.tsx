@@ -1,10 +1,17 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Box} from "@mui/material";
+import {Box, Button, Drawer} from "@mui/material";
 import {useYMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
+import SearchBar from "./SearchBar";
 
-const CustomMap = () => {
+interface CustomMapProps {
+    searchOpen: boolean,
+    setSearchOpen: (searchOpen: boolean) => void
+}
+
+const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
+    const containerRef = useRef(null);
     const mapRef = useRef<HTMLDivElement>(null);
     const ymaps = useYMaps(["Map", "Placemark"]);
     const [map, setMap] = useState<ymaps.Map|null>(null);
@@ -34,7 +41,12 @@ const CustomMap = () => {
     }, [mapState, places, ymaps]);
 
     return (
-        <Box sx={{width: 'auto', height:'calc(100vh - 64px)'}}>
+        <Box
+            ref={containerRef}
+            sx={{width: 'auto', height:'calc(100vh - 64px)',
+                position: "relative",
+            }}
+        >
             <div ref={mapRef}
                  style={{
                      width: 'auto',
@@ -42,6 +54,23 @@ const CustomMap = () => {
                  }}
             >
             </div>
+            <Drawer
+                open={searchOpen}
+                onClose={() => setSearchOpen(false)}
+                anchor="left"
+                variant="temporary"
+                container={containerRef.current}
+                ModalProps={{
+                    container: containerRef.current,
+                    disablePortal: true
+
+                }}
+                sx={{
+                    position: 'absolute',
+                    '& .MuiPaper-root': { position: 'absolute' }}}
+            >
+                <SearchBar setSearchOpen={setSearchOpen}/>
+            </Drawer>
         </Box>
     );
 };

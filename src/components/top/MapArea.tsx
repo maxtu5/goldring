@@ -9,16 +9,17 @@ interface MapAreaProps {
 }
 
 const MapArea = () => {
+    const [searchOpen, setSearchOpen] = React.useState(false);
     return (
         <Grid2 container
                height={'calc(100vh - 64px)'}
         >
             <Grid2 size={{xs: 12, sm: 3, xl: 2}}>
-                <SideBar/>
+                <SideBar searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
             </Grid2>
             <Grid2 size={{xs: 12, sm: 9, xl: 10}}>
                 <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
-                    <CustomMap/>
+                    <CustomMap searchOpen={searchOpen} setSearchOpen={setSearchOpen}/>
                 </YMaps>
             </Grid2>
         </Grid2>

@@ -21,9 +21,14 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import {GRingContext} from "../../utils/context";
 import {Filters} from "../../utils/types";
+import {Subheader} from "../../utils/utils";
 
+interface SideBarProps {
+    searchOpen: boolean,
+    setSearchOpen: (searchOpen: boolean) => void
+}
 
-const SideBar = () => {
+const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
     const [localFilter, setLocalFilter] = useState<Filters>({genres: [], types: [], cultureStatuses: []})
     const {
         cultureStatuses,
@@ -40,12 +45,6 @@ const SideBar = () => {
         setGlobalFilter(localFilter)
     }, [localFilter, setGlobalFilter]);
 
-    const Subheader = styled(Typography)(({theme}) => ({
-            variant: "h6",
-            paddingTop: 10
-        })
-    )
-
     const handleChangeScore = (event: Event, newValue: number | number[]) => {
         setScoreRange(newValue as number[]);
     };
@@ -59,20 +58,6 @@ const SideBar = () => {
                 width: 250,
             },
         },
-    };
-
-    const handleChangeGenre = (event: SelectChangeEvent<typeof localFilter.genres>) => {
-        const {
-            target: {value},
-        } = event;
-        setLocalFilter({...localFilter, genres: typeof value === 'string' ? value.split(',') : value});
-    };
-
-    const handleChangeType = (event: SelectChangeEvent<typeof localFilter.types>) => {
-        const {
-            target: {value},
-        } = event;
-        setLocalFilter({...localFilter, types: typeof value === 'string' ? value.split(',') : value});
     };
 
     const handleChangeCultureStatus = (event: SelectChangeEvent<typeof localFilter.cultureStatuses>) => {
@@ -115,9 +100,9 @@ const SideBar = () => {
         setFiltered(!filtered)
     }
 
-    function renderV(selected: string[]): string {
-        const txt = selected.map(s => types.find(t => t.name === s)?.displayName).join(", ")
-        return txt.length <= 28 ? txt : txt.substring(0, 25) + '...'
+
+    function searchClick() {
+        setSearchOpen(!searchOpen)
     }
 
     return (
@@ -154,42 +139,7 @@ const SideBar = () => {
                                         openTo='year'/>
                         </Stack>
                     </LocalizationProvider>
-                    <Subheader>
-                        Стили
-                    </Subheader>
-                    <Select
-                        id="demo-multiple-checkbox"
-                        multiple
-                        value={localFilter.genres}
-                        onChange={handleChangeGenre}
-                        renderValue={(selected) => `${selected.length} выбрано`}
-                        MenuProps={MenuProps}
-                    >
-                        {genres.map((genre) => (
-                            <MenuItem sx={{p: 0}} key={genre.name} value={genre.name}>
-                                <Checkbox sx={{p: 0}} checked={localFilter.genres.includes(genre.name)}/>
-                                <ListItemText primary={genre.displayName}/>
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    <Subheader>
-                        Тип
-                    </Subheader>
-                    <Select
-                        id="demo-multiple-checkbox"
-                        multiple
-                        value={localFilter.types}
-                        onChange={handleChangeType}
-                        renderValue={(selected) => renderV(selected)}
-                        MenuProps={MenuProps}
-                    >
-                        {types.map((type) => (
-                            <MenuItem key={type.name} value={type.name}>
-                                <Checkbox sx={{p: 0}} checked={localFilter.types.includes(type.name)}/>
-                                <ListItemText primary={type.displayName}/>
-                            </MenuItem>
-                        ))}
-                    </Select>
+
                     <Subheader>
                         Культурный статус
                     </Subheader>
@@ -213,31 +163,12 @@ const SideBar = () => {
                         <Switch defaultChecked/>
                     </Stack>
 
-                    <Button variant={'outlined'} onClick={filterclick}
-                            sx={{margin: 2}}>{filtered ? 'СБРОСИТЬ ФИЛЬТРЫ' : 'ПРИМЕНИТЬ ФИЛЬТРЫ'}</Button>
+                    <Button variant={'outlined'} onClick={searchClick}
+                            sx={{margin: 2}}>{'ПОИСК'}</Button>
 
                     {/*<Divider variant="fullWidth"/>*/}
 
-                    {/*<TextField*/}
-                    {/*    id="filled-search"*/}
-                    {/*    type="search"*/}
-                    {/*    variant="outlined"*/}
-                    {/*    size="small"*/}
-                    {/*    defaultValue={'...поиск'}*/}
-                    {/*    slotProps={{*/}
-                    {/*        input: {*/}
-                    {/*            sx: {*/}
-                    {/*                marginBottom:2,*/}
-                    {/*                marginTop:1*/}
-                    {/*            },*/}
-                    {/*            startAdornment: (*/}
-                    {/*                <InputAdornment position="start">*/}
-                    {/*                    <SearchIcon/>*/}
-                    {/*                </InputAdornment>*/}
-                    {/*            )*/}
-                    {/*        }*/}
-                    {/*    }}*/}
-                    {/*/>*/}
+
                     {/*<FormGroup>*/}
                     {/*    <FormControlLabel control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Название"/>*/}
                     {/*    <FormControlLabel  control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Адрес"/>*/}
