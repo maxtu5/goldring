@@ -1,9 +1,9 @@
-import {Box, Divider} from "@mui/material";
+import {Box} from "@mui/material";
 import NavBar from "./components/top/NavBar";
 import MainArea from "./components/top/MainArea";
 import {GRingContext} from "./utils/context";
 import React, {useEffect, useState} from "react";
-import {base_url, defaultInitialMapState, expiry_time, url_getinitial} from "./utils/constants";
+import {base_url, expiry_time, url_getinitial} from "./utils/constants";
 import {FilterItem, Filters, InitialData, LightPlace} from "./utils/types";
 import {initialDataLocal} from "./utils/data";
 
@@ -16,7 +16,6 @@ function App() {
     const [initialData, setInitialData] = useState<InitialData>({
         genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: []
     });
-    const [initialMapState, setInitialMapState] = useState(defaultInitialMapState);
 
     function processInitialData(data: any) {
         setInitialData({
@@ -39,9 +38,6 @@ function App() {
 
     useEffect(() => {
         console.log("load app")
-        const mapStateFromCache = localStorage.getItem("initialMapState")
-        // console.log(readFC)
-        setInitialMapState(mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState)
 
         const fromCache = sessionStorage.getItem("initialData") ?
             JSON.parse(sessionStorage.getItem("initialData")!) : null;
@@ -80,10 +76,7 @@ function App() {
                 (filter.cultureStatuses.length === 0 ? true : (filter.cultureStatuses.indexOf(p.cultureStatus) > -1)))
     }
 
-    function saveMapState(center: number[], zoom: number) {
-        console.log("saveMapState", center, zoom)
-        localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
-    }
+
 
     return (
         <Box>
@@ -106,9 +99,7 @@ function App() {
                 globalFilter: filter,
                 setGlobalFilter: setFilter,
                 filtered: filtered,
-                setFiltered: setFiltered,
-                mapState: initialMapState,
-                renewMapState: saveMapState
+                setFiltered: setFiltered
             }}>
                 <NavBar/>
                 <MainArea/>
