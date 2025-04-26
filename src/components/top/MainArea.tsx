@@ -36,7 +36,9 @@ const MainArea = () => {
             architects: data.architects,
             pages: data.pages ? [...data.pages] : [],
             cultureStatus: data.cultureStatus,
-            pics: data.pics
+            pics: data.pics,
+            bigLines: [...data.bigLines],
+            smallLine: data.smallLine
         })
     }
 
@@ -73,8 +75,7 @@ const MainArea = () => {
             open={appMode !== 'map'}
         >
             <DialogContent
-                sx={{p:0}}
-                dividers>
+                sx={{p:0}}>
                 <Stack>
                     <ImageGallery place={currentPlace}/>
                     <ObjectDataPanel place={currentPlace}/>

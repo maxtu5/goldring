@@ -3,7 +3,7 @@ import {Box, Button, Drawer} from "@mui/material";
 import {useYMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
-import SearchBar from "./SearchBar";
+import SearchBar from "../search/SearchBar";
 
 interface CustomMapProps {
     searchOpen: boolean,

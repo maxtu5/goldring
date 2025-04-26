@@ -1,3 +1,5 @@
+export enum ListParamTypes {NONE, GENRES, TYPES}
+
 export interface FilterItem {
     name: string,
     displayName: string
@@ -7,6 +9,11 @@ export interface Filters {
     genres: string[],
     types: string[],
     cultureStatuses: string[]
+}
+
+export interface SearchRequest {
+    types: string[],
+    genres: string[]
 }
 
 export interface InitialData {
@@ -43,7 +50,9 @@ export interface FullPlace {
     architects: string,
     pages: string[],
     cultureStatus: string,
-    pics: string[]
+    pics: string[],
+    bigLines: string[],
+    smallLine: string
 }
 
 export const emptyPlace: FullPlace = {
@@ -60,5 +69,7 @@ export const emptyPlace: FullPlace = {
     architects:"",
     pages:[],
     cultureStatus:"",
-    pics:[]
+    pics:[],
+    bigLines:[],
+    smallLine:""
 }
