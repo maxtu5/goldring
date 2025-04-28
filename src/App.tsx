@@ -13,6 +13,7 @@ function App() {
     const [scoreRange, setScoreRange] = React.useState<number[]>([1, 5])
     const [filter, setFilter] = React.useState<Filters>({genres: [], types: [], cultureStatuses: []})
     const [filtered, setFiltered] = React.useState<boolean>(false)
+    const [searchResult, setSearchResult] = React.useState<{show: boolean, found: string[]}>({show: false, found: []})
     const [initialData, setInitialData] = useState<InitialData>({
         genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: []
     });
@@ -100,6 +101,7 @@ function App() {
                 linkPrefixes: [...initialData.linkPrefixes],
                 cultureStatuses: transformFilter(initialData.cultureStatuses),
                 places: initialData.places
+                    .filter(p => searchResult.show ? searchResult.found.includes(p.id) : true)
                     .filter(p => applyFilter(p)),
                 scoreRange: scoreRange,
                 setScoreRange: setScoreRange,
@@ -108,7 +110,9 @@ function App() {
                 filtered: filtered,
                 setFiltered: setFiltered,
                 mapState: initialMapState,
-                renewMapState: saveMapState
+                renewMapState: saveMapState,
+                searchResult: searchResult,
+                setSearchResult: setSearchResult
             }}>
                 <NavBar/>
                 <MainArea/>

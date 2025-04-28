@@ -10,7 +10,8 @@ interface SearchSelectorProps {
         options: FilterItem[]
     }
     searchRequest: SearchRequest,
-    setSearchRequest: (searchRequest: SearchRequest) => void
+    setSearchRequest: (searchRequest: SearchRequest) => void,
+    doSearch: ()=> void
 }
 
 const SearchSelector = ({

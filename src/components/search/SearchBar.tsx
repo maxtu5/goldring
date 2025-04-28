@@ -14,6 +14,8 @@ import {Subheader} from "../../utils/utils";
 import {GRingContext} from "../../utils/context";
 import {FilterItem, ListParamTypes, SearchRequest} from "../../utils/types";
 import SearchSelector from './SearchSelector';
+import {base_url, emptySearchRequest, exactlySuffix, url_getinitial, url_search} from "../../utils/constants";
+import {initialDataLocal} from "../../utils/data";
 
 const ITEM_HEIGHT = 32;
 const ITEM_PADDING_TOP = 4;
@@ -30,28 +32,8 @@ interface SearchBarProps {
     setSearchOpen: (searchOpen: boolean) => void
 }
 
-function textFieldWithCheckbox(label: string) {
-    return (
-        <Stack direction={'row'}>
-            <TextField
-                id="filled-search"
-                type="search"
-                variant="outlined"
-                size="small"
-                // defaultValue={'...'}
-                label={label}
-                slotProps={inputSlotProps}
-            />
-            <FormControlLabel
-                control={<Checkbox size={'small'} sx={{paddingTop: 0, paddingBottom: 0, marginLeft: 1}}/>}
-                label={<Typography variant={'caption'}>{"Точно"}</Typography>}
-            />
-        </Stack>
-    );
-}
-
 const SearchBar = ({setSearchOpen}: SearchBarProps) => {
-    const [searchRequest, setSearchRequest] = useState<SearchRequest>({types: [], genres: []})
+    const [searchRequest, setSearchRequest] = useState<SearchRequest>(emptySearchRequest)
     const [selectorOpen, setSelectorOpen] = useState(false)
     const [selectorData, setSelectorData] = useState<{
         paramtype: ListParamTypes,
@@ -66,8 +48,32 @@ const SearchBar = ({setSearchOpen}: SearchBarProps) => {
         setScoreRange,
         setGlobalFilter,
         filtered,
-        setFiltered
+        setFiltered,
+        setSearchResult
     } = useContext(GRingContext)
+
+    function textFieldWithCheckbox(label: string, fieldName: string) {
+        return (
+            <Stack direction={'row'}>
+                <TextField
+                    type="search" variant="outlined" size="small"
+                    label={label}
+                    onChange={event => setSearchRequest({...searchRequest, [fieldName]: event.target.value})}
+                    slotProps={inputSlotProps}
+                />
+                <FormControlLabel
+                    control={<Checkbox size={'small'} sx={{paddingTop: 0, paddingBottom: 0, marginLeft: 1}}
+                                       onChange={event => {
+                                           console.log(event.target);
+                                           setSearchRequest({...searchRequest, [fieldName + exactlySuffix]: event.target.checked
+                                           })
+                                       }
+                                       }/>}
+                    label={<Typography variant={'caption'}>{"Точно"}</Typography>}
+                />
+            </Stack>
+        );
+    }
 
     function renderV(selected: string[], all: FilterItem[]): string {
         const txt = selected.map(s => all.find(t => t.name === s)?.displayName).join(", ")
@@ -79,23 +85,42 @@ const SearchBar = ({setSearchOpen}: SearchBarProps) => {
         setSelectorOpen(true)
     }
 
+    function doSearch() {
+        fetch(`${base_url}${url_search}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchRequest)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('got it')
+                // @ts-ignore
+                setSearchResult({show: true, found: data.map(p => p.id)})
+            })
+        setSearchOpen(false)
+    }
+
     return (
-        <Stack direction="row" spacing={1}   divider={<Divider orientation="vertical" flexItem />}>
+        <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem/>}>
             <Box
                 width="25vw"
                 p={2}
             >
                 <Stack width={'auto'}>
 
-                    {textFieldWithCheckbox('Название')}
-                    {textFieldWithCheckbox('Архитектор')}
+
+                    {textFieldWithCheckbox('Название', 'name')}
+                    {textFieldWithCheckbox('Архитектор', 'architect')}
 
                     <TextField
                         variant="outlined"
                         size="small"
-                        // defaultValue={''}
+                        onChange={event => setSearchRequest({...searchRequest, address: event.target.value})}
                         label="Адрес"
-
                         slotProps={{
                             input: {
                                 sx: {
@@ -121,8 +146,9 @@ const SearchBar = ({setSearchOpen}: SearchBarProps) => {
                     />
 
                     <Button onClick={() => {
-
+                        doSearch()
                     }}>Искать</Button>
+
                 </Stack>
             </Box>
             <SearchSelector
@@ -131,10 +157,10 @@ const SearchBar = ({setSearchOpen}: SearchBarProps) => {
                 selectorData={selectorData}
                 searchRequest={searchRequest}
                 setSearchRequest={setSearchRequest}
+                doSearch={doSearch}
             />
         </Stack>
-    )
-        ;
+    );
 };
 
 export default SearchBar;

@@ -38,7 +38,9 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         setScoreRange,
         setGlobalFilter,
         filtered,
-        setFiltered
+        setFiltered,
+        searchResult,
+        setSearchResult
     } = useContext(GRingContext)
 
     useEffect(() => {
@@ -102,7 +104,10 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
 
 
     function searchClick() {
-        setSearchOpen(!searchOpen)
+        if (searchResult.show)
+            setSearchResult({...searchResult, show: false})
+        else
+            setSearchOpen(!searchOpen)
     }
 
     return (
@@ -164,7 +169,7 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
                     </Stack>
 
                     <Button variant={'outlined'} onClick={searchClick}
-                            sx={{margin: 2}}>{'ПОИСК'}</Button>
+                            sx={{margin: 2}}>{searchResult.show ? 'ПОКАЗАТЬ ВСЕ' : 'ПОИСК'}</Button>
 
                     {/*<Divider variant="fullWidth"/>*/}
 

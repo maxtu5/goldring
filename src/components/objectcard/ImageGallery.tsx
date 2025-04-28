@@ -34,7 +34,6 @@ const ImageGallery = ({place}: Props) => {
         setAppMode('map');
     };
 
-    // @ts-ignore
     return (
         <Stack direction={"column"} spacing={0} justifyContent={"stretch"}>
             <Button
@@ -52,6 +51,7 @@ const ImageGallery = ({place}: Props) => {
                 {/*<CloseIcon/>*/}
                 закрыть
             </Button>
+            {itemData[0].img==='' ? <Box height={"70vh"} bgcolor={'black'}></Box> :
             <Carousel autoPlay={false}
                       navButtonsAlwaysVisible={true}
                 // navButtonsProps={}
@@ -70,6 +70,7 @@ const ImageGallery = ({place}: Props) => {
                         // margin: '0'
                         , backgroundColor: 'black'
                     }}>
+
                         <CardMedia
                             component="img"
                             alt={item.title}
@@ -77,6 +78,7 @@ const ImageGallery = ({place}: Props) => {
                             src={item.img}
                             sx={{objectFit: "contain"}}
                         />
+
                         <CardContent>
                             <Rating sx={{
                                 position: "absolute",
@@ -88,6 +90,7 @@ const ImageGallery = ({place}: Props) => {
                     </Card>
                 )}
             </Carousel>
+            }
         </Stack>
     )
 };

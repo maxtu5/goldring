@@ -21,6 +21,8 @@ export interface ContextData {
         zoom: number
     },
     renewMapState: (center: number[], zoom: number)=>void,
+    searchResult: {show: boolean, found: string[]},
+    setSearchResult: (searchResult: {show: boolean, found: string[]}) => void
 }
 
 export const GRingContext = React.createContext<ContextData>(
@@ -39,5 +41,7 @@ export const GRingContext = React.createContext<ContextData>(
         filtered: false,
         setFiltered: (b) =>{},
         mapState: defaultInitialMapState,
-        renewMapState: (center: number[], zoom: number)=>{}
+        renewMapState: (center: number[], zoom: number)=>{},
+        searchResult: {show: false, found: []},
+        setSearchResult: (searchResult: {show: boolean, found: string[]}) => {}
     })
