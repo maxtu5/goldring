@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {Box, Button, Drawer} from "@mui/material";
 import {useYMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
@@ -14,21 +14,19 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
     const containerRef = useRef(null);
     const mapRef = useRef<HTMLDivElement>(null);
     const ymaps = useYMaps(["Map", "Placemark"]);
-    const [map, setMap] = useState<ymaps.Map|null>(null);
-
+    // const [map, setMap] = useState<ymaps.Map|null>(null);
     const {setAppMode, places, mapState, renewMapState} = useContext(GRingContext)
 
-    useEffect(() => {
+    const amap = useMemo(()=>{
         if (!ymaps || !mapRef.current) {
-            return;
+            return null;
         }
-        if (map===null) {
-            setMap(new ymaps.Map(mapRef.current, mapState ? mapState : defaultInitialMapState))
-        }
-        map?.events.add('boundschange', () => {
-            renewMapState(map.getCenter(), map.getZoom())
+        const mappie = new ymaps.Map(mapRef.current, mapState ? mapState : defaultInitialMapState);
+        console.log('init map');
+        mappie?.events.add('boundschange', () => {
+            renewMapState(mappie.getCenter(), mappie.getZoom())
         })
-        map?.geoObjects.removeAll()
+        mappie?.geoObjects.removeAll()
         places.forEach((place, index) => {
             const pm = new ymaps.Placemark(
                 [parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])],
@@ -36,9 +34,10 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
                 {iconImageSize: [10, 10], preset: "islands#darkBlueIcon"}
             )
             pm.events.add('click', () => {setAppMode(place.id)})
-            map?.geoObjects.add(pm)
+            mappie?.geoObjects.add(pm)
+            return mappie
         });
-    }, [mapState, places, ymaps]);
+    }, [places, mapState, ymaps])
 
     return (
         <Box
