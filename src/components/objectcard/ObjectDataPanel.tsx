@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, Stack, Typography} from "@mui/material";
 import {FullPlace} from "../../utils/types";
 
-const _linkRegex = /\$L\{https?:\/\/.+?:.+?\}/
+const _linkRegex = /\$L\{.+?\}/
 const linkRegex = new RegExp(
     _linkRegex.source,
     _linkRegex.flags + "g",
@@ -27,7 +27,7 @@ const ObjectDataPanel = ({place}: Props) => {
                             const allDividers: string[] = []
                             for (const match of linx) {
                                 allLinks.push(match[0].substring(3, match[0].lastIndexOf(':')));
-                                allDisplayNames.push(match[0].substring(match[0].lastIndexOf(':') + 1, match[0].length - 1));
+                                allDisplayNames.push(match[0].substring(match[0].lastIndexOf(':')+1, match[0].length-1));
                                 const fragments = textToParse.split(match[0])
                                 allDividers.push(fragments[0])
                                 textToParse = fragments[1]
