@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {Box, Button, Drawer} from "@mui/material";
-import {useYMaps} from "@pbe/react-yandex-maps";
+import {useYMaps, Map, Placemark} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
 import SearchBar from "../search/SearchBar";
@@ -11,48 +11,48 @@ interface CustomMapProps {
 }
 
 const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
+    const {mapState, setAppMode, places, renewMapState} = useContext(GRingContext)
     const containerRef = useRef(null);
-    const mapRef = useRef<HTMLDivElement>(null);
-    const ymaps = useYMaps(["Map", "Placemark"]);
-    // const [map, setMap] = useState<ymaps.Map|null>(null);
-    const {setAppMode, places, mapState, renewMapState} = useContext(GRingContext)
-
-    const amap = useMemo(()=>{
-        if (!ymaps || !mapRef.current) {
-            return null;
-        }
-        const mappie = new ymaps.Map(mapRef.current, mapState ? mapState : defaultInitialMapState);
-        console.log('init map');
-        mappie?.events.add('boundschange', () => {
-            renewMapState(mappie.getCenter(), mappie.getZoom())
-        })
-        mappie?.geoObjects.removeAll()
-        places.forEach((place, index) => {
-            const pm = new ymaps.Placemark(
-                [parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])],
-                {iconContent: place.rating},
-                {iconImageSize: [10, 10], preset: "islands#darkBlueIcon"}
-            )
-            pm.events.add('click', () => {setAppMode(place.id)})
-            mappie?.geoObjects.add(pm)
-            return mappie
-        });
-    }, [places, mapState, ymaps])
+    const ymaps = useRef();
+    const mapRef = useRef();
 
     return (
         <Box
             ref={containerRef}
-            sx={{width: 'auto', height:'calc(100vh - 64px)',
-                position: "relative",
-            }}
-        >
-            <div ref={mapRef}
-                 style={{
-                     width: 'auto',
-                     height: "100%"
-                 }}
+            sx={{width: 'auto', height: '100%', position: "relative"}}>
+            <Map
+                instanceRef={mapRef}
+                width='auto'
+                height="100%"
+                state={mapState ? mapState : defaultInitialMapState}
+                onLoad={(ymapsInstance) => {
+                    console.log('load map');
+                    console.log(mapRef.current);
+                    console.log(places.length);
+                    // @ts-ignore
+                    ymaps.current = ymapsInstance;
+                    // @ts-ignore
+                    mapRef.current?.events.add('boundschange', () => {
+                        // @ts-ignore
+                        renewMapState(mapRef.current?.getCenter(), mapRef.current?.getZoom())
+                    })
+                }}
             >
-            </div>
+                {places.map((place, index) => (
+                    <Placemark
+                        key={place.latlon}
+                        onClick={() => {
+                            setAppMode(place.id)
+                        }}
+                        properties={{iconContent: place.rating}}
+                        defaultGeometry={[parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])]}
+                        options={{
+                            iconImageSize: [10, 10],
+                            preset: "islands#darkBlueIcon"
+                        }}
+                    />
+                ))}
+            </Map>
             <Drawer
                 open={searchOpen}
                 onClose={() => setSearchOpen(false)}
@@ -66,7 +66,8 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
                 }}
                 sx={{
                     position: 'absolute',
-                    '& .MuiPaper-root': { position: 'absolute' }}}
+                    '& .MuiPaper-root': {position: 'absolute'}
+                }}
             >
                 <SearchBar setSearchOpen={setSearchOpen}/>
             </Drawer>

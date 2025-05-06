@@ -35,13 +35,13 @@ function App() {
             },
             time: Date.now()
         }
+        console.log(info.payload.places.length);
         sessionStorage.setItem("initialData", JSON.stringify(info))
     }
 
     useEffect(() => {
         console.log("load app")
         const mapStateFromCache = localStorage.getItem("initialMapState")
-        // console.log(readFC)
         setInitialMapState(mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState)
 
         const fromCache = sessionStorage.getItem("initialData") ?
