@@ -40,17 +40,7 @@ const SearchBar = ({setSearchOpen}: SearchBarProps) => {
         options: FilterItem[]
     }>({paramtype: ListParamTypes.NONE, options: []})
 
-    const {
-        cultureStatuses,
-        genres,
-        types,
-        scoreRange,
-        setScoreRange,
-        setGlobalFilter,
-        filtered,
-        setFiltered,
-        setSearchResult
-    } = useContext(GRingContext)
+    const {genres, types, setSearchResult} = useContext(GRingContext)
 
     function textFieldWithCheckbox(label: string, fieldName: string) {
         return (
@@ -65,7 +55,8 @@ const SearchBar = ({setSearchOpen}: SearchBarProps) => {
                     control={<Checkbox size={'small'} sx={{paddingTop: 0, paddingBottom: 0, marginLeft: 1}}
                                        onChange={event => {
                                            console.log(event.target);
-                                           setSearchRequest({...searchRequest, [fieldName + exactlySuffix]: event.target.checked
+                                           setSearchRequest({
+                                               ...searchRequest, [fieldName + exactlySuffix]: event.target.checked
                                            })
                                        }
                                        }/>}

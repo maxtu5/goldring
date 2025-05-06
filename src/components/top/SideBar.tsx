@@ -20,7 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import {GRingContext} from "../../utils/context";
-import {Filters} from "../../utils/types";
+import {Filters, ListParamTypes} from "../../utils/types";
 import {Subheader} from "../../utils/utils";
 
 interface SideBarProps {
@@ -29,15 +29,14 @@ interface SideBarProps {
 }
 
 const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
-    const [localFilter, setLocalFilter] = useState<Filters>({genres: [], types: [], cultureStatuses: []})
+    const [localFilter, setLocalFilter] = useState<Filters>({statuses: [], cultureStatuses: []})
     const {
         cultureStatuses,
-        genres,
-        types,
+        statuses,
         scoreRange,
         setScoreRange,
         setGlobalFilter,
-        filtered,
+        globalFilter,
         setFiltered,
         searchResult,
         setSearchResult
@@ -96,13 +95,6 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         return `${value}`;
     }
 
-
-    function filterclick() {
-        if (filtered) setLocalFilter({...localFilter, genres: [], types: [], cultureStatuses: []})
-        setFiltered(!filtered)
-    }
-
-
     function searchClick() {
         if (searchResult.show)
             setSearchResult({...searchResult, show: false})
@@ -110,10 +102,17 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
             setSearchOpen(!searchOpen)
     }
 
+    function handleCheckBoxToggle(name: string) {
+            setGlobalFilter({...globalFilter, statuses: globalFilter.statuses.includes(name) ? globalFilter.statuses.filter(s => s !== name) :
+                    [...globalFilter.statuses, name]
+            })
+    }
+
+
     return (
         <Box
             sx={{
-                width: 'auto', p:2
+                width: 'auto', p: 2
             }}
         >
             <FormControl size="small">
@@ -174,11 +173,26 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
                     {/*<Divider variant="fullWidth"/>*/}
 
 
-                    {/*<FormGroup>*/}
-                    {/*    <FormControlLabel control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Название"/>*/}
-                    {/*    <FormControlLabel  control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Адрес"/>*/}
-                    {/*    <FormControlLabel  control={<Checkbox sx= {{paddingTop:0, paddingBottom:0}} defaultChecked/>} label="Архитектор"/>*/}
-                    {/*</FormGroup>*/}
+                    <FormGroup>
+                        <Box>
+
+                        {statuses.map(status => (
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        size={'small'}
+                                        sx={{paddingTop: 0, paddingBottom: 0}}
+                                        checked={globalFilter.statuses.includes(status)}
+                                        onChange={(event) => handleCheckBoxToggle(status)}
+
+                                    />
+                                }
+                                label={status}
+                            />))
+                        }
+                        </Box>
+                    </FormGroup>
+
                 </Stack>
             </FormControl>
         </Box>

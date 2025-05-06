@@ -27,8 +27,6 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
                 state={mapState ? mapState : defaultInitialMapState}
                 onLoad={(ymapsInstance) => {
                     console.log('load map');
-                    console.log(mapRef.current);
-                    console.log(places.length);
                     // @ts-ignore
                     ymaps.current = ymapsInstance;
                     // @ts-ignore

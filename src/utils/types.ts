@@ -6,9 +6,8 @@ export interface FilterItem {
 }
 
 export interface Filters {
-    genres: string[],
-    types: string[],
-    cultureStatuses: string[]
+    cultureStatuses: string[],
+    statuses: string[]
 }
 
 export interface SearchRequest {
@@ -26,6 +25,7 @@ export interface InitialData {
     genres: FilterItem[],
     types: FilterItem[],
     cultureStatuses: FilterItem[],
+    statuses: string[],
     linkPrefixes: string[],
     places: LightPlace[]
 }
