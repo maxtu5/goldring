@@ -29,7 +29,6 @@ interface SideBarProps {
 }
 
 const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
-    const [localFilter, setLocalFilter] = useState<Filters>({statuses: [], cultureStatuses: []})
     const {
         cultureStatuses,
         statuses,
@@ -41,10 +40,16 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         searchResult,
         setSearchResult
     } = useContext(GRingContext)
+    const [localFilter, setLocalFilter] = useState<Filters>({statuses:[], cultureStatuses:[]})
+
 
     useEffect(() => {
         setGlobalFilter(localFilter)
-    }, [localFilter, setGlobalFilter]);
+    }, [localFilter]);
+
+    useEffect(() => {
+        if (localFilter.statuses.length===0) setLocalFilter(globalFilter)
+    }, [globalFilter]);
 
     const handleChangeScore = (event: Event, newValue: number | number[]) => {
         setScoreRange(newValue as number[]);
@@ -103,11 +108,11 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
     }
 
     function handleCheckBoxToggle(name: string) {
-        const newFilter = {...globalFilter, statuses: globalFilter.statuses.includes(name) ?
-                globalFilter.statuses.filter(s => s !== name) :
-                [...globalFilter.statuses, name]
+        const newFilter = {...localFilter, statuses: localFilter.statuses.includes(name) ?
+                localFilter.statuses.filter(s => s !== name) :
+                [...localFilter.statuses, name]
         }
-        setGlobalFilter(newFilter)
+        setLocalFilter(newFilter)
         renewStatusFilters(newFilter.statuses)
     }
 
@@ -183,7 +188,7 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
                                         <Checkbox
                                             size={'small'}
                                             sx={{paddingTop: 0, paddingBottom: 0}}
-                                            checked={globalFilter.statuses.includes(status)}
+                                            checked={localFilter.statuses.includes(status)}
                                             onChange={(event) => handleCheckBoxToggle(status)}
 
                                         />
