@@ -37,7 +37,7 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         setScoreRange,
         setGlobalFilter,
         globalFilter,
-        setFiltered,
+        renewStatusFilters,
         searchResult,
         setSearchResult
     } = useContext(GRingContext)
@@ -103,11 +103,13 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
     }
 
     function handleCheckBoxToggle(name: string) {
-            setGlobalFilter({...globalFilter, statuses: globalFilter.statuses.includes(name) ? globalFilter.statuses.filter(s => s !== name) :
-                    [...globalFilter.statuses, name]
-            })
+        const newFilter = {...globalFilter, statuses: globalFilter.statuses.includes(name) ?
+                globalFilter.statuses.filter(s => s !== name) :
+                [...globalFilter.statuses, name]
+        }
+        setGlobalFilter(newFilter)
+        renewStatusFilters(newFilter.statuses)
     }
-
 
     return (
         <Box
@@ -175,21 +177,20 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
 
                     <FormGroup>
                         <Box>
+                            {statuses.map(status => (
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            size={'small'}
+                                            sx={{paddingTop: 0, paddingBottom: 0}}
+                                            checked={globalFilter.statuses.includes(status)}
+                                            onChange={(event) => handleCheckBoxToggle(status)}
 
-                        {statuses.map(status => (
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        size={'small'}
-                                        sx={{paddingTop: 0, paddingBottom: 0}}
-                                        checked={globalFilter.statuses.includes(status)}
-                                        onChange={(event) => handleCheckBoxToggle(status)}
-
-                                    />
-                                }
-                                label={status}
-                            />))
-                        }
+                                        />
+                                    }
+                                    label={status}
+                                />))
+                            }
                         </Box>
                     </FormGroup>
 

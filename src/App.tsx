@@ -18,7 +18,13 @@ function App() {
         genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: [], statuses: []
     });
     const [initialMapState, setInitialMapState] = useState(defaultInitialMapState);
+    const [initialStatusFilters, setInitialStatusFilters] = useState([]);
 
+    useEffect(()=> {
+        setFilter({...filter, statuses: initialStatusFilters.length===0 ? initialData.statuses : initialStatusFilters});
+
+    }, [initialStatusFilters, initialData]);
+    
     function processInitialData(data: any) {
         console.log("from api")
         setInitialData({
@@ -26,7 +32,6 @@ function App() {
             cultureStatuses: {...data.cultureStatuses}, places: [...data.lightPlaces],
             linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses]
         });
-        setFilter({...filter, statuses: data.statuses});
         const info = {
             payload: {
                 genres: {...data.genres}, types: {...data.types},
@@ -36,7 +41,6 @@ function App() {
             },
             time: Date.now()
         }
-        console.log(info.payload.places.length);
         sessionStorage.setItem("initialData", JSON.stringify(info))
     }
 
@@ -44,6 +48,9 @@ function App() {
         console.log("load app")
         const mapStateFromCache = localStorage.getItem("initialMapState")
         setInitialMapState(mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState)
+
+        const statusFiltersFromCache = localStorage.getItem("initialStatusFilters")
+        setInitialStatusFilters(statusFiltersFromCache===null ? [] : JSON.parse(statusFiltersFromCache))
 
         const fromCache = sessionStorage.getItem("initialData") ?
             JSON.parse(sessionStorage.getItem("initialData")!) : null;
@@ -87,6 +94,11 @@ function App() {
         localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
     }
 
+    function saveStatusFilters(filters: string[]) {
+        console.log("saveStatusFilters", filters)
+        localStorage.setItem("initialStatusFilters", JSON.stringify(filters))
+    }
+
     return (
         <Box>
             <GRingContext.Provider value={{
@@ -113,6 +125,7 @@ function App() {
                 setFiltered: setFiltered,
                 mapState: initialMapState,
                 renewMapState: saveMapState,
+                renewStatusFilters: saveStatusFilters,
                 searchResult: searchResult,
                 setSearchResult: setSearchResult
             }}>
