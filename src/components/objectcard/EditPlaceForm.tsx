@@ -51,7 +51,7 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
                 <span>
                     <Button onClick={() => switchMode()}>ВЕРНУТЬСЯ</Button>
                     <Button onClick={() => {
-                        saveEdited(localPlace, ()=> {
+                        saveEdited(localPlace, () => {
                             switchMode()
                             refreshPlace()
                         })
@@ -59,6 +59,9 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
                     >СОХРАНИТЬ</Button>
                         </span>
             </Stack>
+
+            <EditTextField value={localPlace.latlon} label='latlon'
+                           onChange={(event) => setLocalPlace({...localPlace, latlon: event.target.value})}/>
 
             <FormControl>
                 <RadioGroup value={localPlace.status}
@@ -73,57 +76,59 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
                 </RadioGroup>
             </FormControl>
 
-            <Stack direction={'row'} gap={1} justifyContent={'space-between'}>
-                <EditTextField value={localPlace.latlon} label='Координаты'
-                               onChange={(event) => setLocalPlace({...localPlace, latlon: event.target.value})}/>
-                <EditTextField value={localPlace.visibility} label='Визибилити'
-                               onChange={(event) => setLocalPlace({...localPlace, visibility: event.target.value})}/>
-            </Stack>
+            <EditTextField value={localPlace.visibility} label='visibility'
+                           onChange={(event) => setLocalPlace({...localPlace, visibility: event.target.value})}/>
 
-            <Stack direction={'row'} gap={1} justifyContent={'space-between'}>
-                <EditTextField value={localPlace.date} label='Дата'
-                               onChange={(event) => setLocalPlace({...localPlace, date: event.target.value})}/>
-                <EditTextField value={localPlace.appeal.toString()} label='Рейтинг'
-                               onChange={(event) => setLocalPlace({...localPlace, appeal: parseFloat(event.target.value)})}/>
-                <EditTextField value={localPlace.pics.toString()} label='Картинок'
-                               onChange={(event) => setLocalPlace({...localPlace, pics: parseInt(event.target.value)})}/>
-            </Stack>
+            <EditTextField value={localPlace.country} label='country'
+                           onChange={(event) => setLocalPlace({...localPlace, country: event.target.value})}/>
 
-            <EditTextField value={localPlace.name} label='Название'
+            <EditTextField value={localPlace.region} label='region'
+                           onChange={(event) => setLocalPlace({...localPlace, region: event.target.value})}/>
+
+            <EditTextField value={localPlace.section} label='section'
+                           onChange={(event) => setLocalPlace({...localPlace, section: event.target.value})}/>
+
+            <EditTextField value={localPlace.addString} label='addString'
+                           onChange={(event) => setLocalPlace({...localPlace, addString: event.target.value})}/>
+
+            <EditTextField value={localPlace.appeal.toString()} label='appeal'
+                           onChange={(event) => setLocalPlace({
+                               ...localPlace, appeal: parseFloat(event.target.value)
+                           })}/>
+
+            <EditTextField value={localPlace.pics.toString()} label='pics'
+                           onChange={(event) => setLocalPlace({
+                               ...localPlace, pics: parseInt(event.target.value)
+                           })}/>
+
+            <EditTextField value={localPlace.name} label='name'
                            onChange={(event) => setLocalPlace({...localPlace, name: event.target.value})}/>
 
-            <EditTextField value={localPlace.description} label='Описание'
+            <EditTextField value={localPlace.monument} label='monument'
+                           onChange={(event) => setLocalPlace({...localPlace, monument: event.target.value})}/>
+
+            <EditTextField value={localPlace.cultureStatus} label='cultureStatus'
+                           onChange={(event) => setLocalPlace({...localPlace, cultureStatus: event.target.value})}/>
+
+            <EditTextField value={localPlace.date} label='date'
+                           onChange={(event) => setLocalPlace({...localPlace, date: event.target.value})}/>
+
+            <EditTextField value={localPlace.description} label='description'
                            onChange={(event) => setLocalPlace({...localPlace, description: event.target.value})}/>
 
-            <EditTextField value={localPlace.typesAsString || ''} label='Типы'
+            <EditTextField value={localPlace.genresAsString || ''} label='genres'
+                           onChange={(event) => setLocalPlace({...localPlace, genresAsString: event.target.value})}/>
+
+            <EditTextField value={localPlace.typesAsString || ''} label='types'
                            onChange={(event) =>
                                setLocalPlace({...localPlace, typesAsString: event.target.value})}/>
 
-            <EditTextField value={localPlace.genresAsString || ''} label='Стили'
-                           onChange={(event) => setLocalPlace({...localPlace, genresAsString: event.target.value})}/>
+            <EditTextField value={localPlace.architectsAsString || ''} label='architects'
+                           onChange={(event) => setLocalPlace({
+                               ...localPlace, architectsAsString: event.target.value
+                           })}/>
 
-            <Stack direction={'row'} gap={1} justifyContent={'space-between'}>
-                <EditTextField value={localPlace.cultureStatus} label='Культурный статус'
-                               onChange={(event) => setLocalPlace({...localPlace, cultureStatus: event.target.value})}/>
-                <EditTextField value={localPlace.monument} label='Монумент'
-                               onChange={(event) => setLocalPlace({...localPlace, monument: event.target.value})}/>
-            </Stack>
-
-            <Stack direction={'row'} gap={1} justifyContent={'space-between'}>
-                <EditTextField value={localPlace.country} label='Страна'
-                               onChange={(event) => setLocalPlace({...localPlace, country: event.target.value})}/>
-                <EditTextField value={localPlace.region} label='Регион'
-                               onChange={(event) => setLocalPlace({...localPlace, region: event.target.value})}/>
-                <EditTextField value={localPlace.section} label='Район'
-                               onChange={(event) => setLocalPlace({...localPlace, section: event.target.value})}/>
-                <EditTextField value={localPlace.addString} label='Адрес'
-                               onChange={(event) => setLocalPlace({...localPlace, addString: event.target.value})}/>
-            </Stack>
-
-            <EditTextField value={localPlace.architectsAsString || ''} label='Архитекторы'
-                           onChange={(event) => setLocalPlace({...localPlace, architectsAsString: event.target.value})}/>
-
-            <EditTextField value={localPlace.pagesAsString || ''} label='Сайты'
+            <EditTextField value={localPlace.pagesAsString || ''} label='pages'
                            onChange={(event) => setLocalPlace({...localPlace, pagesAsString: event.target.value})}/>
 
         </Stack>
