@@ -3,7 +3,7 @@ import NavBar from "./components/top/NavBar";
 import MainArea from "./components/top/MainArea";
 import {GRingContext} from "./utils/context";
 import React, {useEffect, useState} from "react";
-import {base_url, expiry_time, url_getinitial} from "./utils/constants";
+import {base_url, defaultInitialMapState, expiry_time, url_getinitial} from "./utils/constants";
 import {FilterItem, Filters, InitialData, LightPlace} from "./utils/types";
 import {initialDataLocal} from "./utils/data";
 
@@ -17,7 +17,6 @@ function App() {
     const [initialData, setInitialData] = useState<InitialData>({
         genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: [], statuses: []
     });
-
     const [initialMapState, setInitialMapState] = useState(defaultInitialMapState);
     const [initialStatusFilters, setInitialStatusFilters] = useState([]);
 
@@ -25,7 +24,7 @@ function App() {
         setFilter({...filter, statuses: initialStatusFilters.length===0 ? initialData.statuses : initialStatusFilters});
 
     }, [initialStatusFilters, initialData]);
-    
+
     function processInitialData(data: any) {
         console.log("from api")
         setInitialData({
@@ -47,7 +46,6 @@ function App() {
 
     useEffect(() => {
         console.log("load app")
-
         const mapStateFromCache = localStorage.getItem("initialMapState")
         setInitialMapState(mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState)
 
@@ -91,7 +89,10 @@ function App() {
                 (filter.statuses.length === 0 ? true : filter.statuses.includes(p.status)))
     }
 
-
+    function saveMapState(center: number[], zoom: number) {
+        console.log("saveMapState", center, zoom)
+        localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
+    }
 
     function saveStatusFilters(filters: string[]) {
         console.log("saveStatusFilters", filters)
@@ -127,7 +128,6 @@ function App() {
                 renewStatusFilters: saveStatusFilters,
                 searchResult: searchResult,
                 setSearchResult: setSearchResult
-
             }}>
                 <NavBar/>
                 <MainArea/>

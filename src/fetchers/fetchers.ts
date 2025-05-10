@@ -67,6 +67,14 @@ export async function loadPlaceEdit(id: string) {
 
 export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => void) {
     console.log('save edit data')
+    const bd = {
+        ...place,
+        types: place.typesAsString?.split(',').filter(s=>s!==''),
+        genres: place.genresAsString?.split(',').filter(s=>s!==''),
+        architects: place.architectsAsString?.split(',').filter(s=>s!==''),
+        pages: place.pagesAsString?.split(',').filter(s=>s!==''),
+    }
+    alert(JSON.stringify(bd));
     await fetch(`${base_url}${url_savePlaceEdit}`,
         {
             headers: {
@@ -74,13 +82,7 @@ export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => v
                 'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({
-                ...place,
-                types: place.typesAsString?.split(','),
-                genres: place.genresAsString?.split(','),
-                architects: place.architectsAsString?.split(','),
-                pages: place.pagesAsString?.split(','),
-            })
+            body: JSON.stringify(bd)
         })
         .then(data => {
             if (data.status === 200) {
