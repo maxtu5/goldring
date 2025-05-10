@@ -1,12 +1,8 @@
 import React from 'react';
 import SideBar from "./SideBar";
 import CustomMap from "./CustomMap";
-import {Box, Grid2, Stack} from "@mui/material";
+import {Grid2} from "@mui/material";
 import {YMaps} from '@pbe/react-yandex-maps';
-
-interface MapAreaProps {
-    visible: boolean
-}
 
 const MapArea = () => {
     const [searchOpen, setSearchOpen] = React.useState(false);

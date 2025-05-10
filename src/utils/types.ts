@@ -12,13 +12,13 @@ export interface Filters {
 
 export interface SearchRequest {
     "name": string,
-    "nameExactly" : boolean,
-    "address" : string,
+    "nameExactly": boolean,
+    "address": string,
     types: string[],
     genres: string[],
     "statuses": string[],
-    "architect" : string,
-    "architectExactly" : boolean
+    "architect": string,
+    "architectExactly": boolean
 }
 
 export interface InitialData {
@@ -61,21 +61,49 @@ export interface FullPlace {
     smallLine: string
 }
 
+export interface PlaceForEdit {
+    id: string,
+    latlon: string,
+    status: string,
+    visibility: string,
+    country: string,
+    region: string,
+    section: string,
+    addString: string,
+    appeal: number,
+    name: string,
+    monument: string,
+    cultureStatus: string,
+    date: string,
+    description: string,
+    genres: string[],
+    genresAsString?: string,
+    types: string[],
+    typesAsString?: string,
+    architects: string[],
+    architectsAsString?: string,
+    pages: string[],
+    pagesAsString?: string,
+    dateAdded: string,
+    dateModified: string,
+    pics: number
+}
+
 export const emptyPlace: FullPlace = {
-    id:"",
-    latlon:"",
-    name:"",
-    appeal:1,
-    date:"",
-    address:"",
-    dateAdded:"",
-    description:"",
-    genres:[],
-    types:[],
-    architects:"",
-    pages:[],
-    cultureStatus:"",
-    pics:[],
-    bigLines:[],
-    smallLine:""
+    id: "",
+    latlon: "",
+    name: "",
+    appeal: 1,
+    date: "",
+    address: "",
+    dateAdded: "",
+    description: "",
+    genres: [],
+    types: [],
+    architects: "",
+    pages: [],
+    cultureStatus: "",
+    pics: [],
+    bigLines: [],
+    smallLine: ""
 }
