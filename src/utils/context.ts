@@ -1,5 +1,6 @@
 import React from "react";
 import {FilterItem, Filters, LightPlace} from "./types";
+import {defaultInitialMapState} from "./constants";
 
 export interface ContextData {
     appMode: string,

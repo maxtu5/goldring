@@ -40,7 +40,6 @@ const MainArea = () => {
     function setEditModeAndUnload() {
         setEditPlaceData(null)
         setEditMode(false)
-        setAppMode(appMode)
     }
 
     return (<Box
