@@ -1,23 +1,9 @@
-import React, {useCallback, useContext, useRef, useState} from 'react';
-import {Box, Drawer} from "@mui/material";
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
+import {Box, Button, Drawer} from "@mui/material";
+import {useYMaps, Map, Placemark} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
-import {
-    LngLat,
-    MapEventUpdateHandler,
-    SearchResponse,
-    YMap as YMapType} from "@yandex/ymaps3-types";
-import {
-    YMap,
-    YMapControls, YMapDefaultFeaturesLayer,
-    YMapDefaultSchemeLayer,
-    YMapListener,
-    YMapMarker,
-    YMapSearchControl} from "../../utils/ymaps";
-import '@yandex/ymaps3-default-ui-theme/dist/esm/index.css';
-import {CustomSuggest, SuggestCallback} from "@yandex/ymaps3-default-ui-theme";
-
-import SearchBar from "./SearchBar";
 import {defaultInitialMapState} from "../../utils/constants";
+import SearchBar from "../search/SearchBar";
 
 interface CustomMapProps {
     searchOpen: boolean,
@@ -25,82 +11,46 @@ interface CustomMapProps {
 }
 
 const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
+    const {mapState, setAppMode, places, renewMapState} = useContext(GRingContext)
     const containerRef = useRef(null);
-    const {setAppMode, places} = useContext(GRingContext)
-    const [map, setMap] = useState<YMapType | null>(null);
-
-    function loadInitialMapState() {
-        const mapStateFromCache = localStorage.getItem("initialMapState")
-        return mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState
-    }
-
-    const initialMapState = loadInitialMapState();
-
-    const [location, setLocation] = useState(initialMapState);
-
-    function saveMapState(center: number[], zoom: number) {
-        if (center[0]===0) return
-        localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
-    }
-
-    // ============= SEARCH CONTROL ==================
-
-    const searchResultHandler = useCallback((searchResult: SearchResponse) => {
-        updateMapLocation(searchResult);
-    }, []);
-
-    function isSingle(subtitle: string | undefined) {
-        return subtitle === undefined || !(subtitle.split(' ').length === 2 && ['организаций', 'organizations'].includes(subtitle.split(' ')[1]));
-    }
-
-    const refineSuggest: SuggestCallback = useCallback(async (toSearch: CustomSuggest) => {
-        const result = await ymaps3.suggest({text: toSearch.text})
-        return result.filter(r => isSingle(r.subtitle?.text))
-    }, []);
-
-    const updateMapLocation = useCallback((searchResult: SearchResponse) => {
-        const newCoords: LngLat = [searchResult[0].geometry?.coordinates[0] ? searchResult[0].geometry?.coordinates[0] : location.center[0],
-            searchResult[0].geometry?.coordinates[1] ? searchResult[0].geometry?.coordinates[1] : location.center[1]]
-        setLocation({center: [newCoords[0], newCoords[1]], zoom: map?.zoom ? map.zoom : location.zoom});
-    }, []);
-
-    // ============= ON DRAG / ZOOM ==================
-
-    const stateChanged: MapEventUpdateHandler = useCallback((update) => {
-        if (update.location.center[0]===0) return
-        saveMapState([update.location.center[0], update.location.center[1]], update.location.zoom);
-    }, [])
+    const ymaps = useRef();
+    const mapRef = useRef();
 
     return (
         <Box
             ref={containerRef}
-            sx={{width: 'auto', height: 'calc(100vh - 64px)', position: "relative"}}>
-            <YMap
-                location={location}
-                ref={x => setMap(x)}
+            sx={{width: 'auto', height: '100%', position: "relative"}}>
+            <Map
+                instanceRef={mapRef}
+                width='auto'
+                height="100%"
+                state={mapState ? mapState : defaultInitialMapState}
+                onLoad={(ymapsInstance) => {
+                    console.log('load map');
+                    // @ts-ignore
+                    ymaps.current = ymapsInstance;
+                    // @ts-ignore
+                    mapRef.current?.events.add('boundschange', () => {
+                        // @ts-ignore
+                        renewMapState(mapRef.current?.getCenter(), mapRef.current?.getZoom())
+                    })
+                }}
             >
-                <YMapDefaultSchemeLayer/>
-                <YMapControls position="top left">
-                    <YMapSearchControl suggest={refineSuggest} searchResult={searchResultHandler}/>
-                </YMapControls>
-                <YMapListener onUpdate={stateChanged}/>
-                <YMapDefaultFeaturesLayer/>
-
-                {places.map(place =>
-                    <YMapMarker
-                        key={place.id}
-                        coordinates={[parseFloat(place.latlon.split(',')[1]), parseFloat(place.latlon.split(',')[0])]}
-                        onClick={() => setAppMode(place.id)}
-                    >
-                        <svg width="30" height="30">
-                            <circle cx="15" cy="15" r="10" stroke="green" stroke-width="1" fill="yellow"/>
-
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="12"
-                                  fill="black">{place.rating}</text>
-                        </svg>
-                    </YMapMarker>
-                )}
-            </YMap>
+                {places.map((place, index) => (
+                    <Placemark
+                        key={place.latlon}
+                        onClick={() => {
+                            setAppMode(place.id)
+                        }}
+                        properties={{iconContent: place.rating}}
+                        defaultGeometry={[parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])]}
+                        options={{
+                            iconImageSize: [10, 10],
+                            preset: "islands#darkBlueIcon"
+                        }}
+                    />
+                ))}
+            </Map>
             <Drawer
                 open={searchOpen}
                 onClose={() => setSearchOpen(false)}

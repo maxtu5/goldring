@@ -7,6 +7,7 @@ export interface ContextData {
     types: FilterItem[],
     places: LightPlace[],
     cultureStatuses: FilterItem[],
+    statuses: string[],
     linkPrefixes: string[],
     scoreRange: number[],
     setScoreRange: (value: number[]) => void,
@@ -15,6 +16,15 @@ export interface ContextData {
     setGlobalFilter: (filters: Filters)=>void,
     filtered: boolean,
     setFiltered: (b: boolean) => void,
+    mapState: {
+        center: number[],
+        zoom: number
+    },
+    renewMapState: (center: number[], zoom: number)=>void,
+    renewStatusFilters: (filters: string[])=>void,
+    searchResult: {show: boolean, found: string[]},
+    setSearchResult: (searchResult: {show: boolean, found: string[]}) => void
+
 }
 
 export const GRingContext = React.createContext<ContextData>(
@@ -24,12 +34,19 @@ export const GRingContext = React.createContext<ContextData>(
         types: [],
         places: [],
         cultureStatuses: [],
+        statuses: [],
         linkPrefixes: [],
         scoreRange: [0,5],
         setAppMode: s => {},
         setScoreRange: n=>{},
-        globalFilter: {genres: [], types: [], cultureStatuses:[]},
+        globalFilter: {cultureStatuses:[], statuses: []},
         setGlobalFilter: f=>{},
         filtered: false,
-        setFiltered: (b) =>{}
+        setFiltered: (b) =>{},
+        mapState: defaultInitialMapState,
+        renewMapState: (center: number[], zoom: number)=>{},
+        renewStatusFilters: (filters: string[])=>{},
+        searchResult: {show: false, found: []},
+        setSearchResult: (searchResult: {show: boolean, found: string[]}) => {}
+
     })

@@ -13,15 +13,13 @@ import {base_url, url_getplace} from "../../utils/constants";
 import {emptyPlace, FullPlace} from "../../utils/types";
 import ImageGallery from "../objectcard/ImageGallery";
 import ObjectDataPanel from "../objectcard/ObjectDataPanel";
-import {placesLocal} from "../../utils/data";
-
 
 const MainArea = () => {
     const {setAppMode, appMode} = useContext(GRingContext)
     const [currentPlace, setCurrentPlace] = useState<FullPlace>(emptyPlace)
 
     function processPlaceData(data: any) {
-        console.log(data)
+        // console.log(data)
         setCurrentPlace({
             id: data.id,
             latlon: data.latlon,
@@ -36,7 +34,9 @@ const MainArea = () => {
             architects: data.architects,
             pages: data.pages ? [...data.pages] : [],
             cultureStatus: data.cultureStatus,
-            pics: data.pics
+            pics: data.pics,
+            bigLines: [...data.bigLines],
+            smallLine: data.smallLine
         })
     }
 
@@ -73,8 +73,7 @@ const MainArea = () => {
             open={appMode !== 'map'}
         >
             <DialogContent
-                sx={{p:0}}
-                dividers>
+                sx={{p:0}}>
                 <Stack>
                     <ImageGallery place={currentPlace}/>
                     <ObjectDataPanel place={currentPlace}/>

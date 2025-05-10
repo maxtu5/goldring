@@ -1,67 +1,56 @@
-import React, {useContext} from 'react';
-import {Box, Link, Stack, Typography} from "@mui/material";
+import React from 'react';
+import {Box, Stack, Typography} from "@mui/material";
 import {FullPlace} from "../../utils/types";
-import {GRingContext} from "../../utils/context";
-import {linkPrefixesDisplayNames} from "../../utils/constants";
+
+const _linkRegex = /\$L\{.+?\}/
+const linkRegex = new RegExp(
+    _linkRegex.source,
+    _linkRegex.flags + "g",
+);
 
 interface Props {
     place: FullPlace
 }
 
 const ObjectDataPanel = ({place}: Props) => {
-        const {genres, types, linkPrefixes} = useContext(GRingContext)
-
-        function typoLine(text: string) {
-            return (
-                <Typography>
-                    {text}
-                </Typography>
-            );
-        }
-
-        function reduceLink(link: string, last: boolean) {
-            let retval = linkPrefixes.find(lp => link.indexOf(lp) !== -1);
-            if (retval === undefined) {
-                retval = link
-            } else {
-                const displayval = linkPrefixesDisplayNames.find(lp => lp.realName === retval)
-                retval = displayval===undefined ? retval : displayval.displayName;
-            }
-            return retval + (last ? "" : ", ");
-        }
-
-        function genresList(place: FullPlace): string {
-            return place.genres.length === 0 ? "" : place.genres
-                .map(gc => genres[genres.findIndex(g => g.name === gc)].displayName)
-                .join(', ') + '. '
-        }
 
         return (
-            <Box width={"auto"} height={"100%"} p={2}>
-                <Stack direction={"column"} justifyContent={"space-between"}>
-                    <Typography
-                        variant="h6"
-                        sx={{lineHeight: '1.2', paddingRight: '20px'}}>
-                        {`${place.name} (${place.latlon})`}
+            <Box width={"auto"} height={"20vh"} p={2}>
+                <Stack direction={"column"} height={'100%'} justifyContent={"space-between"}>
+                    <span>
+                    {place.bigLines.map((line, lineOrder) => {
+                        if (line.includes('$L')) {
+                            const linx = line.matchAll(linkRegex);
+                            let textToParse = line
+                            const allLinks: string[] = []
+                            const allDisplayNames: string[] = []
+                            const allDividers: string[] = []
+                            for (const match of linx) {
+                                allLinks.push(match[0].substring(3, match[0].lastIndexOf(':')));
+                                allDisplayNames.push(match[0].substring(match[0].lastIndexOf(':')+1, match[0].length-1));
+                                const fragments = textToParse.split(match[0])
+                                allDividers.push(fragments[0])
+                                textToParse = fragments[1]
+                            }
+                            return (<div>
+                                {allLinks.map((link, index) => {
+                                    return (<span>{allDividers[index]}<a href={link} target="_blank">{allDisplayNames[index]}</a></span>)
+                                })}
+                                <span>{textToParse}</span>
+                            </div>)
+                        } else return (lineOrder === 0 ?
+                                // <div><b>{line}</b></div> :
+                                <Typography variant={'h6'} sx={{lineHeight: '1.2'}}>
+                                    {line}
+                                </Typography> :
+                                <div>{line}</div>
+                        )
+                    })}
+                    </span>
+                    <Typography variant="caption" align='right'>
+                        {place.smallLine}
                     </Typography>
 
-                    {typoLine(`${place.date} ${genresList(place)}${place.cultureStatus}`)}
-
-                    {typoLine(place.types.length === 0 ? "" :
-                        place.types
-                            .map(gc => types[types.findIndex(g => g.name === gc)].displayName)
-                            .join(', ') + '. ' + (place.architects.length === 0 ? "" :
-                            (place.architects.indexOf(",") >= 0 ? 'Архитекторы: ' : 'Архитектор: ') + place.architects))}
-                    {typoLine(place.description)}
-                    <Stack direction={"row"}>
-                        {place.pages.map((link, index) =>
-                            <Link marginRight={1} href={link} target={"_blank"}>{reduceLink(link, index === place.pages.length - 1)}</Link>)}
-                    </Stack>
-                    <Typography
-                        variant="caption"
-                        align='right'>
-                        {place.address}. Добавлено: {place.dateAdded}
-                    </Typography>
                 </Stack>
             </Box>
         );
