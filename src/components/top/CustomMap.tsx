@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
-import {Box, Button, Drawer} from "@mui/material";
-import {useYMaps, Map, Placemark} from "@pbe/react-yandex-maps";
+import React, {useContext, useRef} from 'react';
+import {Box, Drawer} from "@mui/material";
+import {Map, Placemark} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
 import SearchBar from "../search/SearchBar";

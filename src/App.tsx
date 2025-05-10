@@ -69,7 +69,7 @@ function App() {
                 })
                 .catch(error => {
                     console.log(error)
-                    processInitialData(initialDataLocal)
+                    processInitialData(null)
                 })
         }
         console.log("end load app")

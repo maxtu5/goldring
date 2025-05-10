@@ -3,60 +3,46 @@ import {
     Box,
     Dialog,
     DialogContent,
-    IconButton,
     Stack,
 } from "@mui/material";
 import {GRingContext} from "../../utils/context";
 import MapArea from "./MapArea";
-import CloseIcon from '@mui/icons-material/Close';
-import {base_url, url_getplace} from "../../utils/constants";
-import {emptyPlace, FullPlace} from "../../utils/types";
+import {emptyPlace, FullPlace, PlaceForEdit} from "../../utils/types";
 import ImageGallery from "../objectcard/ImageGallery";
 import ObjectDataPanel from "../objectcard/ObjectDataPanel";
+import EditPlaceForm from "../objectcard/EditPlaceForm";
+import {loadPlaceDisplay, loadPlaceEdit} from "../../fetchers/fetchers";
 
 const MainArea = () => {
     const {setAppMode, appMode} = useContext(GRingContext)
     const [currentPlace, setCurrentPlace] = useState<FullPlace>(emptyPlace)
-
-    function processPlaceData(data: any) {
-        // console.log(data)
-        setCurrentPlace({
-            id: data.id,
-            latlon: data.latlon,
-            name: data.name,
-            appeal: data.appeal,
-            date: data.date,
-            address: data.address,
-            dateAdded: data.dateAdded,
-            description: data.description,
-            genres: [...data.genres],
-            types: [...data.types],
-            architects: data.architects,
-            pages: data.pages ? [...data.pages] : [],
-            cultureStatus: data.cultureStatus,
-            pics: data.pics,
-            bigLines: [...data.bigLines],
-            smallLine: data.smallLine
-        })
-    }
+    const [editPlaceData, setEditPlaceData] = useState<PlaceForEdit | null>(null)
+    const [editMode, setEditMode] = useState<boolean>(false)
 
     useEffect(() => {
-        if (appMode !== 'map') {
-            console.log(`${base_url}${url_getplace}${appMode}`)
-            fetch(`${base_url}${url_getplace}${appMode}`)
-                .then(response => response.json())
-                .then(data => {
-                    processPlaceData(data)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+        console.log('load hook', appMode)
+        if (appMode && appMode !== 'map') {
+            loadPlaceDisplay(appMode, setCurrentPlace)
         }
     }, [appMode]);
 
     const handleClose = () => {
         setAppMode('map');
     };
+
+    function setEdtModeAndLoad(id: string) {
+        console.log('load edit data')
+        // @ts-ignore
+        loadPlaceEdit(id).then(p => setEditPlaceData(p))
+        setEditMode(true)
+    }
+
+    function setEditModeAndUnload() {
+        setEditPlaceData(null)
+        setEditMode(false)
+        setAppMode(appMode)
+    }
+
     return (<Box
         sx={{
             height: '100%',
@@ -73,11 +59,17 @@ const MainArea = () => {
             open={appMode !== 'map'}
         >
             <DialogContent
-                sx={{p:0}}>
-                <Stack>
-                    <ImageGallery place={currentPlace}/>
-                    <ObjectDataPanel place={currentPlace}/>
-                </Stack>
+                sx={{p: 0}}>
+                {editMode && editPlaceData !== null ? <EditPlaceForm
+                        place={editPlaceData}
+                        setPlace={setEditPlaceData}
+                        switchMode={() => setEditModeAndUnload()}
+                        refreshPlace={()=>loadPlaceDisplay(editPlaceData?.id, setCurrentPlace)}/> :
+                    <Stack>
+                        <ImageGallery place={currentPlace}/>
+                        <ObjectDataPanel place={currentPlace} switchMode={() => setEdtModeAndLoad(currentPlace.id)}/>
+                    </Stack>
+                }
             </DialogContent>
         </Dialog>
     </Box>);

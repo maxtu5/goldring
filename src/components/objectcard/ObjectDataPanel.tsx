@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Stack, Typography} from "@mui/material";
+import {Box, Button, Stack, Typography} from "@mui/material";
 import {FullPlace} from "../../utils/types";
 
 const _linkRegex = /\$L\{.+?\}/
@@ -9,14 +9,16 @@ const linkRegex = new RegExp(
 );
 
 interface Props {
-    place: FullPlace
+    place: FullPlace,
+    switchMode: () => void
 }
 
-const ObjectDataPanel = ({place}: Props) => {
+const ObjectDataPanel = ({place, switchMode}: Props) => {
 
         return (
             <Box width={"auto"} height={"20vh"} p={2}>
                 <Stack direction={"column"} height={'100%'} justifyContent={"space-between"}>
+                    <Stack direction={'row'} justifyContent={'space-between'}>
                     <span>
                     {place.bigLines.map((line, lineOrder) => {
                         if (line.includes('$L')) {
@@ -47,6 +49,8 @@ const ObjectDataPanel = ({place}: Props) => {
                         )
                     })}
                     </span>
+                        <Button onClick={()=>switchMode()}>РЕДАКТИРОВАТЬ</Button>
+                    </Stack>
                     <Typography variant="caption" align='right'>
                         {place.smallLine}
                     </Typography>

@@ -67,7 +67,6 @@ const SearchSelector = ({
                                 onChange={(event) => handleCheckBoxToggle(option.name)}
                             />}
                             label={<Typography variant={'caption'}>{option.displayName}</Typography>}
-
                         />
                     ))}
                 </Box>
