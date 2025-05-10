@@ -73,8 +73,9 @@ export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => v
         genres: place.genresAsString?.split(',').filter(s=>s!==''),
         architects: place.architectsAsString?.split(',').filter(s=>s!==''),
         pages: place.pagesAsString?.split(',').filter(s=>s!==''),
+        pics: parseInt(place.picsAsString || '0'),
+        appeal: parseFloat(place.appealAsString || '0')
     }
-    alert(JSON.stringify(bd));
     await fetch(`${base_url}${url_savePlaceEdit}`,
         {
             headers: {

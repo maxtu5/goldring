@@ -39,6 +39,8 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
         genresAsString: place.genres.join(', '),
         architectsAsString: place.architects.join(', '),
         pagesAsString: place.pages.join(', '),
+        appealAsString: place.appeal.toString(),
+        picsAsString: place.pics.toString()
     })
 
     return (
@@ -91,15 +93,13 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
             <EditTextField value={localPlace.addString} label='addString'
                            onChange={(event) => setLocalPlace({...localPlace, addString: event.target.value})}/>
 
-            <EditTextField value={localPlace.appeal.toString()} label='appeal'
+            <EditTextField value={localPlace.appealAsString || ''} label='appeal'
                            onChange={(event) => setLocalPlace({
-                               ...localPlace, appeal: parseFloat(event.target.value)
-                           })}/>
+                               ...localPlace, appealAsString: event.target.value})}/>
 
-            <EditTextField value={localPlace.pics.toString()} label='pics'
+            <EditTextField value={localPlace.picsAsString || ''} label='pics'
                            onChange={(event) => setLocalPlace({
-                               ...localPlace, pics: parseInt(event.target.value)
-                           })}/>
+                               ...localPlace, picsAsString: event.target.value})}/>
 
             <EditTextField value={localPlace.name} label='name'
                            onChange={(event) => setLocalPlace({...localPlace, name: event.target.value})}/>
@@ -125,8 +125,7 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
 
             <EditTextField value={localPlace.architectsAsString || ''} label='architects'
                            onChange={(event) => setLocalPlace({
-                               ...localPlace, architectsAsString: event.target.value
-                           })}/>
+                               ...localPlace, architectsAsString: event.target.value})}/>
 
             <EditTextField value={localPlace.pagesAsString || ''} label='pages'
                            onChange={(event) => setLocalPlace({...localPlace, pagesAsString: event.target.value})}/>

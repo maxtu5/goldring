@@ -71,6 +71,7 @@ export interface PlaceForEdit {
     section: string,
     addString: string,
     appeal: number,
+    appealAsString?: string,
     name: string,
     monument: string,
     cultureStatus: string,
@@ -86,7 +87,8 @@ export interface PlaceForEdit {
     pagesAsString?: string,
     dateAdded: string,
     dateModified: string,
-    pics: number
+    pics: number,
+    picsAsString?: string
 }
 
 export const emptyPlace: FullPlace = {
