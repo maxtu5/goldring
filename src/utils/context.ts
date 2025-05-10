@@ -1,6 +1,5 @@
 import React from "react";
 import {FilterItem, Filters, LightPlace} from "./types";
-import {defaultInitialMapState} from "./constants";
 
 export interface ContextData {
     appMode: string,
@@ -25,6 +24,7 @@ export interface ContextData {
     renewStatusFilters: (filters: string[])=>void,
     searchResult: {show: boolean, found: string[]},
     setSearchResult: (searchResult: {show: boolean, found: string[]}) => void
+
 }
 
 export const GRingContext = React.createContext<ContextData>(
@@ -48,4 +48,5 @@ export const GRingContext = React.createContext<ContextData>(
         renewStatusFilters: (filters: string[])=>{},
         searchResult: {show: false, found: []},
         setSearchResult: (searchResult: {show: boolean, found: string[]}) => {}
+
     })
