@@ -40,7 +40,7 @@ export const GRingContext = React.createContext<ContextData>(
         scoreRange: [0,5],
         setAppMode: s => {},
         setScoreRange: n=>{},
-        globalFilter: {cultureStatuses:[], statuses: []},
+        globalFilter: {cultureStatuses:[], statuses: [], statusAll: false, initialized: false},
         setGlobalFilter: f=>{},
         filtered: false,
         setFiltered: (b) =>{},

@@ -7,9 +7,7 @@ import {YMaps} from '@pbe/react-yandex-maps';
 const MapArea = () => {
     const [searchOpen, setSearchOpen] = React.useState(false);
     return (
-        <Grid2 container
-               height={'calc(100vh - 64px)'}
-        >
+        <Grid2 container height={'calc(100vh - 64px)'}>
             <Grid2 size={{xs: 12, sm: 3, xl: 2}}>
                 <SideBar searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
             </Grid2>

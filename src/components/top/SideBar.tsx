@@ -40,15 +40,17 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         searchResult,
         setSearchResult
     } = useContext(GRingContext)
-    const [localFilter, setLocalFilter] = useState<Filters>({statuses:[], cultureStatuses:[]})
+    const [localFilter, setLocalFilter] = useState<Filters>({statuses:[], cultureStatuses:[], initialized: false, statusAll: false})
 
 
     useEffect(() => {
+        // console.log('local to global')
         setGlobalFilter(localFilter)
-    }, [localFilter]);
+    }, [localFilter.statuses]);
 
     useEffect(() => {
-        if (localFilter.statuses.length===0) setLocalFilter(globalFilter)
+        // console.log('local filer initialize', globalFilter, localFilter)
+        if (globalFilter.statuses.length!==0) setLocalFilter({...globalFilter, initialized: true})
     }, [globalFilter]);
 
     const handleChangeScore = (event: Event, newValue: number | number[]) => {
@@ -111,6 +113,17 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         const newFilter = {...localFilter, statuses: localFilter.statuses.includes(name) ?
                 localFilter.statuses.filter(s => s !== name) :
                 [...localFilter.statuses, name]
+        }
+        setLocalFilter(newFilter)
+        renewStatusFilters(newFilter.statuses)
+    }
+
+    function handleAllCheckBoxToggle() {
+console.log('All check box toggle')
+        const newFilter = {
+            ...localFilter,
+            statuses: localFilter.statusAll ? [] : statuses,
+            statusAll: !localFilter.statusAll
         }
         setLocalFilter(newFilter)
         renewStatusFilters(newFilter.statuses)
@@ -182,14 +195,26 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
 
                     <FormGroup>
                         <Box>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        size={'small'}
+                                        sx={{paddingTop: 0, paddingBottom: 0}}
+                                        checked={localFilter.statusAll}
+                                        onClick={(event) => handleAllCheckBoxToggle()}
+
+                                    />
+                                }
+                                label={'ALL'}
+                            />
                             {statuses.map(status => (
                                 <FormControlLabel
                                     control={
                                         <Checkbox
                                             size={'small'}
                                             sx={{paddingTop: 0, paddingBottom: 0}}
-                                            checked={localFilter.statuses.includes(status)}
-                                            onChange={(event) => handleCheckBoxToggle(status)}
+                                            checked={!!localFilter.statuses.includes(status)}
+                                            onClick={(event) => handleCheckBoxToggle(status)}
 
                                         />
                                     }
@@ -197,8 +222,10 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
                                 />))
                             }
                         </Box>
-                    </FormGroup>
 
+                    </FormGroup>
+                    {localFilter.statuses.length}
+                    {localFilter.initialized? ' y':'n'}
                 </Stack>
             </FormControl>
         </Box>

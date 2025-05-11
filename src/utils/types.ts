@@ -7,7 +7,9 @@ export interface FilterItem {
 
 export interface Filters {
     cultureStatuses: string[],
-    statuses: string[]
+    statuses: string[],
+    statusAll:boolean,
+    initialized: boolean
 }
 
 export interface SearchRequest {

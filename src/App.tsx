@@ -11,7 +11,7 @@ import {initialDataLocal} from "./utils/data";
 function App() {
     const [displayMode, setDisplayMode] = useState('map')
     const [scoreRange, setScoreRange] = React.useState<number[]>([1, 5])
-    const [filter, setFilter] = React.useState<Filters>({cultureStatuses: [], statuses: []})
+    const [filter, setFilter] = React.useState<Filters>({cultureStatuses: [], statuses: [], initialized: false, statusAll: false})
     const [filtered, setFiltered] = React.useState<boolean>(true)
     const [searchResult, setSearchResult] = React.useState<{show: boolean, found: string[]}>({show: false, found: []})
     const [initialData, setInitialData] = useState<InitialData>({
