@@ -50,7 +50,7 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
                         }}
                     />
                 ))}
-                <SearchControl options={{ float: "left", noPlacemark: true, noSuggestPanel: true }} />
+                <SearchControl options={{ float: "left", noSuggestPanel: true }} />
 
             </Map>
             <Drawer

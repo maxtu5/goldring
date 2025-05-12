@@ -5,8 +5,6 @@ import {GRingContext} from "./utils/context";
 import React, {useEffect, useState} from "react";
 import {base_url, defaultInitialMapState, expiry_time, url_getinitial} from "./utils/constants";
 import {FilterItem, Filters, InitialData, LightPlace} from "./utils/types";
-import {initialDataLocal} from "./utils/data";
-
 
 function App() {
     const [displayMode, setDisplayMode] = useState('map')

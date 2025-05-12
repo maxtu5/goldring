@@ -64,10 +64,14 @@ const MainArea = () => {
                         setPlace={setEditPlaceData}
                         switchMode={() => setEditModeAndUnload()}
                         refreshPlace={()=>loadPlaceDisplay(editPlaceData?.id, setCurrentPlace)}/> :
-                    <Stack>
+                    <Box
+                        sx={{
+                            height: '100%',
+                            maxHeight: '100vh',
+                        }}>
                         <ImageGallery place={currentPlace}/>
                         <ObjectDataPanel place={currentPlace} switchMode={() => setEdtModeAndLoad(currentPlace.id)}/>
-                    </Stack>
+                    </Box>
                 }
             </DialogContent>
         </Dialog>
