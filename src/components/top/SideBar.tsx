@@ -150,9 +150,7 @@ console.log('All check box toggle')
                         marks={marks}
                         valueLabelDisplay="auto"
                     />
-                    <Subheader>
-                        Дата
-                    </Subheader>
+                    <Subheader>Дата</Subheader>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Stack direction={"row"} spacing={2}>
                             <DatePicker slotProps={{textField: {size: 'small'}}}
@@ -191,8 +189,6 @@ console.log('All check box toggle')
                             sx={{margin: 2}}>{searchResult.show ? 'ПОКАЗАТЬ ВСЕ' : 'ПОИСК'}</Button>
 
                     {/*<Divider variant="fullWidth"/>*/}
-
-
                     <FormGroup>
                         <Box>
                             <FormControlLabel
@@ -215,7 +211,6 @@ console.log('All check box toggle')
                                             sx={{paddingTop: 0, paddingBottom: 0}}
                                             checked={localFilter.statuses.includes(status)}
                                             onClick={(event) => handleCheckBoxToggle(status)}
-
                                         />
                                     }
                                     label={status}

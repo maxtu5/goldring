@@ -1,6 +1,6 @@
 import React, {useContext, useRef} from 'react';
 import {Box, Drawer} from "@mui/material";
-import {Map, Placemark} from "@pbe/react-yandex-maps";
+import {Map, Placemark, SearchControl} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
 import SearchBar from "../search/SearchBar";
@@ -50,6 +50,8 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
                         }}
                     />
                 ))}
+                <SearchControl options={{ float: "left", noPlacemark: true, noSuggestPanel: true }} />
+
             </Map>
             <Drawer
                 open={searchOpen}

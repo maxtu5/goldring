@@ -122,7 +122,6 @@ function App() {
                 setScoreRange: setScoreRange,
                 globalFilter: filter,
                 setGlobalFilter: setFilter,
-                filtered: filtered,
                 mapState: initialMapState,
                 renewMapState: saveMapState,
                 renewStatusFilters: saveStatusFilters,
