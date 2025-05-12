@@ -213,7 +213,7 @@ console.log('All check box toggle')
                                         <Checkbox
                                             size={'small'}
                                             sx={{paddingTop: 0, paddingBottom: 0}}
-                                            checked={!!localFilter.statuses.includes(status)}
+                                            checked={localFilter.statuses.includes(status)}
                                             onClick={(event) => handleCheckBoxToggle(status)}
 
                                         />
@@ -222,10 +222,7 @@ console.log('All check box toggle')
                                 />))
                             }
                         </Box>
-
                     </FormGroup>
-                    {localFilter.statuses.length}
-                    {localFilter.initialized? ' y':'n'}
                 </Stack>
             </FormControl>
         </Box>

@@ -16,7 +16,6 @@ export interface ContextData {
     globalFilter: Filters,
     setGlobalFilter: (filters: Filters)=>void,
     filtered: boolean,
-    setFiltered: (b: boolean) => void,
     mapState: {
         center: number[],
         zoom: number
@@ -43,7 +42,6 @@ export const GRingContext = React.createContext<ContextData>(
         globalFilter: {cultureStatuses:[], statuses: [], statusAll: false, initialized: false},
         setGlobalFilter: f=>{},
         filtered: false,
-        setFiltered: (b) =>{},
         mapState: defaultInitialMapState,
         renewMapState: (center: number[], zoom: number)=>{},
         renewStatusFilters: (filters: string[])=>{},
