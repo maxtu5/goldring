@@ -16,6 +16,7 @@ interface Props {
 }
 
 function hasImages(images: string[]) {
+    console.log('has images?', images);
     return images && images.length > 0;
 }
 
@@ -23,7 +24,8 @@ const ImageGallery = ({place}: Props) => {
     const {setAppMode} = useContext(GRingContext)
 
     const itemData = hasImages(place.pics) ? place.pics.map(i => {
-            return {img: url_imageprefix + i, title: url_imageprefix + i} }) :
+            return {img: url_imageprefix + i, title: url_imageprefix + i}
+        }) :
         [{
             img: '',
             title: '',
@@ -33,9 +35,10 @@ const ImageGallery = ({place}: Props) => {
         console.log('clickedddd');
         setAppMode('map');
     };
+    console.log(itemData);
 
     return (
-        <Stack direction={"column"} spacing={0} justifyContent={"stretch"}>
+        <Stack direction={"column"} spacing={0} >
             <Button
                 // autoFocus
                 aria-label="close"
@@ -51,45 +54,50 @@ const ImageGallery = ({place}: Props) => {
                 {/*<CloseIcon/>*/}
                 закрыть
             </Button>
-            {itemData[0].img==='' ? <Box height={"70vh"} bgcolor={'black'}></Box> :
-            <Carousel autoPlay={false}
-                      navButtonsAlwaysVisible={true}
-                // navButtonsProps={}
-                      indicatorContainerProps={{
-                          style: {
-                              marginTop: "-60px",
-                              zIndex: 1,
-                              position: "relative"
-                          }
-                      }}
-            >
+            {itemData[0].img === '' ? <Box height={"75vh"} bgcolor={'black'}></Box> :
+                <Box height={"75vh"}>
+                    <Carousel autoPlay={false}
+                              navButtonsAlwaysVisible={true}
+                              indicatorContainerProps={{
+                                  style: {
+                                      marginTop: "-60px",
+                                      zIndex: 1,
+                                      position: "relative",
+                                      // height: '100%'
 
-                {itemData.map((item, i) =>
-                    <Card sx={{
-                        width: 'auto', height: "80vh"
-                        // margin: '0'
-                        , backgroundColor: 'black'
-                    }}>
+                                  }
+                              }}
+                              sx={{height:'100%'}}
+                    >
 
-                        <CardMedia
-                            component="img"
-                            alt={item.title}
-                            height='100%'
-                            src={item.img}
-                            sx={{objectFit: "contain"}}
-                        />
+                        {itemData.map((item, i) =>
+                            <Card sx={{
+                                width: 'auto', height: "100vh",
+                                // margin: '0'
+                                backgroundColor: 'black'
+                            }}>
 
-                        <CardContent>
-                            <Rating sx={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                margin: 0
-                            }} value={place.appeal} precision={0.1}/>
-                        </CardContent>
-                    </Card>
-                )}
-            </Carousel>
+                                <CardMedia
+                                    component="img"
+                                    alt={item.title}
+                                    height='75%'
+                                    width='auto'
+                                    src={item.img}
+                                    sx={{objectFit: "contain"}}
+                                />
+
+                                <CardContent>
+                                    <Rating sx={{
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                        margin: 0
+                                    }} value={place.appeal} precision={0.1}/>
+                                </CardContent>
+                            </Card>
+                        )}
+                    </Carousel>
+                </Box>
             }
         </Stack>
     )
