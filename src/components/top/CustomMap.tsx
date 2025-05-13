@@ -55,7 +55,7 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
                         '& .MuiPaper-root': {col: 'absolute'}
                     }}
                     options={{
-                        formLayout: 'islands#searchControlFormLayout', float: "left"}}/>
+                        formLayout: 'islands#searchControlFormLayout', noSuggestPanel: true, float: "left"}}/>
 
             </Map>
             <Drawer
