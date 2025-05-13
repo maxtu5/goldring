@@ -54,8 +54,12 @@ const ImageGallery = ({place}: Props) => {
                 {/*<CloseIcon/>*/}
                 закрыть
             </Button>
-            {itemData[0].img === '' ? <Box height={"75vh"} bgcolor={'black'}></Box> :
-                <Box height={"75vh"}>
+            {itemData[0].img === '' ? <Box
+                    // height={"75vh"}
+                    height={{ sm: '80vh', xl: '85vh'}}
+                    bgcolor={'black'}></Box> :
+                <Box height={{ sm: '80vh', xl: '85vh'}}
+                >
                     <Carousel autoPlay={false}
                               navButtonsAlwaysVisible={true}
                               indicatorContainerProps={{

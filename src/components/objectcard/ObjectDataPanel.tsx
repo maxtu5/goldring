@@ -16,7 +16,10 @@ interface Props {
 const ObjectDataPanel = ({place, switchMode}: Props) => {
 
         return (
-            <Box width={"auto"} height={'20vh'} p={2}>
+            <Box width={"auto"}
+                 height={{ sm: '15vh', xl: '10vh'}}
+                 // height={'20vh'}
+                 p={2}>
                 <Stack direction={"column"} height={'100%'} justifyContent={"space-between"}>
                     <Stack direction={'row'} justifyContent={'space-between'}>
                     <span>
