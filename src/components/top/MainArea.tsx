@@ -47,13 +47,13 @@ const MainArea = () => {
             height: '100%',
             maxHeight: 'calc(100vh - 64px)',
         }}>
+
         <MapArea/>
+
         <Dialog
             fullScreen
             onClose={handleClose}
             scroll={"body"}
-            // fullWidth={true}
-            // maxWidth={'xl'}
             aria-labelledby="customized-dialog-title"
             open={appMode !== 'map'}
         >

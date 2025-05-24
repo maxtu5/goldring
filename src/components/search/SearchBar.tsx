@@ -29,11 +29,12 @@ const inputSlotProps = {
 }
 
 interface SearchBarProps {
+    searchRequest: SearchRequest,
+    setSearchRequest: (searchRequest: SearchRequest) => void,
     setSearchOpen: (searchOpen: boolean) => void
 }
 
-const SearchBar = ({setSearchOpen}: SearchBarProps) => {
-    const [searchRequest, setSearchRequest] = useState<SearchRequest>(emptySearchRequest)
+const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen}: SearchBarProps) => {
     const [selectorOpen, setSelectorOpen] = useState(false)
     const [selectorData, setSelectorData] = useState<{
         paramtype: ListParamTypes,
@@ -102,7 +103,6 @@ const SearchBar = ({setSearchOpen}: SearchBarProps) => {
                 p={2}
             >
                 <Stack width={'auto'}>
-
 
                     {textFieldWithCheckbox('Название', 'name')}
                     {textFieldWithCheckbox('Архитектор', 'architect')}

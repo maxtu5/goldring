@@ -1,25 +1,17 @@
 import React, {useContext, useRef} from 'react';
-import {Box, Drawer} from "@mui/material";
-import {Map, Placemark, SearchControl} from "@pbe/react-yandex-maps";
+import {ThemeProvider, useTheme} from "@mui/material";
+import {Map, Placemark, SearchControl, YMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
-import SearchBar from "../search/SearchBar";
 
-interface CustomMapProps {
-    searchOpen: boolean,
-    setSearchOpen: (searchOpen: boolean) => void
-}
-
-const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
+const CustomMap = () => {
     const {mapState, setAppMode, places, renewMapState} = useContext(GRingContext)
-    const containerRef = useRef(null);
     const ymaps = useRef();
     const mapRef = useRef();
+    const theme = useTheme()
 
     return (
-        <Box
-            ref={containerRef}
-            sx={{width: 'auto', height: '100%', position: "relative"}}>
+        <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
             <Map
                 instanceRef={mapRef}
                 width='auto'
@@ -50,33 +42,17 @@ const CustomMap = ({searchOpen, setSearchOpen}: CustomMapProps) => {
                         }}
                     />
                 ))}
-                <SearchControl
-                    sx={{
-                        '& .MuiPaper-root': {col: 'absolute'}
-                    }}
-                    options={{
-                        formLayout: 'islands#searchControlFormLayout', noSuggestPanel: true, float: "left"}}/>
+                <ThemeProvider theme={theme}>
 
+                    <SearchControl
+                        style={{...theme}}
+                        options={{
+                            formLayout: 'islands#searchControlFormLayout', noSuggestPanel: true, float: "left"
+                        }}/>
+                </ThemeProvider>
             </Map>
-            <Drawer
-                open={searchOpen}
-                onClose={() => setSearchOpen(false)}
-                anchor="left"
-                variant="temporary"
-                container={containerRef.current}
-                ModalProps={{
-                    container: containerRef.current,
-                    disablePortal: true
+        </YMaps>
 
-                }}
-                sx={{
-                    position: 'absolute',
-                    '& .MuiPaper-root': {position: 'absolute'}
-                }}
-            >
-                <SearchBar setSearchOpen={setSearchOpen}/>
-            </Drawer>
-        </Box>
     );
 };
 

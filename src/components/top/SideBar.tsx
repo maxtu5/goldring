@@ -23,6 +23,44 @@ import {GRingContext} from "../../utils/context";
 import {Filters, ListParamTypes} from "../../utils/types";
 import {Subheader} from "../../utils/utils";
 
+const ITEM_HEIGHT = 32;
+const ITEM_PADDING_TOP = 4;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+const marks = [
+    {
+        value: 1,
+        label: '1',
+    },
+    {
+        value: 2,
+        label: '2',
+    },
+    {
+        value: 3,
+        label: '3',
+    },
+    {
+        value: 4,
+        label: '4',
+    },
+    {
+        value: 5,
+        label: '5',
+    }
+];
+
+function valuetext(value: number) {
+    return `${value}`;
+}
+
 interface SideBarProps {
     searchOpen: boolean,
     setSearchOpen: (searchOpen: boolean) => void
@@ -44,28 +82,15 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
 
 
     useEffect(() => {
-        // console.log('local to global')
         setGlobalFilter(localFilter)
     }, [localFilter.statuses]);
 
     useEffect(() => {
-        // console.log('local filer initialize', globalFilter, localFilter)
         if (globalFilter.statuses.length!==0) setLocalFilter({...globalFilter, initialized: true})
     }, [globalFilter]);
 
     const handleChangeScore = (event: Event, newValue: number | number[]) => {
         setScoreRange(newValue as number[]);
-    };
-
-    const ITEM_HEIGHT = 32;
-    const ITEM_PADDING_TOP = 4;
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250,
-            },
-        },
     };
 
     const handleChangeCultureStatus = (event: SelectChangeEvent<typeof localFilter.cultureStatuses>) => {
@@ -75,38 +100,12 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         setLocalFilter({...localFilter, cultureStatuses: typeof value === 'string' ? value.split(',') : value});
     };
 
-    const marks = [
-        {
-            value: 1,
-            label: '1',
-        },
-        {
-            value: 2,
-            label: '2',
-        },
-        {
-            value: 3,
-            label: '3',
-        },
-        {
-            value: 4,
-            label: '4',
-        },
-        {
-            value: 5,
-            label: '5',
-        }
-    ];
-
-    function valuetext(value: number) {
-        return `${value}`;
+    function searchClick() {
+            setSearchOpen(!searchOpen)
     }
 
-    function searchClick() {
-        if (searchResult.show)
-            setSearchResult({...searchResult, show: false})
-        else
-            setSearchOpen(!searchOpen)
+    function showAllClick() {
+        setSearchResult({...searchResult, show: false})
     }
 
     function handleCheckBoxToggle(name: string) {
@@ -119,7 +118,6 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
     }
 
     function handleAllCheckBoxToggle() {
-console.log('All check box toggle')
         const newFilter = {
             ...localFilter,
             statuses: localFilter.statusAll ? [] : statuses,
@@ -186,7 +184,9 @@ console.log('All check box toggle')
                     </Stack>
 
                     <Button variant={'outlined'} onClick={searchClick}
-                            sx={{margin: 2}}>{searchResult.show ? 'ПОКАЗАТЬ ВСЕ' : 'ПОИСК'}</Button>
+                            sx={{margin: 1, marginBottom: 0}}>{'ПОИСК'}</Button>
+                    <Button variant={'outlined'} onClick={showAllClick} disabled={!searchResult.show}
+                            sx={{margin: 1}}>{'ПОКАЗАТЬ ВСЕ'}</Button>
 
                     {/*<Divider variant="fullWidth"/>*/}
                     <FormGroup>
