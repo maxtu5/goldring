@@ -1,7 +1,6 @@
 import {base_url, url_getPlaceDisplay, url_getPlaceEdit, url_savePlaceEdit} from "../utils/constants";
 import {FullPlace, PlaceForEdit} from "../utils/types";
 
-
 export async function loadPlaceDisplay(id: string, refreshCallback: (place: FullPlace)=>void) {
     await fetch(`${base_url}${url_getPlaceDisplay}${id}`)
         .then(response => response.json())
@@ -40,8 +39,7 @@ export async function loadPlaceEdit(id: string) {
                 status: data.status,
                 visibility: data.visibility,
                 country: data.country,
-                region: data.region,
-                section: data.section,
+                regionCode: data.regionCode,
                 addString: data.addString,
                 appeal: data.appeal,
                 name: data.name,

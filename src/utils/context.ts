@@ -5,14 +5,15 @@ import {defaultInitialMapState} from "./constants";
 export interface ContextData {
     appMode: string,
     genres: FilterItem[],
-    types: FilterItem[],
+    types: FilterItem[][],
     places: LightPlace[],
     cultureStatuses: FilterItem[],
     statuses: string[],
-    linkPrefixes: string[],
     scoreRange: number[],
     setScoreRange: (value: number[]) => void,
     setAppMode: (s: string)=>void,
+    counter: number,
+    setCounter: (value: number) => void,
     globalFilter: Filters,
     setGlobalFilter: (filters: Filters)=>void,
     mapState: {
@@ -20,10 +21,7 @@ export interface ContextData {
         zoom: number
     },
     renewMapState: (center: number[], zoom: number)=>void,
-    renewStatusFilters: (filters: string[])=>void,
-    searchResult: {show: boolean, found: string[]},
-    setSearchResult: (searchResult: {show: boolean, found: string[]}) => void
-
+    renewStatusFilters: (filters: string[])=>void
 }
 
 export const GRingContext = React.createContext<ContextData>(
@@ -34,16 +32,14 @@ export const GRingContext = React.createContext<ContextData>(
         places: [],
         cultureStatuses: [],
         statuses: [],
-        linkPrefixes: [],
         scoreRange: [0,5],
         setAppMode: s => {},
+        counter: 0,
+        setCounter: s => {},
         setScoreRange: n=>{},
         globalFilter: {cultureStatuses:[], statuses: [], statusAll: false, initialized: false},
         setGlobalFilter: f=>{},
         mapState: defaultInitialMapState,
         renewMapState: (center: number[], zoom: number)=>{},
-        renewStatusFilters: (filters: string[])=>{},
-        searchResult: {show: false, found: []},
-        setSearchResult: (searchResult: {show: boolean, found: string[]}) => {}
-
+        renewStatusFilters: (filters: string[])=>{}
     })

@@ -17,40 +17,26 @@ import SearchSelector from './SearchSelector';
 import {base_url, emptySearchRequest, exactlySuffix, url_getinitial, url_search} from "../../utils/constants";
 import {initialDataLocal} from "../../utils/data";
 
-const ITEM_HEIGHT = 32;
-const ITEM_PADDING_TOP = 4;
-const inputSlotProps = {
-    input: {
-        sx: {
-            marginBottom: 2,
-            marginTop: 1
-        },
-    }
-}
-
 interface SearchBarProps {
     searchRequest: SearchRequest,
     setSearchRequest: (searchRequest: SearchRequest) => void,
-    setSearchOpen: (searchOpen: boolean) => void
+    setSearchOpen: (searchOpen: boolean) => void,
+    setShowSearchResult: (show: boolean) => void,
+    setSearchResult: (searchResult: string[]) => void
 }
 
-const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen}: SearchBarProps) => {
-    const [selectorOpen, setSelectorOpen] = useState(false)
-    const [selectorData, setSelectorData] = useState<{
-        paramtype: ListParamTypes,
-        options: FilterItem[]
-    }>({paramtype: ListParamTypes.NONE, options: []})
+const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchResult, setShowSearchResult}: SearchBarProps) => {
+    const [selectorState, setSelectorState] = useState('none')
+    const {genres, types} = useContext(GRingContext)
 
-    const {genres, types, setSearchResult} = useContext(GRingContext)
-
-    function textFieldWithCheckbox(label: string, fieldName: string) {
+    function textFieldWithCheckbox(label: string, fieldName: string, defaultValue: string) {
         return (
-            <Stack direction={'row'}>
+            <Stack direction={'row'} paddingBottom={2}>
                 <TextField
                     type="search" variant="outlined" size="small"
                     label={label}
+                    defaultValue={defaultValue}
                     onChange={event => setSearchRequest({...searchRequest, [fieldName]: event.target.value})}
-                    slotProps={inputSlotProps}
                 />
                 <FormControlLabel
                     control={<Checkbox size={'small'} sx={{paddingTop: 0, paddingBottom: 0, marginLeft: 1}}
@@ -67,17 +53,19 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen}: SearchBarPr
         );
     }
 
-    function renderV(selected: string[], all: FilterItem[]): string {
-        const txt = selected.map(s => all.find(t => t.name === s)?.displayName).join(", ")
+    function listGenres(selectedGenres: string[], allGenres: FilterItem[]): string {
+        const txt = selectedGenres.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
         return txt.length <= 28 ? txt : txt.substring(0, 25) + '...'
     }
 
-    function openSelector(paramType: ListParamTypes, types: FilterItem[]) {
-        setSelectorData({paramtype: paramType, options: types})
-        setSelectorOpen(true)
+    function listTypes(selectedTypes: string[], allTypes: FilterItem[][]) {
+        const txt = selectedTypes.map(s => allTypes.flatMap(ta=>[...ta])
+            .find(t => t.name === s)?.displayName).join(", ")
+        return txt.length <= 28 ? txt : txt.substring(0, 25) + '...'
     }
 
     function doSearch() {
+        console.log(searchRequest);
         fetch(`${base_url}${url_search}`,
             {
                 method: 'POST',
@@ -91,7 +79,8 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen}: SearchBarPr
             .then(data => {
                 console.log('got it')
                 // @ts-ignore
-                setSearchResult({show: true, found: data.map(p => p.id)})
+                setSearchResult(data.map(p => p.id))
+                setShowSearchResult(true)
             })
         setSearchOpen(false)
     }
@@ -104,48 +93,34 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen}: SearchBarPr
             >
                 <Stack width={'auto'}>
 
-                    {textFieldWithCheckbox('Название', 'name')}
-                    {textFieldWithCheckbox('Архитектор', 'architect')}
+                    {textFieldWithCheckbox('Название', 'name', searchRequest.name)}
+                    {textFieldWithCheckbox('Архитектор', 'architect', searchRequest.architect)}
 
                     <TextField
-                        variant="outlined"
-                        size="small"
+                        variant="outlined" size="small" sx={{paddingBottom: 2}}
                         onChange={event => setSearchRequest({...searchRequest, address: event.target.value})}
                         label="Адрес"
-                        slotProps={{
-                            input: {
-                                sx: {
-                                    marginBottom: 2,
-                                    marginTop: 1
-                                },
-                            }
-                        }}
                     />
 
-                    <TextField variant="outlined" size="small"
+                    <TextField variant="outlined" size="small" sx={{paddingBottom: 2}}
                                label={"Типы"}
-                               value={searchRequest.types.length === 0 ? "" : renderV(searchRequest.types, types)}
-                               onClick={() => openSelector(ListParamTypes.TYPES, types)}
-                               slotProps={inputSlotProps}
+                               value={searchRequest.types.length === 0 ? "" : listTypes(searchRequest.types, types)}
+                               onClick={() => setSelectorState('types')}
                     />
 
-                    <TextField variant="outlined" size="small"
+                    <TextField variant="outlined" size="small" sx={{paddingBottom: 2}}
                                label={"Стили"}
-                               value={searchRequest.genres.length === 0 ? "" : renderV(searchRequest.genres, genres)}
-                               onClick={() => openSelector(ListParamTypes.GENRES, genres)}
-                               slotProps={inputSlotProps}
+                               value={searchRequest.genres.length === 0 ? "" : listGenres(searchRequest.genres, genres)}
+                               onClick={ () => setSelectorState('genres') }
                     />
 
-                    <Button onClick={() => {
-                        doSearch()
-                    }}>Искать</Button>
+                    <Button onClick={doSearch}>Искать</Button>
 
                 </Stack>
             </Box>
             <SearchSelector
-                selectorOpen={selectorOpen}
-                setSelectorOpen={setSelectorOpen}
-                selectorData={selectorData}
+                selectorState={selectorState}
+                setSelectorState={setSelectorState}
                 searchRequest={searchRequest}
                 setSearchRequest={setSearchRequest}
                 doSearch={doSearch}

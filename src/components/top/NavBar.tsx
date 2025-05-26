@@ -30,7 +30,7 @@ const UserBox = styled(Box)(({theme}) => ({
 )
 
 const NavBar = () => {
-    const {appMode, places} = useContext(GRingContext)
+    const {counter} = useContext(GRingContext)
     const [open, setOpen] = useState<boolean>(false)
     return (
         <AppBar
@@ -38,7 +38,7 @@ const NavBar = () => {
         >
             <StyledToolBar>
                 <Typography variant={"h6"} sx={{display: {xs: "none", sm: "block"}}}>
-                    КРАСИВЫЕ ДОМА {`(${places.length})`}
+                    КРАСИВЫЕ ДОМА {`(${counter})`}
                 </Typography>
                 <OtherHousesIcon sx={{display: {xs: "block", sm: "none"}}}/>
                 <IconGroup>

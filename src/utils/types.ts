@@ -1,8 +1,8 @@
 export enum ListParamTypes {NONE, GENRES, TYPES}
 
 export interface FilterItem {
-    name: string,
-    displayName: string
+    displayName: string,
+    name: string
 }
 
 export interface Filters {
@@ -25,7 +25,7 @@ export interface SearchRequest {
 
 export interface InitialData {
     genres: FilterItem[],
-    types: FilterItem[],
+    types: FilterItem[][],
     cultureStatuses: FilterItem[],
     statuses: string[],
     linkPrefixes: string[],
@@ -69,8 +69,7 @@ export interface PlaceForEdit {
     status: string,
     visibility: string,
     country: string,
-    region: string,
-    section: string,
+    regionCode: string,
     addString: string,
     appeal: number,
     appealAsString?: string,

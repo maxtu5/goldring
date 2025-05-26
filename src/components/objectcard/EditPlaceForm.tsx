@@ -84,11 +84,8 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
             <EditTextField value={localPlace.country} label='country'
                            onChange={(event) => setLocalPlace({...localPlace, country: event.target.value})}/>
 
-            <EditTextField value={localPlace.region} label='region'
-                           onChange={(event) => setLocalPlace({...localPlace, region: event.target.value})}/>
-
-            <EditTextField value={localPlace.section} label='section'
-                           onChange={(event) => setLocalPlace({...localPlace, section: event.target.value})}/>
+            <EditTextField value={localPlace.regionCode} label='regionCode'
+                           onChange={(event) => setLocalPlace({...localPlace, regionCode: event.target.value})}/>
 
             <EditTextField value={localPlace.addString} label='addString'
                            onChange={(event) => setLocalPlace({...localPlace, addString: event.target.value})}/>

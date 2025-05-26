@@ -1,14 +1,43 @@
-import React, {useContext, useRef} from 'react';
-import {ThemeProvider, useTheme} from "@mui/material";
+import React, {useContext, useMemo, useRef} from 'react';
+import {createTheme, ThemeProvider, useTheme} from "@mui/material";
 import {Map, Placemark, SearchControl, YMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
+import {blue, lime, purple} from "@mui/material/colors";
 
-const CustomMap = () => {
+interface CustomMapProps {
+    searchResult: string[],
+    showSearchResult: boolean
+}
+
+const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
     const {mapState, setAppMode, places, renewMapState} = useContext(GRingContext)
     const ymaps = useRef();
     const mapRef = useRef();
-    const theme = useTheme()
+    const theme = createTheme({
+        palette: {
+            primary: lime,
+            secondary: purple,
+        },
+    });
+    const visiblePlacemarks = useMemo(
+        () => (showSearchResult ? places.filter(p => searchResult.includes(p.id)) : places)
+            .map((place, index) => (
+                <Placemark
+                    key={place.latlon}
+                    onClick={() => {
+                        setAppMode(place.id)
+                    }}
+                    properties={{iconContent: place.rating}}
+                    defaultGeometry={[parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])]}
+                    options={{
+                        iconImageSize: [10, 10],
+                        preset: "islands#darkBlueIcon"
+                    }}
+                />
+            )),
+        [places, showSearchResult, searchResult]
+    );
 
     return (
         <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
@@ -28,26 +57,19 @@ const CustomMap = () => {
                     })
                 }}
             >
-                {places.map((place, index) => (
-                    <Placemark
-                        key={place.latlon}
-                        onClick={() => {
-                            setAppMode(place.id)
-                        }}
-                        properties={{iconContent: place.rating}}
-                        defaultGeometry={[parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])]}
-                        options={{
-                            iconImageSize: [10, 10],
-                            preset: "islands#darkBlueIcon"
-                        }}
-                    />
-                ))}
+                {visiblePlacemarks}
                 <ThemeProvider theme={theme}>
 
                     <SearchControl
-                        style={{...theme}}
+                        style={{
+                            marginLeft: '-50pt'
+                        }}
                         options={{
-                            formLayout: 'islands#searchControlFormLayout', noSuggestPanel: true, float: "left"
+                            formLayout: 'islands#searchControlFormLayout',
+                            noSuggestPanel: true,
+                            float: "left",
+
+                            // position: {left: 10, right: 10, top:10, bottom: 10}
                         }}/>
                 </ThemeProvider>
             </Map>

@@ -20,9 +20,11 @@ const MainArea = () => {
     const [editMode, setEditMode] = useState<boolean>(false)
 
     useEffect(() => {
-        console.log('load hook', appMode)
-        if (appMode && appMode !== 'map') {
+        if (!appMode) return
+        if (appMode !== 'map') {
             loadPlaceDisplay(appMode, setCurrentPlace)
+        } else {
+            setCurrentPlace(emptyPlace)
         }
     }, [appMode]);
 
@@ -54,7 +56,6 @@ const MainArea = () => {
             fullScreen
             onClose={handleClose}
             scroll={"body"}
-            aria-labelledby="customized-dialog-title"
             open={appMode !== 'map'}
         >
             <DialogContent

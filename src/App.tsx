@@ -7,11 +7,11 @@ import {base_url, defaultInitialMapState, expiry_time, url_getinitial} from "./u
 import {FilterItem, Filters, InitialData, LightPlace} from "./utils/types";
 
 function App() {
-    const [displayMode, setDisplayMode] = useState('map')
+    const [appMode, setAppMode] = useState('map')
+    const [counter, setCounter] = useState(0);
     const [scoreRange, setScoreRange] = React.useState<number[]>([1, 5])
     const [filter, setFilter] = React.useState<Filters>({cultureStatuses: [], statuses: [], initialized: false, statusAll: false})
     const [filtered, setFiltered] = React.useState<boolean>(true)
-    const [searchResult, setSearchResult] = React.useState<{show: boolean, found: string[]}>({show: false, found: []})
     const [initialData, setInitialData] = useState<InitialData>({
         genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: [], statuses: []
     });
@@ -20,27 +20,7 @@ function App() {
 
     useEffect(()=> {
         setFilter({...filter, statuses: initialStatusFilters.length===0 ? initialData.statuses : initialStatusFilters});
-
     }, [initialStatusFilters, initialData]);
-
-    function processInitialData(data: any) {
-        console.log("from api")
-        setInitialData({
-            genres: {...data.genres}, types: {...data.types},
-            cultureStatuses: {...data.cultureStatuses}, places: [...data.lightPlaces],
-            linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses]
-        });
-        const info = {
-            payload: {
-                genres: {...data.genres}, types: {...data.types},
-                cultureStatuses: {...data.cultureStatuses},
-                places: [...data.lightPlaces],
-                linkPrefixes: [...data.linkPrefixes]
-            },
-            time: Date.now()
-        }
-        sessionStorage.setItem("initialData", JSON.stringify(info))
-    }
 
     useEffect(() => {
         console.log("load app")
@@ -71,10 +51,32 @@ function App() {
         console.log("end load app")
     }, [])
 
+    function processInitialData(data: any) {
+        console.log("from api")
+        setInitialData({
+            genres: {...data.genres},
+            // @ts-ignore
+            types: [...data.types.map(ta=>{return {...ta}})],
+            cultureStatuses: {...data.cultureStatuses}, places: [...data.lightPlaces],
+            linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses]
+        });
+        const info = {
+            payload: {
+                genres: {...data.genres}, types: {...data.types},
+                cultureStatuses: {...data.cultureStatuses},
+                places: [...data.lightPlaces],
+                linkPrefixes: [...data.linkPrefixes]
+            },
+            time: Date.now()
+        }
+        console.log("initial data", initialData.types)
+        sessionStorage.setItem("initialData", JSON.stringify(info))
+    }
+
     function transformFilter(filterList: FilterItem[]) {
         return Object.getOwnPropertyNames(filterList)
             .map(pname => { // @ts-ignore
-                return {name: pname, displayName: filterList[pname]}
+                return {displayName: pname, name: filterList[pname]}
             });
     }
 
@@ -89,32 +91,23 @@ function App() {
     }
 
     function saveMapState(center: number[], zoom: number) {
-        console.log("saveMapState", center, zoom)
         localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
     }
 
     function saveStatusFilters(filters: string[]) {
-        console.log("saveStatusFilters", filters)
         localStorage.setItem("initialStatusFilters", JSON.stringify(filters))
     }
 
     return (
         <Box>
             <GRingContext.Provider value={{
-                appMode: displayMode, setAppMode: setDisplayMode,
-                genres: Object.getOwnPropertyNames(initialData.genres)
-                    .map(pname => { // @ts-ignore
-                        return {name: pname, displayName: initialData.genres[pname]}
-                    }),
-                types: Object.getOwnPropertyNames(initialData.types)
-                    .map(pname => { // @ts-ignore
-                        return {name: pname, displayName: initialData.types[pname]}
-                    }),
+                appMode: appMode, setAppMode: setAppMode,
+                counter: counter, setCounter: setCounter,
+                genres: transformFilter(initialData.genres),
+                types: initialData.types.map(tt=> transformFilter(tt)),
                 statuses: initialData.statuses,
-                linkPrefixes: [...initialData.linkPrefixes],
                 cultureStatuses: transformFilter(initialData.cultureStatuses),
                 places: initialData.places
-                    .filter(p => searchResult.show ? searchResult.found.includes(p.id) : true)
                     .filter(p => applyFilter(p)),
                 scoreRange: scoreRange,
                 setScoreRange: setScoreRange,
@@ -122,9 +115,7 @@ function App() {
                 setGlobalFilter: setFilter,
                 mapState: initialMapState,
                 renewMapState: saveMapState,
-                renewStatusFilters: saveStatusFilters,
-                searchResult: searchResult,
-                setSearchResult: setSearchResult
+                renewStatusFilters: saveStatusFilters
             }}>
                 <NavBar/>
                 <MainArea/>

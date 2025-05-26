@@ -83,6 +83,7 @@ const ImageGallery = ({place}: Props) => {
 
                                 <CardMedia
                                     component="img"
+                                    loading="lazy"
                                     alt={item.title}
                                     width='auto'
                                     src={item.img}

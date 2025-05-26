@@ -63,10 +63,12 @@ function valuetext(value: number) {
 
 interface SideBarProps {
     searchOpen: boolean,
-    setSearchOpen: (searchOpen: boolean) => void
+    setSearchOpen: (searchOpen: boolean) => void,
+    showSearchResult: boolean,
+    setShowSearchResult: (showSearchResult: boolean) => void
 }
 
-const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
+const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOpen}: SideBarProps) => {
     const {
         cultureStatuses,
         statuses,
@@ -74,9 +76,7 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
         setScoreRange,
         setGlobalFilter,
         globalFilter,
-        renewStatusFilters,
-        searchResult,
-        setSearchResult
+        renewStatusFilters
     } = useContext(GRingContext)
     const [localFilter, setLocalFilter] = useState<Filters>({statuses:[], cultureStatuses:[], initialized: false, statusAll: false})
 
@@ -101,11 +101,11 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
     };
 
     function searchClick() {
-            setSearchOpen(!searchOpen)
+        setSearchOpen(!searchOpen)
     }
 
     function showAllClick() {
-        setSearchResult({...searchResult, show: false})
+        setShowSearchResult(false)
     }
 
     function handleCheckBoxToggle(name: string) {
@@ -185,7 +185,7 @@ const SideBar = ({searchOpen, setSearchOpen}: SideBarProps) => {
 
                     <Button variant={'outlined'} onClick={searchClick}
                             sx={{margin: 1, marginBottom: 0}}>{'ПОИСК'}</Button>
-                    <Button variant={'outlined'} onClick={showAllClick} disabled={!searchResult.show}
+                    <Button variant={'outlined'} onClick={showAllClick} disabled={!showSearchResult}
                             sx={{margin: 1}}>{'ПОКАЗАТЬ ВСЕ'}</Button>
 
                     {/*<Divider variant="fullWidth"/>*/}
