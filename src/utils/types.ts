@@ -13,14 +13,15 @@ export interface Filters {
 }
 
 export interface SearchRequest {
-    "name": string,
-    "nameExactly": boolean,
-    "address": string,
+    name: string,
+    nameExactly: boolean,
+    address: string,
     types: string[],
     genres: string[],
-    "statuses": string[],
-    "architect": string,
-    "architectExactly": boolean
+    statuses: string[],
+    cultureStatuses: string[],
+    architect: string,
+    architectExactly: boolean
 }
 
 export interface InitialData {

@@ -83,9 +83,7 @@ function App() {
     function applyFilter(p: LightPlace): boolean {
         return (
             (p.rating === 0 || (p.rating.valueOf() <= scoreRange[1]) && (p.rating.valueOf() >= scoreRange[0])) &&
-            (!filtered ? true :
-                (filter.cultureStatuses.length === 0 ? true : (filter.cultureStatuses.indexOf(p.cultureStatus) > -1))
-                && (p.status===null || filter.statuses && filter.statuses.includes(p.status))
+            (!filtered ? true : (p.status===null || filter.statuses && filter.statuses.includes(p.status))
                 )
         )
     }

@@ -70,7 +70,6 @@ interface SideBarProps {
 
 const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOpen}: SideBarProps) => {
     const {
-        cultureStatuses,
         statuses,
         scoreRange,
         setScoreRange,
@@ -78,7 +77,12 @@ const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOp
         globalFilter,
         renewStatusFilters
     } = useContext(GRingContext)
-    const [localFilter, setLocalFilter] = useState<Filters>({statuses:[], cultureStatuses:[], initialized: false, statusAll: false})
+    const [localFilter, setLocalFilter] = useState<Filters>({
+        statuses: [],
+        cultureStatuses: [],
+        initialized: false,
+        statusAll: false
+    })
 
 
     useEffect(() => {
@@ -86,18 +90,11 @@ const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOp
     }, [localFilter.statuses]);
 
     useEffect(() => {
-        if (globalFilter.statuses.length!==0) setLocalFilter({...globalFilter, initialized: true})
+        if (globalFilter.statuses.length !== 0) setLocalFilter({...globalFilter, initialized: true})
     }, [globalFilter]);
 
     const handleChangeScore = (event: Event, newValue: number | number[]) => {
         setScoreRange(newValue as number[]);
-    };
-
-    const handleChangeCultureStatus = (event: SelectChangeEvent<typeof localFilter.cultureStatuses>) => {
-        const {
-            target: {value},
-        } = event;
-        setLocalFilter({...localFilter, cultureStatuses: typeof value === 'string' ? value.split(',') : value});
     };
 
     function searchClick() {
@@ -109,7 +106,8 @@ const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOp
     }
 
     function handleCheckBoxToggle(name: string) {
-        const newFilter = {...localFilter, statuses: localFilter.statuses.includes(name) ?
+        const newFilter = {
+            ...localFilter, statuses: localFilter.statuses.includes(name) ?
                 localFilter.statuses.filter(s => s !== name) :
                 [...localFilter.statuses, name]
         }
@@ -160,33 +158,17 @@ const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOp
                         </Stack>
                     </LocalizationProvider>
 
-                    <Subheader>
-                        Культурный статус
-                    </Subheader>
-                    <Select
-                        id="demo-multiple-checkbox"
-                        multiple
-                        value={localFilter.cultureStatuses}
-                        onChange={handleChangeCultureStatus}
-                        renderValue={(selected) => `${selected.length} выбрано`}
-                        MenuProps={MenuProps}
-                    >
-                        {cultureStatuses.map((status) => (
-                            <MenuItem key={status.name} value={status.name}>
-                                <Checkbox sx={{p: 0}} checked={localFilter.cultureStatuses.includes(status.name)}/>
-                                <ListItemText primary={status.displayName}/>
-                            </MenuItem>
-                        ))}
-                    </Select>
                     <Stack direction={"row"} justifyContent={"space-between"} alignContent={"center"}>
                         <Subheader>Уже видел</Subheader>
                         <Switch defaultChecked/>
                     </Stack>
 
-                    <Button variant={'outlined'} onClick={searchClick}
-                            sx={{margin: 1, marginBottom: 0}}>{'ПОИСК'}</Button>
-                    <Button variant={'outlined'} onClick={showAllClick} disabled={!showSearchResult}
-                            sx={{margin: 1}}>{'ПОКАЗАТЬ ВСЕ'}</Button>
+                    <Stack direction={'row'} spacing={1} marginBottom={2}>
+                        <Button variant={'outlined'} onClick={searchClick}
+                                sx={{width: '100%'}}>{'ФИЛЬТРОВАТЬ'}</Button>
+                        <Button variant={'outlined'} onClick={showAllClick} disabled={!showSearchResult}
+                                sx={{width: '100%'}}>{'СБРОСИТЬ'}</Button>
+                    </Stack>
 
                     {/*<Divider variant="fullWidth"/>*/}
                     <FormGroup>

@@ -17,12 +17,13 @@ export const defaultInitialMapState =
 export const exactlySuffix = 'Exactly'
 
 export const emptySearchRequest: SearchRequest = {
-    "name": "",
-    "nameExactly" : false,
-    "address" : "",
-    "genres": [],
-    "types": [],
-    "statuses": [],
-    "architect" : "",
-    "architectExactly" : false
+    name: "",
+    nameExactly : false,
+    address : "",
+    genres: [],
+    types: [],
+    statuses: [],
+    cultureStatuses: [],
+    architect : "",
+    architectExactly : false
 }

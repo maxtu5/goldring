@@ -27,21 +27,23 @@ interface SearchBarProps {
 
 const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchResult, setShowSearchResult}: SearchBarProps) => {
     const [selectorState, setSelectorState] = useState('none')
-    const {genres, types} = useContext(GRingContext)
+    const {genres, types, cultureStatuses} = useContext(GRingContext)
 
     function textFieldWithCheckbox(label: string, fieldName: string, defaultValue: string) {
         return (
-            <Stack direction={'row'} paddingBottom={2}>
+            <Stack direction={'row'} paddingBottom={2} justifyContent={'space-between'}>
                 <TextField
+                    sx={{width: '100%'}}
                     type="search" variant="outlined" size="small"
                     label={label}
                     defaultValue={defaultValue}
                     onChange={event => setSearchRequest({...searchRequest, [fieldName]: event.target.value})}
                 />
                 <FormControlLabel
-                    control={<Checkbox size={'small'} sx={{paddingTop: 0, paddingBottom: 0, marginLeft: 1}}
+                    sx={{marginRight:0, marginLeft: 1}}
+                    labelPlacement={'bottom'}
+                    control={<Checkbox size={'small'} sx={{p: 0}}
                                        onChange={event => {
-                                           console.log(event.target);
                                            setSearchRequest({
                                                ...searchRequest, [fieldName + exactlySuffix]: event.target.checked
                                            })
@@ -54,14 +56,16 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
     }
 
     function listGenres(selectedGenres: string[], allGenres: FilterItem[]): string {
-        const txt = selectedGenres.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
-        return txt.length <= 28 ? txt : txt.substring(0, 25) + '...'
+        return selectedGenres.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
+    }
+
+    function listCultureStatuses(selectedStatuses: string[], allGenres: FilterItem[]): string {
+        return selectedStatuses.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
     }
 
     function listTypes(selectedTypes: string[], allTypes: FilterItem[][]) {
-        const txt = selectedTypes.map(s => allTypes.flatMap(ta=>[...ta])
+        return selectedTypes.map(s => allTypes.flatMap(ta=>[...ta])
             .find(t => t.name === s)?.displayName).join(", ")
-        return txt.length <= 28 ? txt : txt.substring(0, 25) + '...'
     }
 
     function doSearch() {
@@ -102,19 +106,16 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
                         label="Адрес"
                     />
 
-                    <TextField variant="outlined" size="small" sx={{paddingBottom: 2}}
-                               label={"Типы"}
-                               value={searchRequest.types.length === 0 ? "" : listTypes(searchRequest.types, types)}
-                               onClick={() => setSelectorState('types')}
-                    />
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='none' ? 'types' : (selectorState==='types' ? 'none' : selectorState))}>Типы</Button>
+                    <Typography sx={{paddingBottom: 2}}>{searchRequest.types.length === 0 ? "" : listTypes(searchRequest.types, types)}</Typography>
 
-                    <TextField variant="outlined" size="small" sx={{paddingBottom: 2}}
-                               label={"Стили"}
-                               value={searchRequest.genres.length === 0 ? "" : listGenres(searchRequest.genres, genres)}
-                               onClick={ () => setSelectorState('genres') }
-                    />
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='none' ? 'genres' : (selectorState==='genres' ? 'none' : selectorState))}>Стили</Button>
+                    <Typography sx={{paddingBottom: 2}}>{searchRequest.genres.length === 0 ? "" : listGenres(searchRequest.genres, genres)}</Typography>
 
-                    <Button onClick={doSearch}>Искать</Button>
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='none' ? 'cultureStatuses' : (selectorState==='cultureStatuses' ? 'none' : selectorState))}>Культурные статусы</Button>
+                    <Typography sx={{paddingBottom: 2}}>{searchRequest.cultureStatuses.length === 0 ? "" : listCultureStatuses(searchRequest.cultureStatuses, cultureStatuses)}</Typography>
+
+                    <Button variant={'outlined'} onClick={doSearch}>Искать</Button>
 
                 </Stack>
             </Box>

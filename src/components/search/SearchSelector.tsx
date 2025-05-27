@@ -17,7 +17,7 @@ const SearchSelector = ({
                             searchRequest,
                             setSearchRequest
                         }: SearchSelectorProps) => {
-    const {genres, types} = useContext(GRingContext)
+    const {genres, types, cultureStatuses} = useContext(GRingContext)
 
     function GenresSelector() {
         return (<Stack>
@@ -70,18 +70,42 @@ const SearchSelector = ({
         })
     }
 
+    function CultureStatusSelector() {
+        return (<Stack>
+            {cultureStatuses.map(option => (
+                <FormControlLabel
+                    control={<Checkbox
+                        sx={{p: 0}}
+                        size={'small'}
+                        checked={searchRequest.cultureStatuses.includes(option.name)}
+                        onChange={(event) => handleCultureStatusCheckBoxToggle(option.name)}
+                    />}
+                    label={<Typography variant={'caption'}>{option.displayName}</Typography>}
+                />))}
+        </Stack>)
+    }
+
+    function handleCultureStatusCheckBoxToggle(name: string) {
+        setSearchRequest({
+            ...searchRequest,
+            cultureStatuses: searchRequest.cultureStatuses.includes(name) ?
+                searchRequest.cultureStatuses.filter(s => s !== name) :
+                [...searchRequest.cultureStatuses, name]
+        })
+    }
+
     return (
         <Box width={'25vw'} sx={{display: selectorState === 'none' ? "none" : "block"}}>
 
             <Stack width={'auto'} spacing={2} p={1} >
 
                 <Typography variant={'body1'} align={'center'}>
-                    {selectorState === 'types' ? 'Типы' : 'Стили'}
+                    {selectorState === 'types' ? 'Типы' : (selectorState==='genres' ? 'Стили' : 'Культурные статусы')}
                 </Typography>
 
-                {selectorState === 'genres' ? <GenresSelector/> : <TypeSelector/>}
+                {selectorState === 'genres' ? <GenresSelector/> : (selectorState==='types' ? <TypeSelector/> : <CultureStatusSelector/>)}
 
-                <Button onClick={() => setSelectorState('none')}>ЗАКРЫТЬ</Button>
+                {/*<Button onClick={() => setSelectorState('none')}>ЗАКРЫТЬ</Button>*/}
 
             </Stack>
 
