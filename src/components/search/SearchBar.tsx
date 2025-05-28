@@ -56,15 +56,15 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
     }
 
     function listGenres(selectedGenres: string[], allGenres: FilterItem[]): string {
-        return selectedGenres.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
+        return selectedGenres.length===0 ? '' : selectedGenres.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
     }
 
     function listCultureStatuses(selectedStatuses: string[], allGenres: FilterItem[]): string {
-        return selectedStatuses.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
+        return selectedStatuses.length === 0 ? "" : selectedStatuses.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
     }
 
     function listTypes(selectedTypes: string[], allTypes: FilterItem[][]) {
-        return selectedTypes.map(s => allTypes.flatMap(ta=>[...ta])
+        return selectedTypes.length===0 ? '' : selectedTypes.map(s => allTypes.flatMap(ta=>[...ta])
             .find(t => t.name === s)?.displayName).join(", ")
     }
 
@@ -89,6 +89,11 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
         setSearchOpen(false)
     }
 
+    function empty(searchRequest: SearchRequest) {
+        return searchRequest.genres.length === 0 && searchRequest.types.length === 0 && searchRequest.cultureStatuses.length===0 &&
+            searchRequest.name==='' && searchRequest.architect===''
+    }
+
     return (
         <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem/>}>
             <Box
@@ -98,24 +103,19 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
                 <Stack width={'auto'}>
 
                     {textFieldWithCheckbox('Название', 'name', searchRequest.name)}
+
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='cultureStatuses' ? 'none' : 'cultureStatuses')}>Культурный статус</Button>
+                    <Typography sx={{paddingBottom: 2}}>{listCultureStatuses(searchRequest.cultureStatuses, cultureStatuses)}</Typography>
+
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='genres' ? 'none' : 'genres')}>Стили</Button>
+                    <Typography sx={{paddingBottom: 2}}>{listGenres(searchRequest.genres, genres)}</Typography>
+
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='types' ? 'none' : 'types')}>Типы</Button>
+                    <Typography sx={{paddingBottom: 2}}>{listTypes(searchRequest.types, types)}</Typography>
+
                     {textFieldWithCheckbox('Архитектор', 'architect', searchRequest.architect)}
 
-                    <TextField
-                        variant="outlined" size="small" sx={{paddingBottom: 2}}
-                        onChange={event => setSearchRequest({...searchRequest, address: event.target.value})}
-                        label="Адрес"
-                    />
-
-                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='none' ? 'types' : (selectorState==='types' ? 'none' : selectorState))}>Типы</Button>
-                    <Typography sx={{paddingBottom: 2}}>{searchRequest.types.length === 0 ? "" : listTypes(searchRequest.types, types)}</Typography>
-
-                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='none' ? 'genres' : (selectorState==='genres' ? 'none' : selectorState))}>Стили</Button>
-                    <Typography sx={{paddingBottom: 2}}>{searchRequest.genres.length === 0 ? "" : listGenres(searchRequest.genres, genres)}</Typography>
-
-                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='none' ? 'cultureStatuses' : (selectorState==='cultureStatuses' ? 'none' : selectorState))}>Культурные статусы</Button>
-                    <Typography sx={{paddingBottom: 2}}>{searchRequest.cultureStatuses.length === 0 ? "" : listCultureStatuses(searchRequest.cultureStatuses, cultureStatuses)}</Typography>
-
-                    <Button variant={'outlined'} onClick={doSearch}>Искать</Button>
+                    <Button variant={'contained'} disabled={empty(searchRequest)} onClick={doSearch}>Искать</Button>
 
                 </Stack>
             </Box>

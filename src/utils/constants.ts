@@ -19,7 +19,6 @@ export const exactlySuffix = 'Exactly'
 export const emptySearchRequest: SearchRequest = {
     name: "",
     nameExactly : false,
-    address : "",
     genres: [],
     types: [],
     statuses: [],

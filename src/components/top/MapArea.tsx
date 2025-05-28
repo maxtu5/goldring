@@ -23,7 +23,7 @@ const MapArea = () => {
     return (
         <Grid2 container height={'calc(100vh - 64px)'}>
             <Grid2 size={{xs: 12, sm: 3, xl: 2}}>
-                <SideBar showSearchResult={showSearchResult} setShowSearchResult={setShowSearchResult} searchOpen={searchOpen} setSearchOpen={setSearchOpen}/>
+                <SideBar setSearchRequest={setSearchRequest} showSearchResult={showSearchResult} setShowSearchResult={setShowSearchResult} searchOpen={searchOpen} setSearchOpen={setSearchOpen}/>
             </Grid2>
             <Grid2 size={{xs: 12, sm: 9, xl: 10}}>
                 <Box

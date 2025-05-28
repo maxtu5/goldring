@@ -44,21 +44,39 @@ const SearchSelector = ({
     }
 
     function TypeSelector() {
-        return (<span>{types.map(typeGroup => (
-            <Box paddingBottom={2}>
-                {typeGroup.map(type => (
-                    <FormControlLabel
-                        control={<Checkbox
-                            sx={{p: 0}}
-                            size={'small'}
-                            checked={searchRequest.types.includes(type.name)}
-                            onChange={(event) => handleTypeCheckBoxToggle(type.name)}
-                        />}
-                        label={<Typography variant={'caption'}>{type.displayName}</Typography>}
-                    />
-                ))}
-            </Box>
-        ))}</span>)
+        return (<span>{types.map(typeGroup =>
+
+            (<Stack direction={'row'} justifyContent={'space-between'}>
+                    <Stack width={'11vw'} paddingBottom={2}>
+                        {typeGroup.slice(0, typeGroup.length/2+1).map(type => (
+                            <FormControlLabel
+                                control={<Checkbox
+                                    sx={{p: 0}}
+                                    size={'small'}
+                                    checked={searchRequest.types.includes(type.name)}
+                                    onChange={(event) => handleTypeCheckBoxToggle(type.name)}
+                                />}
+                                label={<Typography variant={'caption'}>{type.displayName}</Typography>}
+                            />
+                        ))}
+                    </Stack>
+                    <Stack width={'11vw'} paddingBottom={2}>
+                        {typeGroup.slice(typeGroup.length/2+1, typeGroup.length).map(type => (
+                            <FormControlLabel
+                                control={<Checkbox
+                                    sx={{p: 0}}
+                                    size={'small'}
+                                    checked={searchRequest.types.includes(type.name)}
+                                    onChange={(event) => handleTypeCheckBoxToggle(type.name)}
+                                />}
+                                label={<Typography variant={'caption'}>{type.displayName}</Typography>}
+                            />
+                        ))}
+                    </Stack>
+
+                </Stack>
+            )
+        )}</span>)
     }
 
     function handleTypeCheckBoxToggle(name: string) {
@@ -97,13 +115,10 @@ const SearchSelector = ({
     return (
         <Box width={'25vw'} sx={{display: selectorState === 'none' ? "none" : "block"}}>
 
-            <Stack width={'auto'} spacing={2} p={1} >
+            <Stack width={'auto'} spacing={2} p={1}>
 
-                <Typography variant={'body1'} align={'center'}>
-                    {selectorState === 'types' ? 'Типы' : (selectorState==='genres' ? 'Стили' : 'Культурные статусы')}
-                </Typography>
-
-                {selectorState === 'genres' ? <GenresSelector/> : (selectorState==='types' ? <TypeSelector/> : <CultureStatusSelector/>)}
+                {selectorState === 'genres' ? <GenresSelector/> : (selectorState === 'types' ? <TypeSelector/> :
+                    <CultureStatusSelector/>)}
 
                 {/*<Button onClick={() => setSelectorState('none')}>ЗАКРЫТЬ</Button>*/}
 

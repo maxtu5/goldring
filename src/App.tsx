@@ -81,11 +81,8 @@ function App() {
     }
 
     function applyFilter(p: LightPlace): boolean {
-        return (
-            (p.rating === 0 || (p.rating.valueOf() <= scoreRange[1]) && (p.rating.valueOf() >= scoreRange[0])) &&
-            (!filtered ? true : (p.status===null || filter.statuses && filter.statuses.includes(p.status))
-                )
-        )
+        return (p.rating === 0 || (p.rating.valueOf() <= scoreRange[1]) && (p.rating.valueOf() >= scoreRange[0])) &&
+            (!filtered ? true : (p.status===null || filter.statuses && filter.statuses.includes(p.status)))
     }
 
     function saveMapState(center: number[], zoom: number) {

@@ -20,8 +20,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import {GRingContext} from "../../utils/context";
-import {Filters, ListParamTypes} from "../../utils/types";
+import {Filters, ListParamTypes, SearchRequest} from "../../utils/types";
 import {Subheader} from "../../utils/utils";
+import {emptySearchRequest} from "../../utils/constants";
 
 const ITEM_HEIGHT = 32;
 const ITEM_PADDING_TOP = 4;
@@ -65,10 +66,17 @@ interface SideBarProps {
     searchOpen: boolean,
     setSearchOpen: (searchOpen: boolean) => void,
     showSearchResult: boolean,
-    setShowSearchResult: (showSearchResult: boolean) => void
+    setShowSearchResult: (showSearchResult: boolean) => void,
+    setSearchRequest: (req: SearchRequest) => void
 }
 
-const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOpen}: SideBarProps) => {
+const SideBar = ({
+                     showSearchResult,
+                     setShowSearchResult,
+                     searchOpen,
+                     setSearchOpen,
+                     setSearchRequest
+                 }: SideBarProps) => {
     const {
         statuses,
         scoreRange,
@@ -103,6 +111,7 @@ const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOp
 
     function showAllClick() {
         setShowSearchResult(false)
+        setSearchRequest(emptySearchRequest)
     }
 
     function handleCheckBoxToggle(name: string) {
@@ -164,9 +173,9 @@ const SideBar = ({showSearchResult, setShowSearchResult, searchOpen, setSearchOp
                     </Stack>
 
                     <Stack direction={'row'} spacing={1} marginBottom={2}>
-                        <Button variant={'outlined'} onClick={searchClick}
+                        <Button variant={'contained'} onClick={searchClick}
                                 sx={{width: '100%'}}>{'ФИЛЬТРОВАТЬ'}</Button>
-                        <Button variant={'outlined'} onClick={showAllClick} disabled={!showSearchResult}
+                        <Button variant={'contained'} onClick={showAllClick} disabled={!showSearchResult}
                                 sx={{width: '100%'}}>{'СБРОСИТЬ'}</Button>
                     </Stack>
 
