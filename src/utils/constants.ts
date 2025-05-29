@@ -21,7 +21,6 @@ export const emptySearchRequest: SearchRequest = {
     nameExactly : false,
     genres: [],
     types: [],
-    statuses: [],
     cultureStatuses: [],
     architect : "",
     architectExactly : false

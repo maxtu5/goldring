@@ -17,7 +17,6 @@ export interface SearchRequest {
     nameExactly: boolean,
     types: string[],
     genres: string[],
-    statuses: string[],
     cultureStatuses: string[],
     architect: string,
     architectExactly: boolean

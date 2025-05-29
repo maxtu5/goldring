@@ -1,4 +1,4 @@
-import React, {useContext, useMemo, useRef} from 'react';
+import React, {useContext, useEffect, useMemo, useRef} from 'react';
 import {createTheme, ThemeProvider, useTheme} from "@mui/material";
 import {Map, Placemark, SearchControl, YMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
@@ -38,6 +38,11 @@ const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
             )),
         [places, showSearchResult, searchResult]
     );
+
+    useEffect(() => {
+        // @ts-ignore
+        if (showSearchResult && mapRef.current) mapRef.current.setBounds(mapRef.current.geoObjects.getBounds())
+    }, [showSearchResult, searchResult]);
 
     return (
         <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>

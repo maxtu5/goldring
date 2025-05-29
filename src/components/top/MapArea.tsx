@@ -47,7 +47,12 @@ const MapArea = () => {
                             '& .MuiPaper-root': {position: 'absolute'}
                         }}
                     >
-                        <SearchBar setSearchResult={setSearchResult} setShowSearchResult={setShowSearchResult} searchRequest={searchRequest} setSearchRequest={setSearchRequest} setSearchOpen={setSearchOpen}/>
+                        <SearchBar
+                            setSearchResult={setSearchResult}
+                            setShowSearchResult={setShowSearchResult}
+                            searchRequest={searchRequest}
+                            setSearchRequest={setSearchRequest}
+                            setSearchOpen={setSearchOpen}/>
                     </Drawer>
                 </Box>
             </Grid2>
