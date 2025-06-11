@@ -30,6 +30,8 @@ const MainArea = () => {
 
     const handleClose = () => {
         setAppMode('map');
+        setEditPlaceData(null)
+        setEditMode(false)
     };
 
     function setEdtModeAndLoad(id: string) {

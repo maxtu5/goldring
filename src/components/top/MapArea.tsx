@@ -13,7 +13,8 @@ const MapArea = () => {
     const [searchOpen, setSearchOpen] = React.useState(false);
     const [searchRequest, setSearchRequest] = useState<SearchRequest>(emptySearchRequest)
     const [searchResult, setSearchResult] = React.useState<string[]>([])
-    const [showSearchResult, setShowSearchResult] = React.useState(false);
+    const [showSearchResult, setShowSearchResult] = React.useState(false)
+    const [mapSearch, setMapSearch] = React.useState<string>('')
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -23,14 +24,28 @@ const MapArea = () => {
     return (
         <Grid2 container height={'calc(100vh - 64px)'}>
             <Grid2 size={{xs: 12, sm: 3, xl: 2}}>
-                <SideBar setSearchRequest={setSearchRequest} showSearchResult={showSearchResult} setShowSearchResult={setShowSearchResult} searchOpen={searchOpen} setSearchOpen={setSearchOpen}/>
+                <SideBar
+                    setSearchRequest={setSearchRequest}
+                    showSearchResult={showSearchResult}
+                    setShowSearchResult={setShowSearchResult}
+                    searchOpen={searchOpen}
+                    setSearchOpen={setSearchOpen}
+                    mapSearch={mapSearch}
+                    setMapSearch={setMapSearch}
+                />
             </Grid2>
             <Grid2 size={{xs: 12, sm: 9, xl: 10}}>
                 <Box
                     ref={containerRef}
                     sx={{width: 'auto', height: '100%', position: "relative"}}>
 
-                    <CustomMap searchResult={searchResult} showSearchResult={showSearchResult}/>
+                    <CustomMap
+                        searchResult={searchResult}
+                        showSearchResult={showSearchResult}
+                        mapSearch={mapSearch}
+                        setMapSearch={setMapSearch}
+
+                    />
 
                     <Drawer
                         open={searchOpen}

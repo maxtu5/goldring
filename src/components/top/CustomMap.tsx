@@ -7,13 +7,16 @@ import {blue, lime, purple} from "@mui/material/colors";
 
 interface CustomMapProps {
     searchResult: string[],
-    showSearchResult: boolean
+    showSearchResult: boolean,
+    mapSearch: string,
+    setMapSearch: (value: string) => void
 }
 
-const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
+const CustomMap = ({searchResult, showSearchResult, mapSearch, setMapSearch}: CustomMapProps) => {
     const {mapState, setAppMode, places, renewMapState} = useContext(GRingContext)
     const ymaps = useRef();
     const mapRef = useRef();
+    const apiRef = useRef();
     const theme = createTheme({
         palette: {
             primary: lime,
@@ -44,6 +47,20 @@ const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
         if (showSearchResult && mapRef.current) mapRef.current.setBounds(mapRef.current.geoObjects.getBounds())
     }, [showSearchResult, searchResult]);
 
+    useEffect(() => {
+        if (mapSearch)
+            // @ts-ignore
+            mapRef.current.controls.add('zoomControl', {
+                float: 'none',
+                position: {
+                    right: 40,
+                    top: 5
+                }
+            });
+        // @ts-ignore
+            // apiRef.current.search() //..search(mapSearch).then(r=>console.log(r))
+    }, [mapSearch]);
+
     return (
         <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
             <Map
@@ -51,6 +68,7 @@ const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
                 width='auto'
                 height="100%"
                 state={mapState ? mapState : defaultInitialMapState}
+
                 onLoad={(ymapsInstance) => {
                     console.log('load map');
                     // @ts-ignore
@@ -60,15 +78,15 @@ const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
                         // @ts-ignore
                         renewMapState(mapRef.current?.getCenter(), mapRef.current?.getZoom())
                     })
+                    // @ts-ignore
+
+                    mapRef.current?.controls.add('zoomControl');
                 }}
             >
                 {visiblePlacemarks}
                 <ThemeProvider theme={theme}>
 
                     <SearchControl
-                        style={{
-                            marginLeft: '-50pt'
-                        }}
                         options={{
                             formLayout: 'islands#searchControlFormLayout',
                             noSuggestPanel: true,
