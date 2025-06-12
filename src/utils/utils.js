@@ -9,7 +9,8 @@ export function parseAddress(address) {
 }
 
 export function latlonStringToNumbers(latlonString) {
-    latlonString.split(',').map(s => 0 + s)
+    // console.log(latlonString);
+    return latlonString.split(',').map(s => parseFloat(s))
 }
 
 export const Subheader = styled(Typography)(({theme}) => ({
