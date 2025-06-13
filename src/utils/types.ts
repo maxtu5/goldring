@@ -19,7 +19,8 @@ export interface SearchRequest {
     genres: string[],
     cultureStatuses: string[],
     architect: string,
-    architectExactly: boolean
+    architectExactly: boolean,
+    districts: string[]
 }
 
 export interface InitialData {
@@ -27,6 +28,7 @@ export interface InitialData {
     types: FilterItem[][],
     cultureStatuses: FilterItem[],
     statuses: string[],
+    regions: {name: string, districts: {codes: string[], name: string}[]}[]
     linkPrefixes: string[],
     places: LightPlace[]
 }

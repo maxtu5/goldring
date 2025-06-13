@@ -14,7 +14,6 @@ const MapArea = () => {
     const [searchRequest, setSearchRequest] = useState<SearchRequest>(emptySearchRequest)
     const [searchResult, setSearchResult] = React.useState<string[]>([])
     const [showSearchResult, setShowSearchResult] = React.useState(false)
-    const [mapSearch, setMapSearch] = React.useState<string>('')
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -30,8 +29,6 @@ const MapArea = () => {
                     setShowSearchResult={setShowSearchResult}
                     searchOpen={searchOpen}
                     setSearchOpen={setSearchOpen}
-                    mapSearch={mapSearch}
-                    setMapSearch={setMapSearch}
                 />
             </Grid2>
             <Grid2 size={{xs: 12, sm: 9, xl: 10}}>
@@ -42,9 +39,6 @@ const MapArea = () => {
                     <CustomMap
                         searchResult={searchResult}
                         showSearchResult={showSearchResult}
-                        mapSearch={mapSearch}
-                        setMapSearch={setMapSearch}
-
                     />
 
                     <Drawer

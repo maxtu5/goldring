@@ -13,7 +13,7 @@ function App() {
     const [filter, setFilter] = React.useState<Filters>({cultureStatuses: [], statuses: [], initialized: false, statusAll: false})
     const [filtered, setFiltered] = React.useState<boolean>(true)
     const [initialData, setInitialData] = useState<InitialData>({
-        genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: [], statuses: []
+        genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: [], statuses: [], regions: []
     });
     const [initialMapState, setInitialMapState] = useState(defaultInitialMapState);
     const [initialStatusFilters, setInitialStatusFilters] = useState([]);
@@ -25,6 +25,7 @@ function App() {
     useEffect(() => {
         console.log("load app")
         const mapStateFromCache = localStorage.getItem("initialMapState")
+        console.log(mapStateFromCache)
         setInitialMapState(mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState)
 
         const statusFiltersFromCache = localStorage.getItem("initialStatusFilters")
@@ -58,7 +59,7 @@ function App() {
             // @ts-ignore
             types: [...data.types.map(ta=>{return {...ta}})],
             cultureStatuses: {...data.cultureStatuses}, places: [...data.lightPlaces],
-            linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses]
+            linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses], regions: [...data.regions]
         });
         const info = {
             payload: {
@@ -86,6 +87,7 @@ function App() {
     }
 
     function saveMapState(center: number[], zoom: number) {
+        console.log("saveMapState", center, zoom)
         localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
     }
 
@@ -102,6 +104,7 @@ function App() {
                 types: initialData.types.map(tt=> transformFilter(tt)),
                 statuses: initialData.statuses,
                 cultureStatuses: transformFilter(initialData.cultureStatuses),
+                regions: initialData.regions,
                 places: initialData.places
                     .filter(p => applyFilter(p)),
                 scoreRange: scoreRange,

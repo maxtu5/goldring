@@ -23,5 +23,6 @@ export const emptySearchRequest: SearchRequest = {
     types: [],
     cultureStatuses: [],
     architect : "",
-    architectExactly : false
+    architectExactly : false,
+    districts: []
 }

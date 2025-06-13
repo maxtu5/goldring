@@ -67,9 +67,7 @@ interface SideBarProps {
     setSearchOpen: (searchOpen: boolean) => void,
     showSearchResult: boolean,
     setShowSearchResult: (showSearchResult: boolean) => void,
-    setSearchRequest: (req: SearchRequest) => void,
-    mapSearch: string,
-    setMapSearch: (s: string) => void
+    setSearchRequest: (req: SearchRequest) => void
 }
 
 const SideBar = ({
@@ -77,9 +75,7 @@ const SideBar = ({
                      setShowSearchResult,
                      searchOpen,
                      setSearchOpen,
-                     setSearchRequest,
-                     mapSearch,
-                     setMapSearch
+                     setSearchRequest
                  }: SideBarProps) => {
     const {
         statuses,
@@ -140,8 +136,6 @@ const SideBar = ({
 
     return (
         <Box sx={{width: 'auto', p: 2}}>
-
-            <TextField onChange={(event)=>setMapSearch(event.target.value)}></TextField>
 
             <FormControl size="small">
                 <Stack width={'auto'}>

@@ -1,62 +1,47 @@
-import React, {useContext, useEffect, useMemo, useRef} from 'react';
-import {createTheme, ThemeProvider, useTheme} from "@mui/material";
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {Map, ObjectManager, Placemark, SearchControl, YMaps} from "@pbe/react-yandex-maps";
 import {GRingContext} from "../../utils/context";
 import {defaultInitialMapState} from "../../utils/constants";
-import {blue, lime, purple} from "@mui/material/colors";
 import {latlonStringToNumbers} from "../../utils/utils";
 import {LightPlace} from "../../utils/types";
 
 interface CustomMapProps {
     searchResult: string[],
-    showSearchResult: boolean,
-    mapSearch: string,
-    setMapSearch: (value: string) => void
+    showSearchResult: boolean
 }
 
-const CustomMap = ({searchResult, showSearchResult, mapSearch, setMapSearch}: CustomMapProps) => {
+const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
     const {mapState, setAppMode, places, renewMapState} = useContext(GRingContext)
     const ymaps = useRef();
     const mapRef = useRef();
+    const [localSearchResult, setLocalSearchResult] = useState<{searchResult: string[], showSearchResult: boolean}>({searchResult: [], showSearchResult: false})
+    const [bounds, setBounds] = useState<number[][]>([])
 
-    const visiblePlacemarks = useMemo(
-        () => (showSearchResult ? places.filter(p => searchResult.includes(p.id)) : places)
-            .map((place, index) => (
-                <Placemark
-                    key={place.latlon}
-                    onClick={() => {
-                        setAppMode(place.id)
-                    }}
-                    properties={{iconContent: place.rating}}
-                    defaultGeometry={[parseFloat(place.latlon.split(',')[0]), parseFloat(place.latlon.split(',')[1])]}
-                    options={{
-                        iconImageSize: [10, 10],
-                        preset: "islands#darkBlueIcon"
-                    }}
-                />
-            )),
-        [places, showSearchResult, searchResult]
-    );
+
+    function calcBounds(places: LightPlace[], searchResult: string[]) {
+        if (searchResult.length === 0) return []
+        const filteredPlaces = places.filter(place => searchResult.includes(place.id)).map(place => latlonStringToNumbers(place.latlon))
+        console.log(filteredPlaces)
+        const maxLat = Math.max(...filteredPlaces.map(place => place[0]));
+        const minLat = Math.min(...filteredPlaces.map(place => place[0]));
+        const maxLon = Math.max(...filteredPlaces.map(place => place[1]));
+        const minLon = Math.min(...filteredPlaces.map(place => place[1]));
+        const retval = [[minLat, maxLon], [maxLat, minLon], [maxLat, minLon], [minLat, maxLon]];
+        console.log(retval)
+        return retval
+    }
 
     useEffect(() => {
+        setLocalSearchResult({searchResult: searchResult, showSearchResult: showSearchResult})
         // @ts-ignore
-        if (showSearchResult && mapRef.current) mapRef.current.setBounds(mapRef.current.geoObjects.getBounds())
-    }, [showSearchResult, searchResult]);
-
-    useEffect(() => {
-        if (mapSearch)
+        // if (showSearchResult && mapRef.current) mapRef.current.setBounds(mapRef.current.geoObjects.getBounds())
+        if (mapRef.current) {
             // @ts-ignore
-            mapRef.current.controls.add('zoomControl', {
-                float: 'none',
-                position: {
-                    right: 40,
-                    top: 5
-                }
-            });
-        // @ts-ignore
-            // apiRef.current.search() //..search(mapSearch).then(r=>console.log(r))
-    }, [mapSearch]);
-
+            console.log(mapRef.current.geoObjects.getBounds())
+            // setBounds(calcBounds(places, searchResult))
+        }
+    }, [showSearchResult, searchResult]);
+    // iuazplzqiffpovqq
     return (
         <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
             <Map
@@ -74,10 +59,8 @@ const CustomMap = ({searchResult, showSearchResult, mapSearch, setMapSearch}: Cu
                         // @ts-ignore
                         renewMapState(mapRef.current?.getCenter(), mapRef.current?.getZoom())
                     })
-                    // @ts-ignore
                 }}
             >
-                {/*{visiblePlacemarks}*/}
                 <ObjectManager
                     options={{
                         clusterize: false,
@@ -85,10 +68,10 @@ const CustomMap = ({searchResult, showSearchResult, mapSearch, setMapSearch}: Cu
                     objects={{
                         preset: "islands#darkBlueIcon",
                         iconImageSize: [10, 10]
-
                     }}
-                    onClick={(e)=>chandler(e)}
-                    filter={ (p: LightPlace) => searchResult.length===0 || searchResult.includes(p.id)}
+                    // @ts-ignore
+                    onClick={(event) => setAppMode(event._sourceEvent._sourceEvent.originalEvent.objectId)}
+                    filter={(p: LightPlace) => localSearchResult.showSearchResult ? localSearchResult.searchResult.includes(p.id) : true}
                     features={places.map(place => ({
                             type: "Feature",
                             id: place.id,
@@ -103,14 +86,23 @@ const CustomMap = ({searchResult, showSearchResult, mapSearch, setMapSearch}: Cu
                     ))}
                 />
 
-                    <SearchControl
-                        options={{
-                            formLayout: 'islands#searchControlFormLayout',
-                            noSuggestPanel: true,
-                            float: "left",
+                {/*{bounds.map(point=>(*/}
+                {/*    <Placemark*/}
+                {/*        defaultGeometry={point}*/}
+                {/*        options={{*/}
+                {/*            iconImageSize: [10, 10],*/}
+                {/*            preset: "islands#redIcon"*/}
+                {/*        }}*/}
 
-                            // position: {left: 10, right: 10, top:10, bottom: 10}
-                        }}/>
+                {/*    />*/}
+                {/*))}*/}
+
+                <SearchControl
+                    options={{
+                        noSuggestPanel: true,
+                        float: "left",
+                        // position: {left: 10, right: 10, top:10, bottom: 10}
+                    }}/>
             </Map>
         </YMaps>
 

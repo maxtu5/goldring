@@ -27,7 +27,7 @@ interface SearchBarProps {
 
 const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchResult, setShowSearchResult}: SearchBarProps) => {
     const [selectorState, setSelectorState] = useState('none')
-    const {genres, types, cultureStatuses} = useContext(GRingContext)
+    const {genres, types, cultureStatuses, regions} = useContext(GRingContext)
 
     function textFieldWithCheckbox(label: string, fieldName: string, defaultValue: string) {
         return (
@@ -68,6 +68,10 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
             .find(t => t.name === s)?.displayName).join(", ")
     }
 
+    function listDistricts(selectedDistricts: string[], allDistricts: {name: string, districts: {codes: string[], name: string}[]}[]) {
+        return selectedDistricts.length===0 ? '' : selectedDistricts.join(", ")
+    }
+
     function doSearch() {
         console.log(searchRequest);
         fetch(`${base_url}${url_search}`,
@@ -91,7 +95,7 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
 
     function empty(searchRequest: SearchRequest) {
         return searchRequest.genres.length === 0 && searchRequest.types.length === 0 && searchRequest.cultureStatuses.length===0 &&
-            searchRequest.name==='' && searchRequest.architect===''
+            searchRequest.name==='' && searchRequest.architect==='' && searchRequest.districts.length===0
     }
 
     return (
@@ -103,6 +107,9 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
                 <Stack width={'auto'}>
 
                     {textFieldWithCheckbox('Название', 'name', searchRequest.name)}
+
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='regions' ? 'none' : 'regions')}>Регионы</Button>
+                    <Typography sx={{paddingBottom: 2}}>{listDistricts(searchRequest.districts, regions)}</Typography>
 
                     <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='cultureStatuses' ? 'none' : 'cultureStatuses')}>Культурный статус</Button>
                     <Typography sx={{paddingBottom: 2}}>{listCultureStatuses(searchRequest.cultureStatuses, cultureStatuses)}</Typography>

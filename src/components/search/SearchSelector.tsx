@@ -17,7 +17,7 @@ const SearchSelector = ({
                             searchRequest,
                             setSearchRequest
                         }: SearchSelectorProps) => {
-    const {genres, types, cultureStatuses} = useContext(GRingContext)
+    const {genres, types, cultureStatuses, regions} = useContext(GRingContext)
 
     function GenresSelector() {
         return (<Stack>
@@ -48,7 +48,7 @@ const SearchSelector = ({
 
             (<Stack direction={'row'} justifyContent={'space-between'}>
                     <Stack width={'11vw'} paddingBottom={2}>
-                        {typeGroup.slice(0, typeGroup.length/2+1).map(type => (
+                        {typeGroup.slice(0, typeGroup.length / 2 + 1).map(type => (
                             <FormControlLabel
                                 control={<Checkbox
                                     sx={{p: 0}}
@@ -61,7 +61,7 @@ const SearchSelector = ({
                         ))}
                     </Stack>
                     <Stack width={'11vw'} paddingBottom={2}>
-                        {typeGroup.slice(typeGroup.length/2+1, typeGroup.length).map(type => (
+                        {typeGroup.slice(typeGroup.length / 2 + 1, typeGroup.length).map(type => (
                             <FormControlLabel
                                 control={<Checkbox
                                     sx={{p: 0}}
@@ -112,13 +112,74 @@ const SearchSelector = ({
         })
     }
 
+    function RegionSelector() {
+        return (
+            <Stack>
+                {regions.map(region => (
+                        <Stack>
+                            <Typography>{region.name}</Typography>
+                            <Stack direction={'row'} justifyContent={'space-between'}>
+                                <Stack width={'11vw'} paddingBottom={2}>
+                                    {region.districts
+                                        .flatMap(district => district.codes.map(code => {
+                                            return {name: code, displayName: district.name}
+                                        }))
+                                        .slice(0, region.districts.map(district => district.codes.length).reduce((a, c) => a + c, 0) / 2 + 1)
+                                        .map(district => (
+                                            <FormControlLabel
+                                                control={<Checkbox
+                                                    sx={{p: 0}}
+                                                    size={'small'}
+                                                    checked={searchRequest.districts.includes(district.name)}
+                                                    onChange={(event) => handleDistrictCheckBoxToggle(district.name)}
+                                                />}
+                                                label={<Typography
+                                                    variant={'caption'}>{district.displayName + (district.name.endsWith('G') ? '+' : '')}</Typography>}
+                                            />
+                                        ))}
+                                </Stack>
+                                <Stack width={'11vw'} paddingBottom={2}>
+                                    {region.districts
+                                        .flatMap(district => district.codes.map(code => {
+                                            return {name: code, displayName: district.name}
+                                        }))
+                                        .slice(region.districts.map(district => district.codes.length).reduce((a, c) => a + c, 0) / 2 + 1, region.districts.map(district => district.codes.length).reduce((a, c) => a + c, 0))
+                                        .map(district => (
+                                            <FormControlLabel
+                                                control={<Checkbox
+                                                    sx={{p: 0}}
+                                                    size={'small'}
+                                                    checked={searchRequest.districts.includes(district.name)}
+                                                    onChange={(event) => handleDistrictCheckBoxToggle(district.name)}
+                                                />}
+                                                label={<Typography
+                                                    variant={'caption'}>{district.displayName + (district.name.endsWith('G') ? '+' : '')}</Typography>}
+                                            />
+                                        ))}
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    )
+                )}</Stack>)
+    }
+
+    function handleDistrictCheckBoxToggle(name: string) {
+        setSearchRequest({
+            ...searchRequest,
+            districts: searchRequest.districts.includes(name) ?
+                searchRequest.districts.filter(s => s !== name) :
+                [...searchRequest.districts, name]
+        })
+    }
+
     return (
         <Box width={'25vw'} sx={{display: selectorState === 'none' ? "none" : "block"}}>
 
             <Stack width={'auto'} spacing={2} p={1}>
 
-                {selectorState === 'genres' ? <GenresSelector/> : (selectorState === 'types' ? <TypeSelector/> :
-                    <CultureStatusSelector/>)}
+                {selectorState === 'genres' ? <GenresSelector/> :
+                    (selectorState === 'types' ? <TypeSelector/> :
+                        (selectorState === 'regions' ? <RegionSelector/> : <CultureStatusSelector/>))}
 
                 {/*<Button onClick={() => setSelectorState('none')}>ЗАКРЫТЬ</Button>*/}
 
