@@ -1,19 +1,13 @@
 import React, {useContext} from 'react';
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
     Box,
-    Button,
     Checkbox,
-    FormControlLabel, IconButton,
+    FormControlLabel,
     Stack,
     Typography
 } from "@mui/material";
-import {FilterItem, ListParamTypes, SearchRequest} from "../../utils/types";
+import {SearchRequest} from "../../utils/types";
 import {GRingContext} from "../../utils/context";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import RegionSelector from "./RegionsSelector";
 
 interface SearchSelectorProps {
@@ -26,11 +20,10 @@ interface SearchSelectorProps {
 
 const SearchSelector = ({
                             selectorState,
-                            setSelectorState,
                             searchRequest,
                             setSearchRequest
                         }: SearchSelectorProps) => {
-    const {genres, types, cultureStatuses, regions} = useContext(GRingContext)
+    const {genres, types, cultureStatuses} = useContext(GRingContext)
 
     function GenresSelector() {
         return (<Stack>
