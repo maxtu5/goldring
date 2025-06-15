@@ -19,7 +19,7 @@ function RegionSelector({searchRequest, setSearchRequest}: RegionSelectorProps) 
         return (
             <FormControlLabel
                 control={<Checkbox
-                    sx={{p: 0}}
+                    sx={{p: 0, marginRight:0}}
                     size={'small'}
                     checked={searchRequest.districts.includes(props.district.codes[0])}
                     onChange={() => handleDistrictCheckBoxToggle(props.district.codes)}
@@ -39,38 +39,38 @@ function RegionSelector({searchRequest, setSearchRequest}: RegionSelectorProps) 
     }
 
     return (
-        <Stack margin={2}>
+        <Stack>
             {regions.map((region, index) => (
                 <Stack>
-                    <Stack direction={'row'} justifyContent={'space-between'} onClick={() => {
-                        setExpanded(expanded.map((e, i) => i === index ? !e : e))
-                    }}>
-
-                        <Typography>{region.name}</Typography>
-
-                        <IconButton aria-label="delete" >
-                            {expanded[index] ? <ExpandMoreIcon/> : <ExpandLessIcon/>}
-                        </IconButton>
-                    </Stack>
-                    <Stack sx={{display: expanded[index] ? 'display-box' : 'none'}}>
-                        <FormControlLabel
-                            control={<Checkbox
+                    <Stack direction={'row'} justifyContent={'space-between'}>
+                        <Stack direction={'row'} spacing={1}>
+                            <Checkbox
                                 sx={{p: 0}}
                                 size={'small'}
                                 checked={selectAll[index]}
                                 onChange={() => {
-                                    const addDistricts = selectAll[index] ? [] : (region.districts.flatMap(d=>d.codes))
+                                    const addDistricts = selectAll[index] ? [] : (region.districts.flatMap(d => d.codes))
                                     setSearchRequest({
                                         ...searchRequest,
-                                        districts: [...searchRequest.districts.filter(code => region.districts.filter(d=>d.codes.includes(code)).length === 0),
+                                        districts: [...searchRequest.districts.filter(code => region.districts.filter(d => d.codes.includes(code)).length === 0),
                                             ...addDistricts]
                                     })
                                     setSelectAll(selectAll.map((c, i) => i === index ? !c : c))
                                 }}
-                            />}
-                            sx={{marginBottom: 1}}
-                            label={<Typography variant={'caption'}>Все районы</Typography>}
-                        />
+                            />
+                            <Typography variant={'subtitle1'} paddingTop={0.9} onClick={() => {
+                                setExpanded(expanded.map((e, i) => i === index ? !e : e))
+                            }}>
+                                {region.name}
+                            </Typography>
+                        </Stack>
+                        <IconButton aria-label="delete" onClick={() => {
+                            setExpanded(expanded.map((e, i) => i === index ? !e : e))
+                        }}>
+                            {expanded[index] ? <ExpandMoreIcon/> : <ExpandLessIcon/>}
+                        </IconButton>
+                    </Stack>
+                    <Stack sx={{display: expanded[index] ? 'display-inside' : 'none'}}>
                         <Stack direction={'row'} justifyContent={'space-between'}>
                             <Stack width={'11vw'} paddingBottom={2}>
                                 {region.districts

@@ -119,7 +119,7 @@ const SearchSelector = ({
     }
 
     return (
-        <Box width={'25vw'} sx={{display: selectorState === 'none' ? "none" : "block"}}>
+        <Box p={1} width={'25vw'} sx={{display: selectorState === 'none' ? "none" : "block"}}>
             {selectorState === 'genres' ? <GenresSelector/> :
                 (selectorState === 'types' ? <TypeSelector/> :
                     (selectorState === 'regions' ? <RegionSelector searchRequest={searchRequest} setSearchRequest={setSearchRequest}/> : <CultureStatusSelector/>))}
