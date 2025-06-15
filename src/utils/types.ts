@@ -111,3 +111,8 @@ export const emptyPlace: FullPlace = {
     bigLines: [],
     smallLine: ""
 }
+
+export interface Region {
+    name: string,
+    districts: {codes: string[], name: string}[]
+}

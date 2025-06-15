@@ -1,5 +1,5 @@
 import React from "react";
-import {FilterItem, Filters, LightPlace} from "./types";
+import {FilterItem, Filters, LightPlace, Region} from "./types";
 import {defaultInitialMapState} from "./constants";
 
 export interface ContextData {
@@ -9,7 +9,7 @@ export interface ContextData {
     places: LightPlace[],
     cultureStatuses: FilterItem[],
     statuses: string[],
-    regions: {name: string, districts: {codes: string[], name: string}[]}[],
+    regions: Region[],
     scoreRange: number[],
     setScoreRange: (value: number[]) => void,
     setAppMode: (s: string)=>void,

@@ -1,21 +1,9 @@
 import React, {useContext, useState} from 'react';
-import {
-    Box,
-    Button,
-    Checkbox, Divider,
-    FormControl,
-    FormControlLabel,
-    InputLabel,
-    Select,
-    Stack,
-    TextField, Typography
-} from "@mui/material";
-import {Subheader} from "../../utils/utils";
+import {Box, Button, Checkbox, Divider, FormControlLabel, Stack, TextField, Typography} from "@mui/material";
 import {GRingContext} from "../../utils/context";
-import {FilterItem, ListParamTypes, SearchRequest} from "../../utils/types";
+import {FilterItem, SearchRequest} from "../../utils/types";
 import SearchSelector from './SearchSelector';
-import {base_url, emptySearchRequest, exactlySuffix, url_getinitial, url_search} from "../../utils/constants";
-import {initialDataLocal} from "../../utils/data";
+import {base_url, exactlySuffix, url_search} from "../../utils/constants";
 
 interface SearchBarProps {
     searchRequest: SearchRequest,
@@ -25,7 +13,13 @@ interface SearchBarProps {
     setSearchResult: (searchResult: string[]) => void
 }
 
-const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchResult, setShowSearchResult}: SearchBarProps) => {
+const SearchBar = ({
+                       searchRequest,
+                       setSearchRequest,
+                       setSearchOpen,
+                       setSearchResult,
+                       setShowSearchResult
+                   }: SearchBarProps) => {
     const [selectorState, setSelectorState] = useState('none')
     const {genres, types, cultureStatuses, regions} = useContext(GRingContext)
 
@@ -40,7 +34,7 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
                     onChange={event => setSearchRequest({...searchRequest, [fieldName]: event.target.value})}
                 />
                 <FormControlLabel
-                    sx={{marginRight:0, marginLeft: 1}}
+                    sx={{marginRight: 0, marginLeft: 1}}
                     labelPlacement={'bottom'}
                     control={<Checkbox size={'small'} sx={{p: 0}}
                                        onChange={event => {
@@ -56,7 +50,7 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
     }
 
     function listGenres(selectedGenres: string[], allGenres: FilterItem[]): string {
-        return selectedGenres.length===0 ? '' : selectedGenres.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
+        return selectedGenres.length === 0 ? '' : selectedGenres.map(s => allGenres.find(t => t.name === s)?.displayName).join(", ")
     }
 
     function listCultureStatuses(selectedStatuses: string[], allGenres: FilterItem[]): string {
@@ -64,12 +58,16 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
     }
 
     function listTypes(selectedTypes: string[], allTypes: FilterItem[][]) {
-        return selectedTypes.length===0 ? '' : selectedTypes.map(s => allTypes.flatMap(ta=>[...ta])
+        return selectedTypes.length === 0 ? '' : selectedTypes.map(s => allTypes.flatMap(ta => [...ta])
             .find(t => t.name === s)?.displayName).join(", ")
     }
 
-    function listDistricts(selectedDistricts: string[], allDistricts: {name: string, districts: {codes: string[], name: string}[]}[]) {
-        return selectedDistricts.length===0 ? '' : selectedDistricts.join(", ")
+    function listDistricts(selectedDistricts: string[]) {
+        return selectedDistricts.length === 0 ? '' :
+        regions
+            .filter(reg => reg.districts.findIndex(distr => selectedDistricts.includes(distr.codes[0])) >= 0)
+            .map(reg => `${reg.name} (${reg.districts.filter(d => selectedDistricts.includes(d.codes[0])).length})`)
+            .join(', ')
     }
 
     function doSearch() {
@@ -94,8 +92,8 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
     }
 
     function empty(searchRequest: SearchRequest) {
-        return searchRequest.genres.length === 0 && searchRequest.types.length === 0 && searchRequest.cultureStatuses.length===0 &&
-            searchRequest.name==='' && searchRequest.architect==='' && searchRequest.districts.length===0
+        return searchRequest.genres.length === 0 && searchRequest.types.length === 0 && searchRequest.cultureStatuses.length === 0 &&
+            searchRequest.name === '' && searchRequest.architect === '' && searchRequest.districts.length === 0
     }
 
     return (
@@ -108,16 +106,22 @@ const SearchBar = ({searchRequest, setSearchRequest, setSearchOpen, setSearchRes
 
                     {textFieldWithCheckbox('Название', 'name', searchRequest.name)}
 
-                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='regions' ? 'none' : 'regions')}>Регионы</Button>
-                    <Typography sx={{paddingBottom: 2}}>{listDistricts(searchRequest.districts, regions)}</Typography>
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}}
+                            onClick={() => setSelectorState(selectorState === 'regions' ? 'none' : 'regions')}>Регионы</Button>
+                    <Typography sx={{paddingBottom: 2}}>{listDistricts(searchRequest.districts)}</Typography>
 
-                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='cultureStatuses' ? 'none' : 'cultureStatuses')}>Культурный статус</Button>
-                    <Typography sx={{paddingBottom: 2}}>{listCultureStatuses(searchRequest.cultureStatuses, cultureStatuses)}</Typography>
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}}
+                            onClick={() => setSelectorState(selectorState === 'cultureStatuses' ? 'none' : 'cultureStatuses')}>Культурный
+                        статус</Button>
+                    <Typography
+                        sx={{paddingBottom: 2}}>{listCultureStatuses(searchRequest.cultureStatuses, cultureStatuses)}</Typography>
 
-                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='genres' ? 'none' : 'genres')}>Стили</Button>
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}}
+                            onClick={() => setSelectorState(selectorState === 'genres' ? 'none' : 'genres')}>Стили</Button>
                     <Typography sx={{paddingBottom: 2}}>{listGenres(searchRequest.genres, genres)}</Typography>
 
-                    <Button variant={'outlined'} sx={{paddingBottom: 1}} onClick={()=> setSelectorState(selectorState==='types' ? 'none' : 'types')}>Типы</Button>
+                    <Button variant={'outlined'} sx={{paddingBottom: 1}}
+                            onClick={() => setSelectorState(selectorState === 'types' ? 'none' : 'types')}>Типы</Button>
                     <Typography sx={{paddingBottom: 2}}>{listTypes(searchRequest.types, types)}</Typography>
 
                     {textFieldWithCheckbox('Архитектор', 'architect', searchRequest.architect)}
