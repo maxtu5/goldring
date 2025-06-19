@@ -83,7 +83,8 @@ const SideBar = ({
         setScoreRange,
         setGlobalFilter,
         globalFilter,
-        renewStatusFilters
+        renewStatusFilters,
+        setAppMode
     } = useContext(GRingContext)
     const [localFilter, setLocalFilter] = useState<Filters>({
         statuses: [],
@@ -204,6 +205,8 @@ const SideBar = ({
                                     label={status}
                                 />))
                             }
+                            <Button variant={'contained'} fullWidth={true} sx={{marginTop:2}}
+                            onClick={()=>setAppMode('new')}>создать</Button>
                         </Box>
                     </FormGroup>
                 </Stack>

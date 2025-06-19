@@ -1,10 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {
-    Box,
-    Dialog,
-    DialogContent,
-    Stack,
-} from "@mui/material";
+import {Box, Dialog, DialogContent,} from "@mui/material";
 import {GRingContext} from "../../utils/context";
 import MapArea from "./MapArea";
 import {emptyPlace, FullPlace, PlaceForEdit} from "../../utils/types";
@@ -12,6 +7,7 @@ import ImageGallery from "../objectcard/ImageGallery";
 import ObjectDataPanel from "../objectcard/ObjectDataPanel";
 import EditPlaceForm from "../objectcard/EditPlaceForm";
 import {loadPlaceDisplay, loadPlaceEdit} from "../../fetchers/fetchers";
+import {CreatePointForm} from "../objectcard/CreatePointForm";
 
 const MainArea = () => {
     const {setAppMode, appMode} = useContext(GRingContext)
@@ -41,7 +37,7 @@ const MainArea = () => {
         setEditMode(true)
     }
 
-    function setEditModeAndUnload() {
+    function setViewModeAndUnload() {
         setEditPlaceData(null)
         setEditMode(false)
     }
@@ -62,19 +58,23 @@ const MainArea = () => {
         >
             <DialogContent
                 sx={{p: 0}}>
-                {editMode && editPlaceData !== null ? <EditPlaceForm
-                        place={editPlaceData}
-                        setPlace={setEditPlaceData}
-                        switchMode={() => setEditModeAndUnload()}
-                        refreshPlace={()=>loadPlaceDisplay(editPlaceData?.id, setCurrentPlace)}/> :
-                    <Box
-                        sx={{
-                            height: '100%',
-                            maxHeight: '100vh',
-                        }}>
-                        <ImageGallery place={currentPlace}/>
-                        <ObjectDataPanel place={currentPlace} switchMode={() => setEdtModeAndLoad(currentPlace.id)}/>
-                    </Box>
+                {appMode === 'new' ? <CreatePointForm/> :
+                    (editMode && editPlaceData !== null ?
+                        <EditPlaceForm
+                            place={editPlaceData}
+                            setPlace={setEditPlaceData}
+                            switchMode={() => setViewModeAndUnload()}
+                            refreshPlace={() => loadPlaceDisplay(editPlaceData?.id, setCurrentPlace)}
+                        /> :
+                        <Box
+                            sx={{
+                                height: '100%',
+                                maxHeight: '100vh',
+                            }}>
+                            <ImageGallery place={currentPlace}/>
+                            <ObjectDataPanel place={currentPlace}
+                                             switchMode={() => setEdtModeAndLoad(currentPlace.id)}/>
+                        </Box>)
                 }
             </DialogContent>
         </Dialog>
