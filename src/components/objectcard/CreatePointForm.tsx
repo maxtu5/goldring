@@ -2,7 +2,7 @@ import {
     Box,
     Button, Checkbox,
     FormControl,
-    FormControlLabel, InputLabel, ListItemText, MenuItem, OutlinedInput,
+    FormControlLabel, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput,
     Radio,
     RadioGroup, Select, SelectChangeEvent,
     Stack,
@@ -12,6 +12,8 @@ import {
 import React, {useContext, useState} from "react";
 import {GRingContext} from "../../utils/context";
 import {PlaceForEdit} from "../../utils/types";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 function EditTextField(props: {
     value: string,
@@ -25,6 +27,8 @@ function EditTextField(props: {
 
 export function CreatePointForm() {
     const {setAppMode, statuses, cultureStatuses, types, genres, regions} = useContext(GRingContext)
+    const [regionCodeExpanded, setRegionCodeExpanded] = useState(false)
+    const [regionsExpanded, setRegionsExpanded] = React.useState<boolean[]>(regions.map(() => false))
     const [localPlace, setLocalPlace] = useState<PlaceForEdit>({
         id: '',
         latlon: '',
@@ -104,22 +108,60 @@ export function CreatePointForm() {
                 <EditTextField value={localPlace.country} label='country'
                                onChange={(event) => setLocalPlace({...localPlace, country: event.target.value})}/>
 
+                <Stack direction={'row'} justifyContent={'space-between'}>
+                    <Stack direction={'row'}>
+                        <IconButton onClick={() => {
+                            setRegionCodeExpanded(!regionCodeExpanded)
+                        }}>
+                            {regionCodeExpanded ? <ExpandMoreIcon/> : <ExpandLessIcon/>}
+                        </IconButton>
+                        <Typography variant={'subtitle1'} paddingTop={0.9}>
+                            regionCode
+                        </Typography>
+                    </Stack>
+                    <Typography>{localPlace.regionCode}</Typography>
+                </Stack>
+                {regionCodeExpanded && (regions.map((region, index) => (
+                    <Stack>
+                        <Stack direction={'row'}>
+                            <IconButton onClick={() => {
+                                setRegionsExpanded(regionsExpanded.map((e, i) => i === index ? !e : e))
+                            }}>
+                                {regionsExpanded[index] ? <ExpandMoreIcon/> : <ExpandLessIcon/>}
+                            </IconButton>
+                            <Typography variant={'subtitle1'} paddingTop={0.9}>{region.name}</Typography>
+                        </Stack>
+                        {regionsExpanded[index] && region.districts
+                            .flatMap((district: { codes: string[]; name: string; }) => district.codes.map(code => (
+                                    <FormControlLabel
+                                        control={<Checkbox
+                                            sx={{p: 0, marginRight: 0}}
+                                            size={'small'}
+                                            checked={localPlace.regionCode === code}
+                                            onChange={() => setLocalPlace({...localPlace, regionCode: code})}
+                                        />}
+                                        label={<Typography variant={'caption'}>{code}</Typography>}
+                                    />
+                                ))
+                            )}
+                    </Stack>
+                )))}
 
-                <Select size={'small'} sx={{marginBottom: 2}} displayEmpty={true}
-                        value={localPlace.regionCode}
-                        onChange={(event) =>
-                            setLocalPlace({...localPlace, regionCode: event.target.value})}
-                        renderValue={(selected) => selected === '' ? 'regionCode' : selected}
-                >
-                    {regions.flatMap(region =>
-                        region.districts.flatMap((district, index) =>
-                            district.codes.map(code =>
-                                <MenuItem key={code} value={code} divider={index===region.districts.length-1}>
-                                    <Checkbox sx={{p: 0}} checked={localPlace.regionCode === code}/>
-                                    <ListItemText primary={code}/>
-                                </MenuItem>)))
-                    }
-                </Select>
+                {/*<Select size={'small'} sx={{marginBottom: 2}} displayEmpty={true}*/}
+                {/*        value={localPlace.regionCode}*/}
+                {/*        onChange={(event) =>*/}
+                {/*            setLocalPlace({...localPlace, regionCode: event.target.value})}*/}
+                {/*        renderValue={(selected) => selected === '' ? 'regionCode' : selected}*/}
+                {/*>*/}
+                {/*    {regions.flatMap(region =>*/}
+                {/*        region.districts.flatMap((district, index) =>*/}
+                {/*            district.codes.map(code =>*/}
+                {/*                <MenuItem key={code} value={code} divider={index === region.districts.length - 1}>*/}
+                {/*                    <Checkbox sx={{p: 0}} checked={localPlace.regionCode === code}/>*/}
+                {/*                    <ListItemText primary={code}/>*/}
+                {/*                </MenuItem>)))*/}
+                {/*    }*/}
+                {/*</Select>*/}
 
                 {/*<EditTextField value={localPlace.regionCode} label='regionCode'*/}
                 {/*               onChange={(event) => setLocalPlace({...localPlace, regionCode: event.target.value})}/>*/}
