@@ -17,7 +17,7 @@ const MainArea = () => {
 
     useEffect(() => {
         if (!appMode) return
-        if (appMode !== 'map') {
+        if (appMode !== 'map' && appMode !== 'new') {
             loadPlaceDisplay(appMode, setCurrentPlace)
         } else {
             setCurrentPlace(emptyPlace)
