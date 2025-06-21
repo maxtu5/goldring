@@ -21,6 +21,7 @@ export interface ContextData {
         center: number[],
         zoom: number
     },
+    setMapState: (state: {center:number[], zoom:number})=>void;
     renewMapState: (center: number[], zoom: number)=>void,
     renewStatusFilters: (filters: string[])=>void
 }
@@ -42,6 +43,7 @@ export const GRingContext = React.createContext<ContextData>(
         globalFilter: {cultureStatuses:[], statuses: [], statusAll: false, initialized: false},
         setGlobalFilter: f=>{},
         mapState: defaultInitialMapState,
+        setMapState: (state: {center: number[], zoom: number})=>{},
         renewMapState: (center: number[], zoom: number)=>{},
         renewStatusFilters: (filters: string[])=>{}
     })

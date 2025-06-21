@@ -41,7 +41,13 @@ const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
             // setBounds(calcBounds(places, searchResult))
         }
     }, [showSearchResult, searchResult]);
-    // iuazplzqiffpovqq
+
+    useEffect(() => {
+        if (mapRef.current)
+            // @ts-ignore
+            mapRef.current.setCenter(mapState.center, mapState.zoom)
+    }, [mapState]);
+
     return (
         <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
             <Map

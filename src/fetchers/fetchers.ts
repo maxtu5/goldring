@@ -1,4 +1,4 @@
-import {base_url, url_getPlaceDisplay, url_getPlaceEdit, url_savePlaceEdit} from "../utils/constants";
+import {base_url, url_getPlaceDisplay, url_getPlaceEdit, url_savePlaceEdit, url_savePlaceNew} from "../utils/constants";
 import {FullPlace, PlaceForEdit} from "../utils/types";
 
 export async function loadPlaceDisplay(id: string, refreshCallback: (place: FullPlace)=>void) {
@@ -65,7 +65,7 @@ export async function loadPlaceEdit(id: string) {
 
 export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => void) {
     console.log('save edit data')
-    const bd = {
+    const body = {
         ...place,
         types: place.typesAsString?.split(',').filter(s=>s!==''),
         genres: place.genresAsString?.split(',').filter(s=>s!==''),
@@ -81,7 +81,7 @@ export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => v
                 'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify(bd)
+            body: JSON.stringify(body)
         })
         .then(data => {
             if (data.status === 200) {
@@ -93,4 +93,48 @@ export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => v
         .catch(error => {
             console.log(error)
         })
+}
+
+export async function saveNew(place: PlaceForEdit, callbackOnSuccess: () => void) {
+    console.log('save new place')
+    const body = {
+        latlon: place.latlon,
+        name: place.name,
+        date: place.date,
+        description: place.description,
+        cultureStatus: place.cultureStatus,
+        status: place.status,
+        visibility: place.visibility,
+        country: place.country,
+        regionCode: place.regionCode,
+        addString: place.addString,
+        monument: place.monument,
+        types: place.types,
+        genres: place.genres,
+        architects: place.architectsAsString?.split(',').filter(s=>s!=='').map(s=>s.trim()),
+        pages: place.pagesAsString?.split(',').filter(s=>s!=='').map(s=>s.trim()),
+        pics: parseInt(place.picsAsString || '0'),
+        appeal: parseFloat(place.appealAsString || '0')
+    }
+    console.log(JSON.stringify(body))
+    await fetch(`${base_url}${url_savePlaceNew}`,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(body)
+        })
+        .then(data => {
+            if (data.status === 200) {
+                callbackOnSuccess()
+            } else {
+                alert('Failed ' + data.status);
+            }
+        })
+        .catch(error => {
+            console.log(error)
+        })
+
 }

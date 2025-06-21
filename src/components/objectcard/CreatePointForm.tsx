@@ -14,6 +14,8 @@ import {GRingContext} from "../../utils/context";
 import {PlaceForEdit} from "../../utils/types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import {saveNew} from "../../fetchers/fetchers";
+import {latlonStringToNumbers} from "../../utils/utils";
 
 function EditTextField(props: {
     value: string,
@@ -26,7 +28,7 @@ function EditTextField(props: {
 }
 
 export function CreatePointForm() {
-    const {setAppMode, statuses, cultureStatuses, types, genres, regions} = useContext(GRingContext)
+    const {setAppMode, statuses, cultureStatuses, types, genres, regions, setMapState} = useContext(GRingContext)
     const [regionCodeExpanded, setRegionCodeExpanded] = useState(false)
     const [regionsExpanded, setRegionsExpanded] = React.useState<boolean[]>(regions.map(() => false))
     const [localPlace, setLocalPlace] = useState<PlaceForEdit>({
@@ -41,7 +43,7 @@ export function CreatePointForm() {
         types: [],
         architects: [],
         pages: [],
-        cultureStatus: 'NONE',
+        cultureStatus: '',
         typesAsString: '',
         genresAsString: '',
         architectsAsString: '',
@@ -76,11 +78,10 @@ export function CreatePointForm() {
                     <span>
                     <Button onClick={() => setAppMode('map')}>ВЕРНУТЬСЯ</Button>
                     <Button onClick={() => {
-                        // saveEdited(localPlace, () => {
-                        //     // refreshPlace()
-                        //     setAppMode('map')
-                        // })
-                        setAppMode('map')
+                        saveNew(localPlace, () => {
+                            setMapState({center: latlonStringToNumbers(localPlace.latlon), zoom:18})
+                            setAppMode('map')
+                        })
                     }}
                     >СОХРАНИТЬ</Button>
                         </span>
@@ -108,18 +109,14 @@ export function CreatePointForm() {
                 <EditTextField value={localPlace.country} label='country'
                                onChange={(event) => setLocalPlace({...localPlace, country: event.target.value})}/>
 
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                    <Stack direction={'row'}>
-                        <IconButton onClick={() => {
-                            setRegionCodeExpanded(!regionCodeExpanded)
-                        }}>
-                            {regionCodeExpanded ? <ExpandMoreIcon/> : <ExpandLessIcon/>}
-                        </IconButton>
-                        <Typography variant={'subtitle1'} paddingTop={0.9}>
-                            regionCode
-                        </Typography>
-                    </Stack>
-                    <Typography>{localPlace.regionCode}</Typography>
+                <Stack direction={'row'} sx={{marginBottom: 2}}>
+                    <IconButton onClick={() => {
+                        setRegionCodeExpanded(!regionCodeExpanded)
+                    }}>
+                        {regionCodeExpanded ? <ExpandMoreIcon/> : <ExpandLessIcon/>}
+                    </IconButton>
+                    <TextField sx={{width: '100%', paddingLeft: 1}} size={'small'}
+                               value={localPlace.regionCode === '' ? 'regionCode' : localPlace.regionCode}/>
                 </Stack>
                 {regionCodeExpanded && (regions.map((region, index) => (
                     <Stack>
@@ -131,40 +128,28 @@ export function CreatePointForm() {
                             </IconButton>
                             <Typography variant={'subtitle1'} paddingTop={0.9}>{region.name}</Typography>
                         </Stack>
-                        {regionsExpanded[index] && region.districts
-                            .flatMap((district: { codes: string[]; name: string; }) => district.codes.map(code => (
-                                    <FormControlLabel
-                                        control={<Checkbox
-                                            sx={{p: 0, marginRight: 0}}
-                                            size={'small'}
-                                            checked={localPlace.regionCode === code}
-                                            onChange={() => setLocalPlace({...localPlace, regionCode: code})}
-                                        />}
-                                        label={<Typography variant={'caption'}>{code}</Typography>}
-                                    />
-                                ))
-                            )}
+                        <Box paddingLeft={6}>
+                            {regionsExpanded[index] && region.districts
+                                .flatMap((district: { codes: string[]; name: string; }) =>
+                                    district.codes.map(code => (
+                                        <FormControlLabel
+                                            sx={{width: '20vw'}}
+                                            control={<Checkbox
+                                                sx={{p: 0, marginRight: 0}}
+                                                checked={localPlace.regionCode === code}
+
+                                                onChange={() => {
+                                                    console.log(localPlace, code)
+                                                    setLocalPlace({...localPlace, regionCode: localPlace.regionCode===code ? '' : code})
+                                                }}
+                                            />}
+                                            label={<Typography>{district.name + (code.endsWith('G') ? ' - Г' : '')}</Typography>}
+                                        />
+                                    ))
+                                )}
+                        </Box>
                     </Stack>
                 )))}
-
-                {/*<Select size={'small'} sx={{marginBottom: 2}} displayEmpty={true}*/}
-                {/*        value={localPlace.regionCode}*/}
-                {/*        onChange={(event) =>*/}
-                {/*            setLocalPlace({...localPlace, regionCode: event.target.value})}*/}
-                {/*        renderValue={(selected) => selected === '' ? 'regionCode' : selected}*/}
-                {/*>*/}
-                {/*    {regions.flatMap(region =>*/}
-                {/*        region.districts.flatMap((district, index) =>*/}
-                {/*            district.codes.map(code =>*/}
-                {/*                <MenuItem key={code} value={code} divider={index === region.districts.length - 1}>*/}
-                {/*                    <Checkbox sx={{p: 0}} checked={localPlace.regionCode === code}/>*/}
-                {/*                    <ListItemText primary={code}/>*/}
-                {/*                </MenuItem>)))*/}
-                {/*    }*/}
-                {/*</Select>*/}
-
-                {/*<EditTextField value={localPlace.regionCode} label='regionCode'*/}
-                {/*               onChange={(event) => setLocalPlace({...localPlace, regionCode: event.target.value})}/>*/}
 
                 <EditTextField value={localPlace.addString} label='addString'
                                onChange={(event) => setLocalPlace({...localPlace, addString: event.target.value})}/>
@@ -193,7 +178,7 @@ export function CreatePointForm() {
                         setLocalPlace({...localPlace, cultureStatus: event.target.value})
                     }}
                 >
-                    <MenuItem value='NONE'>cultureStatus</MenuItem>
+                    <MenuItem value=''>cultureStatus</MenuItem>
                     {cultureStatuses.map(status => (
                         <MenuItem value={status.name}>{status.displayName}</MenuItem>
                     ))}

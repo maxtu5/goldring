@@ -5,6 +5,7 @@ export const url_getinitial = '/main'
 export const url_getPlaceDisplay = '/load-point?id='
 export const url_getPlaceEdit = '/load?id='
 export const url_savePlaceEdit = '/edit'
+export const url_savePlaceNew = '/new'
 
 export const url_search = '/search'
 export const url_imageprefix = 'http://127.0.0.1:8081/'

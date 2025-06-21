@@ -112,6 +112,7 @@ function App() {
                 globalFilter: filter,
                 setGlobalFilter: setFilter,
                 mapState: initialMapState,
+                setMapState: setInitialMapState,
                 renewMapState: saveMapState,
                 renewStatusFilters: saveStatusFilters
             }}>
