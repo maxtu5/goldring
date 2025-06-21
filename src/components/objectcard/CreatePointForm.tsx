@@ -1,10 +1,10 @@
 import {
     Box,
-    Button,
+    Button, Checkbox,
     FormControl,
-    FormControlLabel, MenuItem,
+    FormControlLabel, InputLabel, ListItemText, MenuItem, OutlinedInput,
     Radio,
-    RadioGroup, Select,
+    RadioGroup, Select, SelectChangeEvent,
     Stack,
     TextField,
     Typography
@@ -24,7 +24,7 @@ function EditTextField(props: {
 }
 
 export function CreatePointForm() {
-    const {setAppMode, statuses, cultureStatuses} = useContext(GRingContext)
+    const {setAppMode, statuses, cultureStatuses, types, genres, regions} = useContext(GRingContext)
     const [localPlace, setLocalPlace] = useState<PlaceForEdit>({
         id: '',
         latlon: '',
@@ -53,6 +53,13 @@ export function CreatePointForm() {
         monument: '',
         dateModified: '',
     })
+
+    const handleChangeType = (event: SelectChangeEvent<typeof localPlace.types>) => {
+        const {
+            target: {value},
+        } = event;
+        setLocalPlace({...localPlace, types: typeof value === 'string' ? [value] : [...value]});
+    };
 
     return (
         <Box>
@@ -97,19 +104,38 @@ export function CreatePointForm() {
                 <EditTextField value={localPlace.country} label='country'
                                onChange={(event) => setLocalPlace({...localPlace, country: event.target.value})}/>
 
-                <EditTextField value={localPlace.regionCode} label='regionCode'
-                               onChange={(event) => setLocalPlace({...localPlace, regionCode: event.target.value})}/>
+
+                <Select size={'small'} sx={{marginBottom: 2}} displayEmpty={true}
+                        value={localPlace.regionCode}
+                        onChange={(event) =>
+                            setLocalPlace({...localPlace, regionCode: event.target.value})}
+                        renderValue={(selected) => selected === '' ? 'regionCode' : selected}
+                >
+                    {regions.flatMap(region =>
+                        region.districts.flatMap((district, index) =>
+                            district.codes.map(code =>
+                                <MenuItem key={code} value={code} divider={index===region.districts.length-1}>
+                                    <Checkbox sx={{p: 0}} checked={localPlace.regionCode === code}/>
+                                    <ListItemText primary={code}/>
+                                </MenuItem>)))
+                    }
+                </Select>
+
+                {/*<EditTextField value={localPlace.regionCode} label='regionCode'*/}
+                {/*               onChange={(event) => setLocalPlace({...localPlace, regionCode: event.target.value})}/>*/}
 
                 <EditTextField value={localPlace.addString} label='addString'
                                onChange={(event) => setLocalPlace({...localPlace, addString: event.target.value})}/>
 
                 <EditTextField value={localPlace.appealAsString || ''} label='appeal'
                                onChange={(event) => setLocalPlace({
-                                   ...localPlace, appealAsString: event.target.value})}/>
+                                   ...localPlace, appealAsString: event.target.value
+                               })}/>
 
                 <EditTextField value={localPlace.picsAsString || ''} label='pics'
                                onChange={(event) => setLocalPlace({
-                                   ...localPlace, picsAsString: event.target.value})}/>
+                                   ...localPlace, picsAsString: event.target.value
+                               })}/>
 
                 <EditTextField value={localPlace.name} label='name'
                                onChange={(event) => setLocalPlace({...localPlace, name: event.target.value})}/>
@@ -118,7 +144,7 @@ export function CreatePointForm() {
                                onChange={(event) => setLocalPlace({...localPlace, monument: event.target.value})}/>
 
                 <Select
-                    value={localPlace.cultureStatus===''? 'cultureStatus' : localPlace.cultureStatus}
+                    value={localPlace.cultureStatus === '' ? 'cultureStatus' : localPlace.cultureStatus}
                     size={'small'}
                     sx={{marginBottom: 2, width: "100%"}}
                     onChange={(event) => {
@@ -126,7 +152,7 @@ export function CreatePointForm() {
                     }}
                 >
                     <MenuItem value='NONE'>cultureStatus</MenuItem>
-                    {cultureStatuses.map(status=>(
+                    {cultureStatuses.map(status => (
                         <MenuItem value={status.name}>{status.displayName}</MenuItem>
                     ))}
                 </Select>
@@ -137,16 +163,56 @@ export function CreatePointForm() {
                 <EditTextField value={localPlace.description} label='description'
                                onChange={(event) => setLocalPlace({...localPlace, description: event.target.value})}/>
 
-                <EditTextField value={localPlace.genresAsString || ''} label='genres'
-                               onChange={(event) => setLocalPlace({...localPlace, genresAsString: event.target.value})}/>
+                <Select multiple size={'small'} sx={{marginBottom: 2}} displayEmpty={true}
+                        value={localPlace.genres}
+                        onChange={(event) => setLocalPlace({
+                            ...localPlace,
+                            genres: typeof event.target.value === 'string' ? [event.target.value] : event.target.value
+                        })}
+                        renderValue={(selected) => selected.length === 0 ? 'Стили' : selected.join(', ')}
+                >
+                    {genres.map(genre => (
+                        <MenuItem key={genre.name} value={genre.name}>
+                            <Checkbox sx={{p: 0}} checked={localPlace.genres.includes(genre.name)}/>
+                            <ListItemText primary={genre.displayName}/>
+                        </MenuItem>
+                    ))}
+                </Select>
 
-                <EditTextField value={localPlace.typesAsString || ''} label='types'
-                               onChange={(event) =>
-                                   setLocalPlace({...localPlace, typesAsString: event.target.value})}/>
+                <FormControl sx={{marginBottom: 2}}>
+                    <InputLabel shrink htmlFor="select-types"
+                                sx={{backgroundColor: 'white', paddingLeft: 1, paddingRight: 1}}>
+                        Типы
+                    </InputLabel>
+                    <Select multiple size="small"
+                            value={localPlace.types}
+                            onChange={handleChangeType}
+                            renderValue={(selected) => selected.join(', ')}
+                    >
+                        {types.flatMap((typesGroup, i) => (typesGroup.map((type, index) => (
+                                <MenuItem key={type.name} value={type.name} divider={index === typesGroup.length - 1}>
+                                    <Checkbox sx={{p: 0}} checked={localPlace.types.includes(type.name)}/>
+                                    <ListItemText primary={type.displayName}/>
+                                </MenuItem>
+                            ))
+                        ))}
+                    </Select>
+                </FormControl>
+
+                {/*<EditTextField value={localPlace.genresAsString || ''} label='genres'*/}
+                {/*               onChange={(event) => setLocalPlace({*/}
+                {/*                   ...localPlace,*/}
+                {/*                   genresAsString: event.target.value*/}
+                {/*               })}/>*/}
+
+                {/*<EditTextField value={localPlace.typesAsString || ''} label='types'*/}
+                {/*               onChange={(event) =>*/}
+                {/*                   setLocalPlace({...localPlace, typesAsString: event.target.value})}/>*/}
 
                 <EditTextField value={localPlace.architectsAsString || ''} label='architects'
                                onChange={(event) => setLocalPlace({
-                                   ...localPlace, architectsAsString: event.target.value})}/>
+                                   ...localPlace, architectsAsString: event.target.value
+                               })}/>
 
                 <EditTextField value={localPlace.pagesAsString || ''} label='pages'
                                onChange={(event) => setLocalPlace({...localPlace, pagesAsString: event.target.value})}/>
