@@ -37,9 +37,9 @@ function ListOpener(props: {
 
 function SelectItem(props: { changeHandler: () => void, checked: boolean, label: string, itemWidth: string }) {
     return (<FormControlLabel sx={{width: props.itemWidth}}
-                              control={<Checkbox sx={{p: 0, marginRight: 0}} checked={props.checked}
+                              control={<Checkbox size={'small'} sx={{p: 0, marginRight: 0}} checked={props.checked}
                                                  onChange={props.changeHandler}/>}
-                              label={<Typography>{props.label}</Typography>}/>)
+                              label={<Typography variant={'caption'}>{props.label}</Typography>}/>)
 }
 
 export function CreatePointForm() {
