@@ -244,7 +244,7 @@ export function CreatePointForm() {
                                 label={<TextField sx={{width: '100%', paddingLeft: 1}} size={'small'}
                                                   value={localPlace.types.length === 0 ? 'types' : localPlace.types.join(', ')}/>}/>
                     {typesExpanded && (types.map((typeGroup) => (
-                        <Box marginLeft={6}>
+                        <Box marginLeft={6} marginTop={2}>
                             {typeGroup.map((type, index) => (
                                 <SelectItem itemWidth={'20vw'}
                                             checked={localPlace.types.includes(type.name)}
