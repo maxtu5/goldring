@@ -48,6 +48,10 @@ const CustomMap = ({searchResult, showSearchResult}: CustomMapProps) => {
             mapRef.current.setCenter(mapState.center, mapState.zoom)
     }, [mapState]);
 
+    useEffect(() => {
+        console.log('palaces renew');
+    }, [places]);
+
     return (
         <YMaps query={{apikey: '3954d170-f82d-46dc-b843-bf9cd5117be4'}}>
             <Map

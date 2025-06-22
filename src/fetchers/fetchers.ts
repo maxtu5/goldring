@@ -1,11 +1,11 @@
 import {base_url, url_getPlaceDisplay, url_getPlaceEdit, url_savePlaceEdit, url_savePlaceNew} from "../utils/constants";
-import {FullPlace, PlaceForEdit} from "../utils/types";
+import {FullPlace, LightPlace, PlaceForEdit} from "../utils/types";
 
-export async function loadPlaceDisplay(id: string, refreshCallback: (place: FullPlace)=>void) {
+export async function loadPlaceDisplay(id: string, refreshCallback: (place: FullPlace) => void) {
     await fetch(`${base_url}${url_getPlaceDisplay}${id}`)
         .then(response => response.json())
         .then(data => {
-            refreshCallback( {
+            refreshCallback({
                 id: data.id,
                 latlon: data.latlon,
                 name: data.name,
@@ -67,10 +67,10 @@ export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => v
     console.log('save edit data')
     const body = {
         ...place,
-        types: place.typesAsString?.split(',').filter(s=>s!==''),
-        genres: place.genresAsString?.split(',').filter(s=>s!==''),
-        architects: place.architectsAsString?.split(',').filter(s=>s!==''),
-        pages: place.pagesAsString?.split(',').filter(s=>s!==''),
+        types: place.typesAsString?.split(',').filter(s => s !== ''),
+        genres: place.genresAsString?.split(',').filter(s => s !== ''),
+        architects: place.architectsAsString?.split(',').filter(s => s !== ''),
+        pages: place.pagesAsString?.split(',').filter(s => s !== ''),
         pics: parseInt(place.picsAsString || '0'),
         appeal: parseFloat(place.appealAsString || '0')
     }
@@ -95,7 +95,7 @@ export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => v
         })
 }
 
-export async function saveNew(place: PlaceForEdit, callbackOnSuccess: () => void) {
+export async function saveNew(place: PlaceForEdit, callbackOnSuccess: (p: LightPlace) => void) {
     console.log('save new place')
     const body = {
         latlon: place.latlon,
@@ -111,8 +111,8 @@ export async function saveNew(place: PlaceForEdit, callbackOnSuccess: () => void
         monument: place.monument,
         types: place.types,
         genres: place.genres,
-        architects: place.architectsAsString?.split(',').filter(s=>s!=='').map(s=>s.trim()),
-        pages: place.pagesAsString?.split(',').filter(s=>s!=='').map(s=>s.trim()),
+        architects: place.architectsAsString?.split(',').filter(s => s !== '').map(s => s.trim()),
+        pages: place.pagesAsString?.split(',').filter(s => s !== '').map(s => s.trim()),
         pics: parseInt(place.picsAsString || '0'),
         appeal: parseFloat(place.appealAsString || '0')
     }
@@ -128,11 +128,22 @@ export async function saveNew(place: PlaceForEdit, callbackOnSuccess: () => void
         })
         .then(data => {
             if (data.status === 200) {
-                callbackOnSuccess()
+                return data.json()
             } else {
                 alert('Failed ' + data.status);
             }
         })
+        .then(data => callbackOnSuccess({
+            id: data.id,
+            cultureStatus: data.cultureStatus,
+            date: data.date,
+            genres: [...data.genres],
+            latlon: data.latlon,
+            rating: data.appeal,
+            status: data.status,
+            types: [...data.types],
+            visibility: data.visibility
+        }))
         .catch(error => {
             console.log(error)
         })

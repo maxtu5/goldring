@@ -95,6 +95,10 @@ function App() {
         localStorage.setItem("initialStatusFilters", JSON.stringify(filters))
     }
 
+    function addPlace(p: LightPlace) {
+        setInitialData({...initialData, places: [...initialData.places, p]})
+    }
+
     return (
         <Box>
             <GRingContext.Provider value={{
@@ -107,6 +111,7 @@ function App() {
                 regions: initialData.regions,
                 places: initialData.places
                     .filter(p => applyFilter(p)),
+                addPlace: addPlace,
                 scoreRange: scoreRange,
                 setScoreRange: setScoreRange,
                 globalFilter: filter,

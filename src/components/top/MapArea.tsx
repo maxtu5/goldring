@@ -17,6 +17,7 @@ const MapArea = () => {
     const containerRef = useRef(null);
 
     useEffect(() => {
+        console.log('set counter', places.length)
         setCounter(showSearchResult ? places.filter(p=>searchResult.includes(p.id)).length : places.length)
     }, [places, searchResult, showSearchResult])
 
