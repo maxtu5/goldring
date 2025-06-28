@@ -151,21 +151,19 @@ export function CreatePointForm() {
                                 setExpanded={() => setRegionsExpanded(regionsExpanded.map((e, i) => i === index ? !e : e))}
                                 label={<Typography variant={'subtitle1'} paddingTop={0.9}>{region.name}</Typography>}/>
                             <Box paddingLeft={6}>
-                                {regionsExpanded[index] && region.districts
-                                    .flatMap((district: { codes: string[]; name: string; }) =>
-                                        district.codes.map(code => (
-                                            <SelectItem itemWidth={'20vw'}
-                                                        checked={localPlace.regionCode === code}
-                                                        changeHandler={() => {
-                                                            setLocalPlace({
-                                                                ...localPlace,
-                                                                regionCode: localPlace.regionCode === code ? '' : code
-                                                            })
-                                                        }}
-                                                        label={district.name + (code.endsWith('G') ? ' - Г' : '')}
-                                            />
-                                        ))
-                                    )}
+                                {regionsExpanded[index] && region.districtsMap.map(district => (
+                                    <SelectItem itemWidth={'20vw'}
+                                                checked={localPlace.regionCode === district.displayName}
+                                                changeHandler={() => {
+                                                    setLocalPlace({
+                                                        ...localPlace,
+                                                        regionCode: localPlace.regionCode === district.displayName ? '' : district.displayName
+                                                    })
+                                                }}
+                                                label={district.name}
+                                    />
+                                ))
+                                }
                             </Box>
                         </Stack>
                     )))}

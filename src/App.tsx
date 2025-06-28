@@ -59,8 +59,11 @@ function App() {
             // @ts-ignore
             types: [...data.types.map(ta=>{return {...ta}})],
             cultureStatuses: {...data.cultureStatuses}, places: [...data.lightPlaces],
-            linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses], regions: [...data.regions]
+            linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses],
+            // @ts-ignore
+            regions:[...data.regions]
         });
+
         const info = {
             payload: {
                 genres: {...data.genres}, types: {...data.types},
@@ -108,7 +111,7 @@ function App() {
                 types: initialData.types.map(tt=> transformFilter(tt)),
                 statuses: initialData.statuses,
                 cultureStatuses: transformFilter(initialData.cultureStatuses),
-                regions: initialData.regions,
+                regions: initialData.regions.map(reg=>{return{...reg, districtsMap: transformFilter(reg.districtsMap)}}),
                 places: initialData.places
                     .filter(p => applyFilter(p)),
                 addPlace: addPlace,

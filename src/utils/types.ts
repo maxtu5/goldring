@@ -28,7 +28,7 @@ export interface InitialData {
     types: FilterItem[][],
     cultureStatuses: FilterItem[],
     statuses: string[],
-    regions: {name: string, districts: {codes: string[], name: string}[]}[]
+    regions: {name: string, districts: {codes: string[], name: string}[], districtsMap: FilterItem[]}[],
     linkPrefixes: string[],
     places: LightPlace[]
 }
@@ -114,5 +114,6 @@ export const emptyPlace: FullPlace = {
 
 export interface Region {
     name: string,
-    districts: {codes: string[], name: string}[]
+    districts: {codes: string[], name: string}[],
+    districtsMap: FilterItem[]
 }
