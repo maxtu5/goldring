@@ -7,15 +7,15 @@ import {url_imageprefix} from "../../utils/constants";
 import {ZoomableImage} from "./ZoomableImage";
 
 interface Props {
-    place: FullPlace
+    place: FullPlace,
+    setImageView: (value: string) => void
 }
 
 function hasImages(images: string[]) {
-    console.log('has images?', images);
     return images && images.length > 0;
 }
 
-const ImageGallery = ({place}: Props) => {
+const ImageGallery = ({place, setImageView}: Props) => {
     const {setAppMode} = useContext(GRingContext)
 
     const itemData = hasImages(place.pics) ? place.pics.map(i => {
@@ -70,8 +70,18 @@ const ImageGallery = ({place}: Props) => {
                                 // margin: '0'
                                 backgroundColor: 'black'
                             }}>
-                                <ZoomableImage alt={item.title} src={item.img}/>
+                                <CardMedia
+                                    component="img"
+                                    loading="lazy"
+                                    alt={item.title}
+                                    width='auto'
+                                    src={item.img}
+                                    sx={{
+                                        objectFit: "contain",
+                                        height:{ sm: '80%', xl: '85%'}
 
+                                    }}
+                                />
                                 <CardContent>
                                     <Rating sx={{
                                         position: "absolute",
@@ -79,6 +89,16 @@ const ImageGallery = ({place}: Props) => {
                                         left: 0,
                                         margin: 0
                                     }} value={place.appeal} precision={0.1}/>
+                                    <Button sx={{
+                                        position: "relative",
+                                        bottom: "10vh",
+                                        left: 0,
+                                        margin: 0,
+                                        // zIndex: 10000
+                                    }}
+                                        onClick={()=>setImageView(item.img)}>
+                                        увеличить
+                                    </Button>
                                 </CardContent>
                             </Card>
                         )}
