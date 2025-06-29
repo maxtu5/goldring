@@ -1,4 +1,4 @@
-import {Box, Button, CardMedia} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import React, {useEffect} from "react";
 
 export function ZoomableImage(props: {
@@ -16,44 +16,37 @@ export function ZoomableImage(props: {
 
     function handleDrag(deltaX: number, deltaY: number) {
         setPosition(position => position = {
-            x: position.x - deltaX, //position.x<=0 && deltaX>0 || position.x>100 && deltaX<0 ? position.x : position.x-deltaX,
-            y: position.y - deltaY
+            x: position.x-deltaX<0 ? 0 : (position.x-deltaX>100 ? 100 : position.x-deltaX),
+            y: position.y-deltaY<0 ? 0 : (position.y-deltaY>100 ? 100 : position.y-deltaY)
         })
     }
 
     useEffect(() => {
-        console.log('draw')
         if (imageRef.current === null) return
-        // @ts-ignore
         const image = imageRef.current
         let isDragging = false
         let prevPosition = {x: 0, y: 0}
-// @ts-ignore
-        const handleMouseDown = (e) => {
+
+        const handleMouseDown = (e: MouseEvent) => {
             e.preventDefault()
-            console.log("Mouse-Down")
             isDragging = true
             prevPosition = {x: e.clientX, y: e.clientY}
         }
-// @ts-ignore
-        const handleMouseMove = (e) => {
+
+        const handleMouseMove = (e: MouseEvent) => {
             if (!isDragging) return
             console.log("Mouse-move")
             const deltaX = e.clientX - prevPosition.x
             const deltaY = e.clientY - prevPosition.y
             prevPosition = {x: e.clientX, y: e.clientY}
-            handleDrag(deltaX / 2, deltaY / 2)
-            // setPosition(position=>{x: position.x + deltaX, y: position.y + deltaY})
+            handleDrag(deltaX / Math.pow(zoom/100, 3) , deltaY / Math.pow(zoom/100, 3))
         }
-// @ts-ignore
 
-        const handleMouseUp = (e) => {
-            console.log("Mouse-Up")
+        const handleMouseUp = (e: MouseEvent) => {
             isDragging = false
         }
-// @ts-ignore
 
-        const handleMouseWheel = (e) => {
+        const handleMouseWheel = (e: WheelEvent) => {
             zoomPlus(e.deltaY)
         }
 
@@ -71,21 +64,24 @@ export function ZoomableImage(props: {
         }
     }, [imageRef]);
 
-    return (<Box ref={imageRef} sx={{
-        width: '100%',
-        height: '100vh',
-        backgroundColor: 'black',
-        backgroundImage: `url("${props.src}")`,
-        backgroundPosition: `${position.x}% ${position.y}%`,
-        backgroundRepeat: `no-repeat`,
-        backgroundSize: `${zoom}%`
-    }}>
-        <Button onClick={() => props.setImageView('')}
-                sx={{
-                    position: "absolute",
-                    right: 8,
-                    top: 8
-                }}>закрыть</Button>
-    </Box>)
-
+    return (
+        <Box ref={imageRef} sx={{
+            width: '100%',
+            height: '100vh',
+            backgroundColor: 'black',
+            backgroundImage: `url("${props.src}")`,
+            backgroundPosition: `${position.x}% ${position.y}%`,
+            backgroundRepeat: `no-repeat`,
+            backgroundSize: `${zoom}%`
+        }}>
+            {`${zoom}, ${position.x}, ${position.y}`}
+            <Button onClick={() => props.setImageView('')}
+                    sx={{
+                        backgroundColor: 'white',
+                        position: "absolute",
+                        right: 8,
+                        top: 8
+                    }}>закрыть</Button>
+        </Box>
+    )
 }
