@@ -79,7 +79,6 @@ const ImageGallery = ({place, setImageView}: Props) => {
                                     sx={{
                                         objectFit: "contain",
                                         height:{ sm: '80%', xl: '85%'}
-
                                     }}
                                 />
                                 <CardContent>

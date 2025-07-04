@@ -11,7 +11,7 @@ export function ZoomableImage(props: {
     const imageRef = React.useRef<HTMLImageElement>(null)
 
     function zoomPlus(delta: number) {
-        setZoom(zoom => zoom < 30 && delta < 0 ? zoom : zoom + (delta > 0 ? 10 : -10))
+        setZoom(zoom => zoom <= 110 && delta > 0 ? 100 : zoom - (delta > 0 ? 10 : -10))
     }
 
     function handleDrag(deltaX: number, deltaY: number) {
@@ -74,7 +74,7 @@ export function ZoomableImage(props: {
             backgroundRepeat: `no-repeat`,
             backgroundSize: `${zoom}%`
         }}>
-            {`${zoom}, ${position.x}, ${position.y}`}
+            {/*{`${zoom}, ${position.x}, ${position.y}`}*/}
             <Button onClick={() => props.setImageView('')}
                     sx={{
                         backgroundColor: 'white',
