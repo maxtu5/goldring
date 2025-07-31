@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Box, Button, Stack, Typography} from "@mui/material";
 import {FullPlace} from "../../utils/types";
+import {GRingContext} from "../../utils/context";
 
 const _linkRegex = /\$L\{.+?\}/
 const linkRegex = new RegExp(
@@ -14,11 +15,12 @@ interface Props {
 }
 
 const ObjectDataPanel = ({place, switchMode}: Props) => {
+        const {user} = useContext(GRingContext)
 
         return (
             <Box width={"auto"}
-                 height={{ sm: '15vh', xl: '10vh'}}
-                 // height={'20vh'}
+                 height={{sm: '15vh', xl: '10vh'}}
+                // height={'20vh'}
                  p={2}>
                 <Stack direction={"column"} height={'100%'} justifyContent={"space-between"}>
                     <Stack direction={'row'} justifyContent={'space-between'}>
@@ -32,14 +34,15 @@ const ObjectDataPanel = ({place, switchMode}: Props) => {
                             const allDividers: string[] = []
                             for (const match of linx) {
                                 allLinks.push(match[0].substring(3, match[0].lastIndexOf(':')));
-                                allDisplayNames.push(match[0].substring(match[0].lastIndexOf(':')+1, match[0].length-1));
+                                allDisplayNames.push(match[0].substring(match[0].lastIndexOf(':') + 1, match[0].length - 1));
                                 const fragments = textToParse.split(match[0])
                                 allDividers.push(fragments[0])
                                 textToParse = fragments[1]
                             }
                             return (<div>
                                 {allLinks.map((link, index) => {
-                                    return (<span>{allDividers[index]}<a href={link} target="_blank">{allDisplayNames[index]}</a></span>)
+                                    return (<span>{allDividers[index]}<a href={link}
+                                                                         target="_blank">{allDisplayNames[index]}</a></span>)
                                 })}
                                 <span>{textToParse}</span>
                             </div>)
@@ -52,7 +55,8 @@ const ObjectDataPanel = ({place, switchMode}: Props) => {
                         )
                     })}
                     </span>
-                        <Button onClick={()=>switchMode()}>РЕДАКТИРОВАТЬ</Button>
+                        {user !== null && user.role === 'ROLE_ADMIN' &&
+                            <Button onClick={() => switchMode()}>РЕДАКТИРОВАТЬ</Button>}
                     </Stack>
                     <Typography variant="caption" align='right'>
                         {place.smallLine}

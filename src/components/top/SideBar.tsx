@@ -84,7 +84,8 @@ const SideBar = ({
         setGlobalFilter,
         globalFilter,
         renewStatusFilters,
-        setAppMode
+        setAppMode,
+        user
     } = useContext(GRingContext)
     const [localFilter, setLocalFilter] = useState<Filters>({
         statuses: [],
@@ -177,8 +178,7 @@ const SideBar = ({
                                 sx={{width: '100%'}}>{'СБРОСИТЬ'}</Button>
                     </Stack>
 
-                    {/*<Divider variant="fullWidth"/>*/}
-                    <FormGroup>
+                    {user!==null && user.role==='ROLE_ADMIN' && <FormGroup>
                         <Box>
                             <FormControlLabel
                                 control={
@@ -208,7 +208,7 @@ const SideBar = ({
                             <Button variant={'contained'} fullWidth={true} sx={{marginTop:2}}
                             onClick={()=>setAppMode('new')}>создать</Button>
                         </Box>
-                    </FormGroup>
+                    </FormGroup>}
                 </Stack>
             </FormControl>
         </Box>

@@ -1,5 +1,10 @@
 export enum ListParamTypes {NONE, GENRES, TYPES}
 
+export interface User {
+    name: string,
+    role: string
+}
+
 export interface FilterItem {
     displayName: string,
     name: string

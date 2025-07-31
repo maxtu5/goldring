@@ -1,5 +1,5 @@
 import React from "react";
-import {FilterItem, Filters, LightPlace, Region} from "./types";
+import {FilterItem, Filters, LightPlace, Region, User} from "./types";
 import {defaultInitialMapState} from "./constants";
 
 export interface ContextData {
@@ -24,7 +24,10 @@ export interface ContextData {
     },
     setMapState: (state: {center:number[], zoom:number})=>void;
     renewMapState: (center: number[], zoom: number)=>void,
-    renewStatusFilters: (filters: string[])=>void
+    renewStatusFilters: (filters: string[])=>void,
+    user: User | null,
+    setUser: (user: User | null) => void,
+    refreshPoints: () => void
 }
 
 export const GRingContext = React.createContext<ContextData>(
@@ -47,5 +50,8 @@ export const GRingContext = React.createContext<ContextData>(
         mapState: defaultInitialMapState,
         setMapState: (state: {center: number[], zoom: number})=>{},
         renewMapState: (center: number[], zoom: number)=>{},
-        renewStatusFilters: (filters: string[])=>{}
+        renewStatusFilters: (filters: string[])=>{},
+        user: null,
+        setUser: (user: User | null)=>{},
+        refreshPoints: () => {}
     })

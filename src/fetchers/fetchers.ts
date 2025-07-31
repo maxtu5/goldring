@@ -1,8 +1,31 @@
-import {base_url, url_getPlaceDisplay, url_getPlaceEdit, url_savePlaceEdit, url_savePlaceNew} from "../utils/constants";
-import {FullPlace, LightPlace, PlaceForEdit} from "../utils/types";
+import {
+    base_url,
+    url_getinitial,
+    url_getPlaceDisplay,
+    url_getPlaceEdit,
+    url_savePlaceEdit,
+    url_savePlaceNew
+} from "../utils/constants";
+import {FullPlace, LightPlace, PlaceForEdit, User} from "../utils/types";
+
+export async function loadInitialData(callbackOnResullt: (data: any) => void) {
+    fetch(`${base_url}${url_getinitial}`, {
+        credentials: "include"
+    })
+        .then(response => response.json())
+        .then(data => {
+            callbackOnResullt(data)
+        })
+        .catch(error => {
+            console.log(error)
+            callbackOnResullt(null)
+        })
+}
 
 export async function loadPlaceDisplay(id: string, refreshCallback: (place: FullPlace) => void) {
-    await fetch(`${base_url}${url_getPlaceDisplay}${id}`)
+    await fetch(`${base_url}${url_getPlaceDisplay}${id}`, {
+        credentials: "include"
+    })
         .then(response => response.json())
         .then(data => {
             refreshCallback({

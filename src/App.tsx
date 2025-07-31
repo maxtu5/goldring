@@ -3,14 +3,22 @@ import NavBar from "./components/top/NavBar";
 import MainArea from "./components/top/MainArea";
 import {GRingContext} from "./utils/context";
 import React, {useEffect, useState} from "react";
-import {base_url, defaultInitialMapState, expiry_time, url_getinitial} from "./utils/constants";
-import {FilterItem, Filters, InitialData, LightPlace} from "./utils/types";
+import {anonymousUser, base_url, defaultInitialMapState, expiry_time, url_getinitial} from "./utils/constants";
+import {FilterItem, Filters, InitialData, LightPlace, User} from "./utils/types";
+import {currentUser} from "./fetchers/userdata";
+import {loadInitialData} from "./fetchers/fetchers";
 
 function App() {
     const [appMode, setAppMode] = useState('map')
+    const [user, setUser] = useState<User | null>(null);
     const [counter, setCounter] = useState(0);
     const [scoreRange, setScoreRange] = React.useState<number[]>([1, 5])
-    const [filter, setFilter] = React.useState<Filters>({cultureStatuses: [], statuses: [], initialized: false, statusAll: false})
+    const [filter, setFilter] = React.useState<Filters>({
+        cultureStatuses: [],
+        statuses: [],
+        initialized: false,
+        statusAll: false
+    })
     const [filtered, setFiltered] = React.useState<boolean>(true)
     const [initialData, setInitialData] = useState<InitialData>({
         genres: [], types: [], cultureStatuses: [], places: [], linkPrefixes: [], statuses: [], regions: []
@@ -18,18 +26,26 @@ function App() {
     const [initialMapState, setInitialMapState] = useState(defaultInitialMapState);
     const [initialStatusFilters, setInitialStatusFilters] = useState([]);
 
-    useEffect(()=> {
-        setFilter({...filter, statuses: initialStatusFilters.length===0 ? initialData.statuses : initialStatusFilters});
+    useEffect(() => {
+        setFilter({
+            ...filter,
+            statuses: initialStatusFilters.length === 0 ? initialData.statuses : initialStatusFilters
+        });
     }, [initialStatusFilters, initialData]);
 
     useEffect(() => {
         console.log("load app")
+
+        currentUser((u: User | null) => {
+            setUser(u == null || u.name === anonymousUser ? null : u)
+        })
+
         const mapStateFromCache = localStorage.getItem("initialMapState")
         console.log(mapStateFromCache)
         setInitialMapState(mapStateFromCache ? JSON.parse(mapStateFromCache) : defaultInitialMapState)
 
         const statusFiltersFromCache = localStorage.getItem("initialStatusFilters")
-        setInitialStatusFilters(statusFiltersFromCache===null ? [] : JSON.parse(statusFiltersFromCache))
+        setInitialStatusFilters(statusFiltersFromCache === null ? [] : JSON.parse(statusFiltersFromCache))
 
         const fromCache = sessionStorage.getItem("initialData") ?
             JSON.parse(sessionStorage.getItem("initialData")!) : null;
@@ -39,17 +55,9 @@ function App() {
             setInitialData(fromCache.payload)
             setFilter({...filter, statuses: fromCache.payload.statuses})
         } else {
-            fetch(`${base_url}${url_getinitial}`)
-                .then(response => response.json())
-                .then(data => {
-                    processInitialData(data)
-                })
-                .catch(error => {
-                    console.log(error)
-                    processInitialData(null)
-                })
+            loadInitialData(processInitialData).then(()=>{console.log("end load app")})
         }
-        console.log("end load app")
+
     }, [])
 
     function processInitialData(data: any) {
@@ -57,11 +65,10 @@ function App() {
         setInitialData({
             genres: {...data.genres},
             // @ts-ignore
-            types: [...data.types.map(ta=>{return {...ta}})],
+            types: [...data.types.map(ta => {return {...ta}})],
             cultureStatuses: {...data.cultureStatuses}, places: [...data.lightPlaces],
             linkPrefixes: [...data.linkPrefixes], statuses: [...data.statuses],
-            // @ts-ignore
-            regions:[...data.regions]
+            regions: [...data.regions]
         });
 
         const info = {
@@ -73,7 +80,6 @@ function App() {
             },
             time: Date.now()
         }
-        console.log("initial data", initialData.types)
         sessionStorage.setItem("initialData", JSON.stringify(info))
     }
 
@@ -86,11 +92,10 @@ function App() {
 
     function applyFilter(p: LightPlace): boolean {
         return (p.rating === 0 || (p.rating.valueOf() <= scoreRange[1]) && (p.rating.valueOf() >= scoreRange[0])) &&
-            (!filtered ? true : (p.status===null || filter.statuses && filter.statuses.includes(p.status)))
+            (!filtered ? true : (p.status === null || filter.statuses && filter.statuses.includes(p.status)))
     }
 
     function saveMapState(center: number[], zoom: number) {
-        console.log("saveMapState", center, zoom)
         localStorage.setItem("initialMapState", JSON.stringify({center: center, zoom: zoom}))
     }
 
@@ -108,10 +113,12 @@ function App() {
                 appMode: appMode, setAppMode: setAppMode,
                 counter: counter, setCounter: setCounter,
                 genres: transformFilter(initialData.genres),
-                types: initialData.types.map(tt=> transformFilter(tt)),
+                types: initialData.types.map(tt => transformFilter(tt)),
                 statuses: initialData.statuses,
                 cultureStatuses: transformFilter(initialData.cultureStatuses),
-                regions: initialData.regions.map(reg=>{return{...reg, districtsMap: transformFilter(reg.districtsMap)}}),
+                regions: initialData.regions.map(reg => {
+                    return {...reg, districtsMap: transformFilter(reg.districtsMap)}
+                }),
                 places: initialData.places
                     .filter(p => applyFilter(p)),
                 addPlace: addPlace,
@@ -122,7 +129,11 @@ function App() {
                 mapState: initialMapState,
                 setMapState: setInitialMapState,
                 renewMapState: saveMapState,
-                renewStatusFilters: saveStatusFilters
+                renewStatusFilters: saveStatusFilters,
+                user: user,
+                setUser: setUser,
+                refreshPoints: ()=>{loadInitialData((data: any) =>
+                    processInitialData(data))}
             }}>
                 <NavBar/>
                 <MainArea/>
