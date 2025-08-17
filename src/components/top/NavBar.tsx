@@ -5,14 +5,12 @@ import {
     Toolbar,
     Typography,
     Box,
-    Badge,
     Avatar,
     Menu,
     MenuItem,
-    Tooltip
+    Tooltip, Button, Stack
 } from "@mui/material";
 import OtherHousesIcon from '@mui/icons-material/OtherHouses';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import {GRingContext} from "../../utils/context";
 import {signout} from "../../fetchers/userdata";
 
@@ -20,26 +18,6 @@ const StyledToolBar = styled(Toolbar)({
     display: "flex",
     justifyContent: "space-between"
 })
-
-const IconGroup = styled(Box)(({theme}) => ({
-        display: "none",
-        gap: "20px",
-        alignItems: "center",
-        [theme.breakpoints.up("sm")]: {
-            display: "flex"
-        }
-    })
-)
-
-const UserBox = styled(Box)(({theme}) => ({
-        display: "flex",
-        gap: "10px",
-        alignItems: "center",
-        [theme.breakpoints.up("sm")]: {
-            display: "none"
-        }
-    })
-)
 
 function getRandomColor() {
     let hex = Math.floor(Math.random() * 0xFFFFFF);
@@ -60,31 +38,23 @@ const NavBar = () => {
                     КРАСИВЫЕ ДОМА {`(${counter})`}
                 </Typography>
                 <OtherHousesIcon sx={{display: {xs: "block", sm: "none"}}}/>
-                <IconGroup>
-                    <Badge badgeContent={4} color="error">
-                        <NotificationsIcon color={"action"}/>
-                    </Badge>
-                    <Tooltip title={user?.name}>
-                    {user === null || user.name==='anonymousUser' ?
-                        <Avatar sx={{width: 30, height: 30}}
-                                onClick={e => setOpen(true)}
-                                src="https://icons.veryicon.com/png/o/miscellaneous/esgcc-basic-icon-library/1-login.png"
-                        /> :
-                        <Avatar sx={{width: 30, height: 30, bgcolor: getRandomColor}}
-                                onClick={e => setOpen(true)}
-                        >
 
-                            {
-                                // @ts-ignore
-                                user.name.at(0).toUpperCase()
-                            }
-                        </Avatar>}
-                    </Tooltip>
-                </IconGroup>
-                <UserBox onClick={e => setOpen(true)}>
-                    <Avatar sx={{width: 30, height: 30}} src="https://mocny.co.uk//wp-content/uploads/2021/07/3.jpg"/>
-                    <Typography>Рыбка</Typography>
-                </UserBox>
+                <Tooltip title={user?.name}>
+                    {user === null || user.name === 'anonymousUser' ?
+                        <Button variant={"contained"} onClick={e => setOpen(true)}>ВХОД</Button> :
+                        <Stack direction={"row"} spacing={2}>
+                            {user.role === 'ROLE_ADMIN' && (<Button variant={'contained'} onClick={()=>setAppMode('stats')}>СТАТИСТИКА</Button>)}
+                            <Avatar sx={{width: 30, height: 30, bgcolor: getRandomColor}}
+                                    onClick={e => setOpen(true)}
+                            >
+                                {
+                                    // @ts-ignore
+                                    user.name.at(0).toUpperCase()
+                                }
+                            </Avatar>
+                        </Stack>
+                    }
+                </Tooltip>
                 <Menu
                     id="demo-positioned-menu"
                     open={open}
@@ -98,7 +68,7 @@ const NavBar = () => {
                         horizontal: 'right',
                     }}
                 >
-                    {user === null || user.name==='anonymousUser' ?
+                    {user === null || user.name === 'anonymousUser' ?
                         <MenuItem onClick={() => {
                             setOpen(false)
                             setAppMode('user')
@@ -110,15 +80,17 @@ const NavBar = () => {
                                                 }}>Сменить пароль</MenuItem>
                                                 <MenuItem onClick={() => {
                                                     setOpen(false)
-                                                    signout()
-                                                    setUser(null)
-                                                    refreshPoints()
+                                                    signout(() => {
+                                                        setUser(null)
+                                                        refreshPoints()
+                                                    })
                                                 }}>Выйти</MenuItem>
                         </span>}
                 </Menu>
             </StyledToolBar>
         </AppBar>
-    );
+    )
+        ;
 };
 
 export default NavBar;

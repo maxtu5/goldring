@@ -81,12 +81,13 @@ export async function currentUser(callbackOnSuccess: (u: User | null) => void) {
         })
 }
 
-export async function signout() {
+export async function signout(callbackOnSuccess: () => void) {
     await fetch(`${base_url}${url_users_signout}`,
         {
             credentials: "include",
             method: "POST"
         })
+        .then(()=>callbackOnSuccess())
         .catch(error => {
             console.log(error)
         })

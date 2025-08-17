@@ -4,12 +4,13 @@ import {GRingContext} from "../../utils/context";
 import MapArea from "./MapArea";
 import {emptyPlace, FullPlace, PlaceForEdit} from "../../utils/types";
 import ImageGallery from "../objectcard/ImageGallery";
-import ObjectDataPanel from "../objectcard/ObjectDataPanel";
+import PointData from "../objectcard/PointData";
 import EditPlaceForm from "../objectcard/EditPlaceForm";
 import {loadPlaceDisplay, loadPlaceEdit} from "../../fetchers/fetchers";
 import {CreatePointForm} from "../objectcard/CreatePointForm";
 import {ZoomableImage} from "../objectcard/ZoomableImage";
 import {UserManagementForm} from "../user/UserManagementForm";
+import StatsPanel from "../admin/StatsPanel";
 
 const MainArea = () => {
     const {setAppMode, appMode} = useContext(GRingContext)
@@ -20,7 +21,7 @@ const MainArea = () => {
 
     useEffect(() => {
         if (!appMode) return
-        if (['map', 'new', 'user'].includes(appMode)) {
+        if (['map', 'new', 'user', 'stats'].includes(appMode)) {
             setCurrentPlace(emptyPlace)
         } else {
             loadPlaceDisplay(appMode, setCurrentPlace)
@@ -61,21 +62,24 @@ const MainArea = () => {
         >
             <DialogContent
                 sx={{p: 0}}>
-                {appMode === 'user' ? <UserManagementForm/> :
-                    (appMode === 'new' ? <CreatePointForm/> :
-                        (editMode && editPlaceData !== null ?
-                            <EditPlaceForm
-                                place={editPlaceData}
-                                setPlace={setEditPlaceData}
-                                switchMode={() => setViewModeAndUnload()}
-                                refreshPlace={() => loadPlaceDisplay(editPlaceData?.id, setCurrentPlace)}
-                            /> : (imageView === "" ?
-                                <Box sx={{height: '100%', maxHeight: '100vh'}}>
-                                    <ImageGallery place={currentPlace} setImageView={setImageView}/>
-                                    <ObjectDataPanel place={currentPlace}
-                                                     switchMode={() => setEdtModeAndLoad(currentPlace.id)}/>
-                                </Box> :
-                                <ZoomableImage alt={""} src={imageView} setImageView={setImageView}/>)))
+                {appMode === 'stats' ? <StatsPanel/> :
+                    (appMode === 'user' ? <UserManagementForm/> :
+                        (appMode === 'new' ? <CreatePointForm/> :
+                            (editMode && editPlaceData !== null ?
+                                <EditPlaceForm
+                                    place={editPlaceData}
+                                    setPlace={setEditPlaceData}
+                                    saveAndClose={() => {
+                                        setViewModeAndUnload()
+                                        loadPlaceDisplay(editPlaceData?.id, setCurrentPlace)
+                                    }}
+                                /> : (imageView === "" ?
+                                    <Box sx={{height: '100%', maxHeight: '100vh'}}>
+                                        <ImageGallery place={currentPlace} setImageView={setImageView}/>
+                                        <PointData place={currentPlace}
+                                                   switchMode={() => setEdtModeAndLoad(currentPlace.id)}/>
+                                    </Box> :
+                                    <ZoomableImage alt={""} src={imageView} setImageView={setImageView}/>))))
                 }
             </DialogContent>
         </Dialog>

@@ -1,10 +1,10 @@
 import {
-    base_url,
+    base_url, local_runner_url,
     url_getinitial,
     url_getPlaceDisplay,
-    url_getPlaceEdit,
+    url_getPlaceEdit, url_lr_jwt, url_lr_saveLocal,
     url_savePlaceEdit,
-    url_savePlaceNew
+    url_savePlaceNew, url_stats
 } from "../utils/constants";
 import {FullPlace, LightPlace, PlaceForEdit, User} from "../utils/types";
 
@@ -53,7 +53,9 @@ export async function loadPlaceDisplay(id: string, refreshCallback: (place: Full
 }
 
 export async function loadPlaceEdit(id: string) {
-    const retval = await fetch(`${base_url}${url_getPlaceEdit}${id}`)
+    const retval = await fetch(`${base_url}${url_getPlaceEdit}${id}`, {
+        credentials: "include"
+    })
         .then(response => response.json())
         .then(data => {
             return {
@@ -86,33 +88,44 @@ export async function loadPlaceEdit(id: string) {
     return retval;
 }
 
-export async function saveEdited(place: PlaceForEdit, callbackOnSuccess: () => void) {
-    console.log('save edit data')
-    const body = {
-        ...place,
-        types: place.typesAsString?.split(',').filter(s => s !== ''),
-        genres: place.genresAsString?.split(',').filter(s => s !== ''),
-        architects: place.architectsAsString?.split(',').filter(s => s !== ''),
-        pages: place.pagesAsString?.split(',').filter(s => s !== ''),
-        pics: parseInt(place.picsAsString || '0'),
-        appeal: parseFloat(place.appealAsString || '0')
-    }
+export async function savedEditedWithJwt(place: PlaceForEdit, callbackOnSuccess: () => void) {
+    await fetch(`${local_runner_url}${url_lr_jwt}`)
+        .then(response => {
+            if (!response.ok) {
+                console.log('resp not ok')
+                throw new Error("Request failed");
+            }
+            return response.text()
+        })
+        .then(token => {
+            saveLocal(place, token, callbackOnSuccess)
+        })
+        .catch(error => {
+            alert("Local server not available")
+        });
+}
+
+async function saveEdited(jsonString: string, token: string, callbackOnSuccess: () => void) {
+    console.log('save edit')
     await fetch(`${base_url}${url_savePlaceEdit}`,
         {
+            // credentials: "include",
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                // 'Accept': 'application/json',
+                // 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             method: "POST",
-            body: JSON.stringify(body)
+            body: jsonString
         })
         .then(data => {
             if (data.status === 200) {
-                callbackOnSuccess()
+                return data.json()
             } else {
                 alert('Failed ' + data.status);
             }
         })
+        .then(json=>callbackOnSuccess())
         .catch(error => {
             console.log(error)
         })
@@ -135,17 +148,18 @@ export async function saveNew(place: PlaceForEdit, callbackOnSuccess: (p: LightP
         types: place.types,
         genres: place.genres,
         architects: place.architectsAsString?.split(',').filter(s => s !== '').map(s => s.trim()),
-        pages: place.pagesAsString?.split(',').filter(s => s !== '').map(s => s.trim()),
+        pages: place.pagesAsString?.split(',').map(s => s.trim()).filter(s => s !== '').map(s => s.trim()),
         pics: parseInt(place.picsAsString || '0'),
         appeal: parseFloat(place.appealAsString || '0')
     }
     console.log(JSON.stringify(body))
     await fetch(`${base_url}${url_savePlaceNew}`,
         {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
+            credentials: "include",
+            // headers: {
+            //     'Accept': 'application/json',
+            //     'Content-Type': 'application/json'
+            // },
             method: "POST",
             body: JSON.stringify(body)
         })
@@ -170,5 +184,44 @@ export async function saveNew(place: PlaceForEdit, callbackOnSuccess: (p: LightP
         .catch(error => {
             console.log(error)
         })
+}
 
+export async function loadStats(callbackOnSuccess: (s: string) => void) {
+    await fetch(`${base_url}${url_stats}`, {
+        credentials: "include"
+    })
+        .then(response => response.text())
+        .then(data => callbackOnSuccess(data))
+        .catch(error => {
+            console.log(error)
+        })
+}
+
+export async function saveLocal(place: PlaceForEdit, token: string, callbackOnSuccess: () => void) {
+    console.log('save local')
+    const body = {
+        ...place,
+        types: place.typesAsString?.split(',').filter(s => s !== ''),
+        genres: place.genresAsString?.split(',').filter(s => s !== ''),
+        architects: place.architectsAsString?.split(',').filter(s => s !== ''),
+        pages: place.pagesAsString?.split(',').map(s => s.trim()).filter(s => s !== ''),
+        pics: parseInt(place.picsAsString || '0'),
+        appeal: parseFloat(place.appealAsString || '0')
+    }
+    await fetch(`${local_runner_url}${url_lr_saveLocal}`, {
+        method: 'POST',
+        headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+        .then(response => {
+            if (response.status === 200) return response.text()
+            else alert ("not saved local")
+        })
+        .then(text=> {
+            if (text) saveEdited(text, token, callbackOnSuccess)
+            alert('saved local ' + text)
+        })
 }

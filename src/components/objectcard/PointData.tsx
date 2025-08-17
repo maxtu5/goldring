@@ -14,7 +14,7 @@ interface Props {
     switchMode: () => void
 }
 
-const ObjectDataPanel = ({place, switchMode}: Props) => {
+const PointData = ({place, switchMode}: Props) => {
         const {user} = useContext(GRingContext)
 
         return (
@@ -26,6 +26,7 @@ const ObjectDataPanel = ({place, switchMode}: Props) => {
                     <Stack direction={'row'} justifyContent={'space-between'}>
                     <span>
                     {place.bigLines.map((line, lineOrder) => {
+                        console.log(line)
                         if (line.includes('$L')) {
                             const linx = line.matchAll(linkRegex);
                             let textToParse = line
@@ -33,6 +34,7 @@ const ObjectDataPanel = ({place, switchMode}: Props) => {
                             const allDisplayNames: string[] = []
                             const allDividers: string[] = []
                             for (const match of linx) {
+                                console.log(textToParse, match)
                                 allLinks.push(match[0].substring(3, match[0].lastIndexOf(':')));
                                 allDisplayNames.push(match[0].substring(match[0].lastIndexOf(':') + 1, match[0].length - 1));
                                 const fragments = textToParse.split(match[0])
@@ -68,4 +70,4 @@ const ObjectDataPanel = ({place, switchMode}: Props) => {
     }
 ;
 
-export default ObjectDataPanel;
+export default PointData;

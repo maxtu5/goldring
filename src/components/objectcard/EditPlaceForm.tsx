@@ -12,13 +12,12 @@ import {
 } from "@mui/material";
 import {PlaceForEdit} from "../../utils/types";
 import {GRingContext} from "../../utils/context";
-import {saveEdited} from "../../fetchers/fetchers";
+import {savedEditedWithJwt, saveLocal} from "../../fetchers/fetchers";
 
 interface Props {
     place: PlaceForEdit,
     setPlace: (place: PlaceForEdit | null) => void
-    switchMode: () => void,
-    refreshPlace: () => void
+    saveAndClose: () => void,
 }
 
 function EditTextField(props: {
@@ -31,7 +30,7 @@ function EditTextField(props: {
     />);
 }
 
-const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
+const EditPlaceForm = ({place, setPlace, saveAndClose}: Props) => {
     const {statuses} = useContext(GRingContext)
     const [localPlace, setLocalPlace] = useState<PlaceForEdit>({
         ...place,
@@ -51,11 +50,11 @@ const EditPlaceForm = ({place, setPlace, switchMode, refreshPlace}: Props) => {
                     {localPlace.id}
                 </Typography>
                 <span>
-                    <Button onClick={() => switchMode()}>ВЕРНУТЬСЯ</Button>
+                    <Button onClick={() => saveAndClose()}>ВЕРНУТЬСЯ</Button>
                     <Button onClick={() => {
-                        saveEdited(localPlace, () => {
-                            switchMode()
-                            refreshPlace()
+                        savedEditedWithJwt(localPlace, () => {
+                            // saveLocal(json)
+                            saveAndClose()
                         })
                     }}
                     >СОХРАНИТЬ</Button>
